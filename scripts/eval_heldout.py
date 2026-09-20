@@ -65,7 +65,11 @@ def score(model, task, packer, device, bs, limit=None):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ckpt", required=True)
+    ap.add_argument("--ckpt", help="trained checkpoint; omit for an untrained backbone")
+    ap.add_argument("--backbone", help="backbone to score untrained (with --decoder)")
+    ap.add_argument("--decoder", action="store_true", help="causal LM with yes/no readout")
+    ap.add_argument("--preamble", default=None)
+    ap.add_argument("--template", default=None)
     ap.add_argument("--bs", type=int, default=8)
     ap.add_argument("--max-len", type=int, default=4096)
     ap.add_argument("--limit", type=int, default=None)
@@ -75,22 +79,81 @@ def main() -> None:
 
     sys.stdout.reconfigure(line_buffering=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    ck = torch.load(args.ckpt, map_location="cpu", weights_only=False)
-    backbone = ck.get("backbone", "answerdotai/ModernBERT-base")
-    tok = AutoTokenizer.from_pretrained(backbone)
-    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2)
+    if not (args.ckpt or args.backbone):
+        raise SystemExit("pass --ckpt or --backbone")
 
-    model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
-    missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
+    ck = (
+        torch.load(args.ckpt, map_location="cpu", weights_only=False)
+        if args.ckpt
+        else {}
+    )
+    backbone = args.backbone or ck.get("backbone", "answerdotai/ModernBERT-base")
+    tok = AutoTokenizer.from_pretrained(backbone)
+
+    template = args.template or (
+        "\nOption: {opt}\nIs this the correct answer to the question? answer"
+        if args.decoder else None
+    )
+    packer = Packer(
+        tok, max_len=args.max_len, max_state_len=args.max_len // 2,
+        marker=":" if args.decoder else None,
+        marker_after=args.decoder, option_template=template, preamble=args.preamble,
+    )
+
+    if args.decoder:
+        from openjev.decoder import OpenJevDecoder
+
+        model = OpenJevDecoder(backbone=backbone, tokenizer=tok).to(device)
+    else:
+        model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
+    if ck.get("state_dict"):
+        missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
+        if missing or unexpected:
+            print(f"!! state_dict mismatch: {len(missing)} missing, "
+                  f"{len(unexpected)} unexpected; first missing {missing[:3]}")
     model.eval()
-    print(f"{args.ckpt}  backbone={backbone}  trained_on={ck.get('trained_on')}")
-    if missing or unexpected:
-        print(f"!! state_dict mismatch: {len(missing)} missing, {len(unexpected)} unexpected")
-        print(f"   first missing: {missing[:3]}")
+    print(f"{args.ckpt or backbone}  {'decoder' if args.decoder else 'encoder'}"
+          f"  trained_on={ck.get('trained_on', 'nothing')}")
+
+    # ---- control: a task any working harness must pass -------------------
+    # For an untrained backbone there is no held-in task, but the control's
+    # job is to stop a chance-level held-out result being read as a finding
+    # when it is really a bug in packing, grouping or label mapping. A
+    # deliberately trivial task does that job for either case: if this is at
+    # chance, nothing below means anything.
+    from openjev.schema import Choice, Example, Task as _T
+
+    sanity = _T(
+        name="harness_sanity",
+        questions={"q": Choice(
+            instructions="What is this text about?",
+            criteria={
+                "cats": "the text is about cats",
+                "cars": "the text is about cars",
+                "cooking": "the text is about cooking food",
+            },
+        )},
+        examples=[
+            Example(state=s, answers={"q": a}, meta={"tier": "sanity"})
+            for s, a in [
+                ("My cat sat on the windowsill washing her paws.", "cats"),
+                ("The engine stalled and I had to replace the spark plugs.", "cars"),
+                ("Fry the onions gently before adding the garlic and tomatoes.", "cooking"),
+                ("She adopted two kittens from the shelter last week.", "cats"),
+                ("I changed the oil and rotated the tyres this morning.", "cars"),
+                ("Simmer the stock for an hour, then season to taste.", "cooking"),
+            ]
+        ],
+    )
+    g, pr = score(model, sanity, packer, device, args.bs)
+    acc = accuracy(pr, g)
+    print(f"\n== HARNESS SANITY (must be near 1.0; chance is 0.333)  {acc:.3f}")
+    if acc < 0.6:
+        print("   !! the harness is suspect. Treat everything below as unverified.")
 
     # ---- control: tasks this checkpoint WAS trained on --------------------
     mix = Path(args.mixture)
-    if mix.exists():
+    if mix.exists() and ck.get("state_dict"):
         dirs = sorted(p for p in mix.iterdir() if (p / "task.json").exists())[:5]
         print(f"\n== HELD-IN CONTROL (trained on these) ==")
         print(f"{'task':<40}{'K':>5}{'n':>6}{'acc':>8}{'x chance':>10}")
