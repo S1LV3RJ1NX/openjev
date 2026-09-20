@@ -1,0 +1,30 @@
+{
+ "task": "ag_news",
+ "hf_dataset": "fancyzhx/ag_news",
+ "config": "default",
+ "homepage": "https://huggingface.co/datasets/fancyzhx/ag_news",
+ "license": "unknown",
+ "redistributable": false,
+ "license_note": "The dataset card declares 'license: unknown'. The original AG corpus terms permit non-commercial academic use of the corpus but do not grant redistribution rights we can rely on, so rows are generated locally and git-ignored.",
+ "tasksource_leak_paths": [
+  "ag_news"
+ ],
+ "description_source": "dataset documentation (ClassLabel names) and train split",
+ "primitive": "choice",
+ "n_options": 4,
+ "n_test": 600,
+ "n_dev": 0,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 4,
+  "options_present_as_gold": 4,
+  "options_never_gold": [],
+  "min_per_option": 150,
+  "max_per_option": 150
+ },
+ "related_not_excluded": [],
+ "sha256": {
+  "test.jsonl": "74d826ba19861218d0357015d307a80316e2913d85922b91c9d5b34468c783f8"
+ }
+}

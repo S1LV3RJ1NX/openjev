@@ -1,0 +1,37 @@
+{
+ "task": "sst5",
+ "hf_dataset": "SetFit/sst5",
+ "config": "default",
+ "homepage": "https://huggingface.co/datasets/SetFit/sst5",
+ "license": "unknown",
+ "redistributable": false,
+ "license_note": "SetFit/sst5 carries no licence metadata at all and upstream stanfordnlp/sst is tagged 'unknown'. Absence of a licence is not permission, so rows are generated locally and git-ignored.",
+ "tasksource_leak_paths": [
+  "rotten_tomatoes",
+  "glue/sst2"
+ ],
+ "description_source": "dataset documentation (the SST five-way scale)",
+ "primitive": "score",
+ "n_options": 5,
+ "n_test": 600,
+ "n_dev": 600,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 5,
+  "options_present_as_gold": 5,
+  "options_never_gold": [],
+  "min_per_option": 120,
+  "max_per_option": 120
+ },
+ "related_not_excluded": [
+  "tweet_eval/sentiment",
+  "poem_sentiment",
+  "amazon_polarity",
+  "imdb"
+ ],
+ "sha256": {
+  "test.jsonl": "40ec0f3af0a686f354765dde3547e4f119cdfd3feb1f8d640295be3bb1abc4bf",
+  "dev.jsonl": "292e59aeb56ef0561c76f90cdcd6f64cce69a1cb8d19758d6dff62f31726f033"
+ }
+}

@@ -1,0 +1,600 @@
+{"state": "i need to know how to say hello in france", "answers": {"intent": "translate"}, "meta": {"source_label": "translate", "out_of_scope": false}}
+{"state": "would you translate a phrase into mandarin for me", "answers": {"intent": "translate"}, "meta": {"source_label": "translate", "out_of_scope": false}}
+{"state": "could you translate this into chinese for me, please", "answers": {"intent": "translate"}, "meta": {"source_label": "translate", "out_of_scope": false}}
+{"state": "transfer ten dollars from my wells fargo account to my bank of america account", "answers": {"intent": "transfer"}, "meta": {"source_label": "transfer", "out_of_scope": false}}
+{"state": "send 100 dollars from my vanguard money market to my wells fargo savings", "answers": {"intent": "transfer"}, "meta": {"source_label": "transfer", "out_of_scope": false}}
+{"state": "send from my bbc money market to my t rowe price money market seven thousand dollars", "answers": {"intent": "transfer"}, "meta": {"source_label": "transfer", "out_of_scope": false}}
+{"state": "transfer 1000 dollars from my first national bank to my bethpage federal credit union savings", "answers": {"intent": "transfer"}, "meta": {"source_label": "transfer", "out_of_scope": false}}
+{"state": "set the timer for 10 minutes", "answers": {"intent": "timer"}, "meta": {"source_label": "timer", "out_of_scope": false}}
+{"state": "please set up a timer for me", "answers": {"intent": "timer"}, "meta": {"source_label": "timer", "out_of_scope": false}}
+{"state": "set 60 minutes for oven please", "answers": {"intent": "timer"}, "meta": {"source_label": "timer", "out_of_scope": false}}
+{"state": "please make the timer for cooking for for 2 hours", "answers": {"intent": "timer"}, "meta": {"source_label": "timer", "out_of_scope": false}}
+{"state": "may i please have a definition for the work churlish", "answers": {"intent": "definition"}, "meta": {"source_label": "definition", "out_of_scope": false}}
+{"state": "what is the meaning of fascism", "answers": {"intent": "definition"}, "meta": {"source_label": "definition", "out_of_scope": false}}
+{"state": "what does idiosyncratic mean", "answers": {"intent": "definition"}, "meta": {"source_label": "definition", "out_of_scope": false}}
+{"state": "define ambivalence for me please", "answers": {"intent": "definition"}, "meta": {"source_label": "definition", "out_of_scope": false}}
+{"state": "what's your opinion on the meaning of life", "answers": {"intent": "meaning_of_life"}, "meta": {"source_label": "meaning_of_life", "out_of_scope": false}}
+{"state": "can you tell me, what is the meaning of life", "answers": {"intent": "meaning_of_life"}, "meta": {"source_label": "meaning_of_life", "out_of_scope": false}}
+{"state": "what do you think life is really about", "answers": {"intent": "meaning_of_life"}, "meta": {"source_label": "meaning_of_life", "out_of_scope": false}}
+{"state": "do you think we have a higher calling", "answers": {"intent": "meaning_of_life"}, "meta": {"source_label": "meaning_of_life", "out_of_scope": false}}
+{"state": "explain how do i get new insurance", "answers": {"intent": "insurance_change"}, "meta": {"source_label": "insurance_change", "out_of_scope": false}}
+{"state": "tell me how to get new insurance", "answers": {"intent": "insurance_change"}, "meta": {"source_label": "insurance_change", "out_of_scope": false}}
+{"state": "tell me how to change my insurance policy", "answers": {"intent": "insurance_change"}, "meta": {"source_label": "insurance_change", "out_of_scope": false}}
+{"state": "i need to change my insurance policy, how", "answers": {"intent": "insurance_change"}, "meta": {"source_label": "insurance_change", "out_of_scope": false}}
+{"state": "do you remember where i left my cellphone", "answers": {"intent": "find_phone"}, "meta": {"source_label": "find_phone", "out_of_scope": false}}
+{"state": "help me, i don't know where my phone is", "answers": {"intent": "find_phone"}, "meta": {"source_label": "find_phone", "out_of_scope": false}}
+{"state": "tell me my phone's location", "answers": {"intent": "find_phone"}, "meta": {"source_label": "find_phone", "out_of_scope": false}}
+{"state": "help locate my phone", "answers": {"intent": "find_phone"}, "meta": {"source_label": "find_phone", "out_of_scope": false}}
+{"state": "how safe is it to travel to guatemala right now and are there any alerts", "answers": {"intent": "travel_alert"}, "meta": {"source_label": "travel_alert", "out_of_scope": false}}
+{"state": "are there any travel alerts for juarez", "answers": {"intent": "travel_alert"}, "meta": {"source_label": "travel_alert", "out_of_scope": false}}
+{"state": "does mexico have any travel alerts i should know about", "answers": {"intent": "travel_alert"}, "meta": {"source_label": "travel_alert", "out_of_scope": false}}
+{"state": "can i put in a pto request for may 1 to may 5", "answers": {"intent": "pto_request"}, "meta": {"source_label": "pto_request", "out_of_scope": false}}
+{"state": "am i able to put in a pto request for may 6 to may 18", "answers": {"intent": "pto_request"}, "meta": {"source_label": "pto_request", "out_of_scope": false}}
+{"state": "tell me whether i can put a pto request in for may 10 to may 15", "answers": {"intent": "pto_request"}, "meta": {"source_label": "pto_request", "out_of_scope": false}}
+{"state": "please help me make a request for vacation", "answers": {"intent": "pto_request"}, "meta": {"source_label": "pto_request", "out_of_scope": false}}
+{"state": "what are some easy ways to make my credit score better", "answers": {"intent": "improve_credit_score"}, "meta": {"source_label": "improve_credit_score", "out_of_scope": false}}
+{"state": "how should i go about improving my credit score", "answers": {"intent": "improve_credit_score"}, "meta": {"source_label": "improve_credit_score", "out_of_scope": false}}
+{"state": "what things can i do to increase my credit score", "answers": {"intent": "improve_credit_score"}, "meta": {"source_label": "improve_credit_score", "out_of_scope": false}}
+{"state": "what is the best thing for me to do to improve my credit score quickly", "answers": {"intent": "improve_credit_score"}, "meta": {"source_label": "improve_credit_score", "out_of_scope": false}}
+{"state": "tell me something interesting about new york state", "answers": {"intent": "fun_fact"}, "meta": {"source_label": "fun_fact", "out_of_scope": false}}
+{"state": "what's a fun fact about axolotls", "answers": {"intent": "fun_fact"}, "meta": {"source_label": "fun_fact", "out_of_scope": false}}
+{"state": "tell me a fact about the maned wolf", "answers": {"intent": "fun_fact"}, "meta": {"source_label": "fun_fact", "out_of_scope": false}}
+{"state": "read me cat trivia", "answers": {"intent": "fun_fact"}, "meta": {"source_label": "fun_fact", "out_of_scope": false}}
+{"state": "i need new language", "answers": {"intent": "change_language"}, "meta": {"source_label": "change_language", "out_of_scope": false}}
+{"state": "please change your language setting to spanish now", "answers": {"intent": "change_language"}, "meta": {"source_label": "change_language", "out_of_scope": false}}
+{"state": "how can i change your response language", "answers": {"intent": "change_language"}, "meta": {"source_label": "change_language", "out_of_scope": false}}
+{"state": "change the language to english", "answers": {"intent": "change_language"}, "meta": {"source_label": "change_language", "out_of_scope": false}}
+{"state": "when's my next paycheck coming in", "answers": {"intent": "payday"}, "meta": {"source_label": "payday", "out_of_scope": false}}
+{"state": "what's the date of my next paycheck", "answers": {"intent": "payday"}, "meta": {"source_label": "payday", "out_of_scope": false}}
+{"state": "what was the last check date", "answers": {"intent": "payday"}, "meta": {"source_label": "payday", "out_of_scope": false}}
+{"state": "how long has it been since i was paid", "answers": {"intent": "payday"}, "meta": {"source_label": "payday", "out_of_scope": false}}
+{"state": "tell me the duration it takes to get a new cc", "answers": {"intent": "replacement_card_duration"}, "meta": {"source_label": "replacement_card_duration", "out_of_scope": false}}
+{"state": "how long does it take a new card to arrive in the mail to me", "answers": {"intent": "replacement_card_duration"}, "meta": {"source_label": "replacement_card_duration", "out_of_scope": false}}
+{"state": "what is the time frame for receiving a new credit card if my original one gets lost", "answers": {"intent": "replacement_card_duration"}, "meta": {"source_label": "replacement_card_duration", "out_of_scope": false}}
+{"state": "how long does it usually take for a new credit card to come", "answers": {"intent": "replacement_card_duration"}, "meta": {"source_label": "replacement_card_duration", "out_of_scope": false}}
+{"state": "what time is it in the pacific standard time", "answers": {"intent": "time"}, "meta": {"source_label": "time", "out_of_scope": false}}
+{"state": "what is the time in paris now", "answers": {"intent": "time"}, "meta": {"source_label": "time", "out_of_scope": false}}
+{"state": "time in manhattan", "answers": {"intent": "time"}, "meta": {"source_label": "time", "out_of_scope": false}}
+{"state": "what time is it now in michigan", "answers": {"intent": "time"}, "meta": {"source_label": "time", "out_of_scope": false}}
+{"state": "has my credit card application processed yet", "answers": {"intent": "application_status"}, "meta": {"source_label": "application_status", "out_of_scope": false}}
+{"state": "has my credit card application been approved yet", "answers": {"intent": "application_status"}, "meta": {"source_label": "application_status", "out_of_scope": false}}
+{"state": "has my visa card application been approved yet", "answers": {"intent": "application_status"}, "meta": {"source_label": "application_status", "out_of_scope": false}}
+{"state": "when will my credit card application be reviewed", "answers": {"intent": "application_status"}, "meta": {"source_label": "application_status", "out_of_scope": false}}
+{"state": "can you please update the status of flight dl123", "answers": {"intent": "flight_status"}, "meta": {"source_label": "flight_status", "out_of_scope": false}}
+{"state": "is flight dl123 due to land as schedule", "answers": {"intent": "flight_status"}, "meta": {"source_label": "flight_status", "out_of_scope": false}}
+{"state": "when is my flight expected to arrive", "answers": {"intent": "flight_status"}, "meta": {"source_label": "flight_status", "out_of_scope": false}}
+{"state": "what is the boarding time for my upcoming flight", "answers": {"intent": "flight_status"}, "meta": {"source_label": "flight_status", "out_of_scope": false}}
+{"state": "please flip a coin - i call heads", "answers": {"intent": "flip_coin"}, "meta": {"source_label": "flip_coin", "out_of_scope": false}}
+{"state": "flip a coin now", "answers": {"intent": "flip_coin"}, "meta": {"source_label": "flip_coin", "out_of_scope": false}}
+{"state": "please flip a coin", "answers": {"intent": "flip_coin"}, "meta": {"source_label": "flip_coin", "out_of_scope": false}}
+{"state": "flip me a coin", "answers": {"intent": "flip_coin"}, "meta": {"source_label": "flip_coin", "out_of_scope": false}}
+{"state": "from now on, my name is tom", "answers": {"intent": "change_user_name"}, "meta": {"source_label": "change_user_name", "out_of_scope": false}}
+{"state": "i want to be called tom", "answers": {"intent": "change_user_name"}, "meta": {"source_label": "change_user_name", "out_of_scope": false}}
+{"state": "i prefer to be called jason", "answers": {"intent": "change_user_name"}, "meta": {"source_label": "change_user_name", "out_of_scope": false}}
+{"state": "i am camile", "answers": {"intent": "change_user_name"}, "meta": {"source_label": "change_user_name", "out_of_scope": false}}
+{"state": "what place were you made at", "answers": {"intent": "where_are_you_from"}, "meta": {"source_label": "where_are_you_from", "out_of_scope": false}}
+{"state": "where are you from before you got here", "answers": {"intent": "where_are_you_from"}, "meta": {"source_label": "where_are_you_from", "out_of_scope": false}}
+{"state": "let me know when you were made", "answers": {"intent": "where_are_you_from"}, "meta": {"source_label": "where_are_you_from", "out_of_scope": false}}
+{"state": "i'm out of cleaning supplies, remind me on my list", "answers": {"intent": "shopping_list_update"}, "meta": {"source_label": "shopping_list_update", "out_of_scope": false}}
+{"state": "i'm out of kleenex so will you put that on my shopping list", "answers": {"intent": "shopping_list_update"}, "meta": {"source_label": "shopping_list_update", "out_of_scope": false}}
+{"state": "i'm out of paper towels so will you put that on my shopping list", "answers": {"intent": "shopping_list_update"}, "meta": {"source_label": "shopping_list_update", "out_of_scope": false}}
+{"state": "i'm out of laundry detergent so will you put that on my shopping list", "answers": {"intent": "shopping_list_update"}, "meta": {"source_label": "shopping_list_update", "out_of_scope": false}}
+{"state": "what kind of things can i ask the ai", "answers": {"intent": "what_can_i_ask_you"}, "meta": {"source_label": "what_can_i_ask_you", "out_of_scope": false}}
+{"state": "what questions can you answer", "answers": {"intent": "what_can_i_ask_you"}, "meta": {"source_label": "what_can_i_ask_you", "out_of_scope": false}}
+{"state": "what kind of questions can you answer", "answers": {"intent": "what_can_i_ask_you"}, "meta": {"source_label": "what_can_i_ask_you", "out_of_scope": false}}
+{"state": "i do not have that information", "answers": {"intent": "maybe"}, "meta": {"source_label": "maybe", "out_of_scope": false}}
+{"state": "don't have any idea", "answers": {"intent": "maybe"}, "meta": {"source_label": "maybe", "out_of_scope": false}}
+{"state": "i don't know the anwser", "answers": {"intent": "maybe"}, "meta": {"source_label": "maybe", "out_of_scope": false}}
+{"state": "either of them could be i'm not sure", "answers": {"intent": "maybe"}, "meta": {"source_label": "maybe", "out_of_scope": false}}
+{"state": "way to change car oil", "answers": {"intent": "oil_change_how"}, "meta": {"source_label": "oil_change_how", "out_of_scope": false}}
+{"state": "how can i change car oil", "answers": {"intent": "oil_change_how"}, "meta": {"source_label": "oil_change_how", "out_of_scope": false}}
+{"state": "what kind of oil do i need for my ford truck and how can i change it", "answers": {"intent": "oil_change_how"}, "meta": {"source_label": "oil_change_how", "out_of_scope": false}}
+{"state": "what kind of oil and how much do i need for my toyota tacoma truck and how do i do it", "answers": {"intent": "oil_change_how"}, "meta": {"source_label": "oil_change_how", "out_of_scope": false}}
+{"state": "book 3 under the name zebee at xenophobe", "answers": {"intent": "restaurant_reservation"}, "meta": {"source_label": "restaurant_reservation", "out_of_scope": false}}
+{"state": "what reservations are available for 3 people at the xenophobe", "answers": {"intent": "restaurant_reservation"}, "meta": {"source_label": "restaurant_reservation", "out_of_scope": false}}
+{"state": "use the name wheeler to reserve a table for 3 at andrea's steakhouse at 5pm", "answers": {"intent": "restaurant_reservation"}, "meta": {"source_label": "restaurant_reservation", "out_of_scope": false}}
+{"state": "make a reservation for wheeler party of 3 for 5pm at andrea's steakhouse", "answers": {"intent": "restaurant_reservation"}, "meta": {"source_label": "restaurant_reservation", "out_of_scope": false}}
+{"state": "do i have more than $100 in my pnc account", "answers": {"intent": "balance"}, "meta": {"source_label": "balance", "out_of_scope": false}}
+{"state": "can i get beer within my deposit account", "answers": {"intent": "balance"}, "meta": {"source_label": "balance", "out_of_scope": false}}
+{"state": "please tell me how much money i have in my bank accounts", "answers": {"intent": "balance"}, "meta": {"source_label": "balance", "out_of_scope": false}}
+{"state": "how much money is in all of my bank accounts", "answers": {"intent": "balance"}, "meta": {"source_label": "balance", "out_of_scope": false}}
+{"state": "confirm four for my reservation at fiji", "answers": {"intent": "confirm_reservation"}, "meta": {"source_label": "confirm_reservation", "out_of_scope": false}}
+{"state": "make sure my flower bar reservation is scheduled for tomorrow", "answers": {"intent": "confirm_reservation"}, "meta": {"source_label": "confirm_reservation", "out_of_scope": false}}
+{"state": "confirm my friday reservation at 2:00", "answers": {"intent": "confirm_reservation"}, "meta": {"source_label": "confirm_reservation", "out_of_scope": false}}
+{"state": "you know the reservation i have on 2:00 friday i confirm it", "answers": {"intent": "confirm_reservation"}, "meta": {"source_label": "confirm_reservation", "out_of_scope": false}}
+{"state": "please put a block on my us bank account immediately", "answers": {"intent": "freeze_account"}, "meta": {"source_label": "freeze_account", "out_of_scope": false}}
+{"state": "place a hold on my chase money market market account at once", "answers": {"intent": "freeze_account"}, "meta": {"source_label": "freeze_account", "out_of_scope": false}}
+{"state": "please immediately block my navy federal credit union account", "answers": {"intent": "freeze_account"}, "meta": {"source_label": "freeze_account", "out_of_scope": false}}
+{"state": "i need my savings account placed under a block as soon as possible", "answers": {"intent": "freeze_account"}, "meta": {"source_label": "freeze_account", "out_of_scope": false}}
+{"state": "is there a way to roll over my 401k", "answers": {"intent": "rollover_401k"}, "meta": {"source_label": "rollover_401k", "out_of_scope": false}}
+{"state": "due to getting a new job i need assistance with my 401k rollover", "answers": {"intent": "rollover_401k"}, "meta": {"source_label": "rollover_401k", "out_of_scope": false}}
+{"state": "rolling over my 401k help", "answers": {"intent": "rollover_401k"}, "meta": {"source_label": "rollover_401k", "out_of_scope": false}}
+{"state": "assistance in rolling over my 401k", "answers": {"intent": "rollover_401k"}, "meta": {"source_label": "rollover_401k", "out_of_scope": false}}
+{"state": "what manufactures you", "answers": {"intent": "who_made_you"}, "meta": {"source_label": "who_made_you", "out_of_scope": false}}
+{"state": "who brought you into existence", "answers": {"intent": "who_made_you"}, "meta": {"source_label": "who_made_you", "out_of_scope": false}}
+{"state": "who programmed you", "answers": {"intent": "who_made_you"}, "meta": {"source_label": "who_made_you", "out_of_scope": false}}
+{"state": "how much time to drive to the closest bank", "answers": {"intent": "distance"}, "meta": {"source_label": "distance", "out_of_scope": false}}
+{"state": "can you tell me the drive time to the nearest gas station", "answers": {"intent": "distance"}, "meta": {"source_label": "distance", "out_of_scope": false}}
+{"state": "if going to lake placid, ny, how long would it be by bus", "answers": {"intent": "distance"}, "meta": {"source_label": "distance", "out_of_scope": false}}
+{"state": "can you please tell me how long it will take to get to target in austin", "answers": {"intent": "distance"}, "meta": {"source_label": "distance", "out_of_scope": false}}
+{"state": "tell me my name the way its saved", "answers": {"intent": "user_name"}, "meta": {"source_label": "user_name", "out_of_scope": false}}
+{"state": "tell me what my name is", "answers": {"intent": "user_name"}, "meta": {"source_label": "user_name", "out_of_scope": false}}
+{"state": "which way do you have my name saved", "answers": {"intent": "user_name"}, "meta": {"source_label": "user_name", "out_of_scope": false}}
+{"state": "what timezone is honolulu in", "answers": {"intent": "timezone"}, "meta": {"source_label": "timezone", "out_of_scope": false}}
+{"state": "what timezone is paris in", "answers": {"intent": "timezone"}, "meta": {"source_label": "timezone", "out_of_scope": false}}
+{"state": "which time zones does european countries use", "answers": {"intent": "timezone"}, "meta": {"source_label": "timezone", "out_of_scope": false}}
+{"state": "tell me the timezone for hong kong", "answers": {"intent": "timezone"}, "meta": {"source_label": "timezone", "out_of_scope": false}}
+{"state": "please skip this song and go to the next one instead", "answers": {"intent": "next_song"}, "meta": {"source_label": "next_song", "out_of_scope": false}}
+{"state": "i need for you to skip this song", "answers": {"intent": "next_song"}, "meta": {"source_label": "next_song", "out_of_scope": false}}
+{"state": "i want the next song played", "answers": {"intent": "next_song"}, "meta": {"source_label": "next_song", "out_of_scope": false}}
+{"state": "needing you to play the next song", "answers": {"intent": "next_song"}, "meta": {"source_label": "next_song", "out_of_scope": false}}
+{"state": "show me all new transactions", "answers": {"intent": "transactions"}, "meta": {"source_label": "transactions", "out_of_scope": false}}
+{"state": "how many paypal transactions did i have last week", "answers": {"intent": "transactions"}, "meta": {"source_label": "transactions", "out_of_scope": false}}
+{"state": "what transactions do i have on my visa from the last 4 weeks", "answers": {"intent": "transactions"}, "meta": {"source_label": "transactions", "out_of_scope": false}}
+{"state": "what withdrawals were there on my account yesterday", "answers": {"intent": "transactions"}, "meta": {"source_label": "transactions", "out_of_scope": false}}
+{"state": "where is your favorite restaurant to eat", "answers": {"intent": "restaurant_suggestion"}, "meta": {"source_label": "restaurant_suggestion", "out_of_scope": false}}
+{"state": "does brooklyn have good italian restaurants", "answers": {"intent": "restaurant_suggestion"}, "meta": {"source_label": "restaurant_suggestion", "out_of_scope": false}}
+{"state": "what are some good ethiopian restaurants in queens", "answers": {"intent": "restaurant_suggestion"}, "meta": {"source_label": "restaurant_suggestion", "out_of_scope": false}}
+{"state": "what are some good itialian restaurants in north salem", "answers": {"intent": "restaurant_suggestion"}, "meta": {"source_label": "restaurant_suggestion", "out_of_scope": false}}
+{"state": "whats the reward balance for my visa", "answers": {"intent": "rewards_balance"}, "meta": {"source_label": "rewards_balance", "out_of_scope": false}}
+{"state": "what is my kohls card's rewards balance", "answers": {"intent": "rewards_balance"}, "meta": {"source_label": "rewards_balance", "out_of_scope": false}}
+{"state": "how do i check my rewards for my old navy card", "answers": {"intent": "rewards_balance"}, "meta": {"source_label": "rewards_balance", "out_of_scope": false}}
+{"state": "how do i check my rewards for my capital one card", "answers": {"intent": "rewards_balance"}, "meta": {"source_label": "rewards_balance", "out_of_scope": false}}
+{"state": "i will require help to take care of my utility bill", "answers": {"intent": "pay_bill"}, "meta": {"source_label": "pay_bill", "out_of_scope": false}}
+{"state": "use my boa account to pay the cable bill", "answers": {"intent": "pay_bill"}, "meta": {"source_label": "pay_bill", "out_of_scope": false}}
+{"state": "use my savings account to pay xfinity", "answers": {"intent": "pay_bill"}, "meta": {"source_label": "pay_bill", "out_of_scope": false}}
+{"state": "pay my cable bill directly from my checking account", "answers": {"intent": "pay_bill"}, "meta": {"source_label": "pay_bill", "out_of_scope": false}}
+{"state": "how much did i spend on shcool due last year", "answers": {"intent": "spending_history"}, "meta": {"source_label": "spending_history", "out_of_scope": false}}
+{"state": "did i buy too many donuts recently, like last week", "answers": {"intent": "spending_history"}, "meta": {"source_label": "spending_history", "out_of_scope": false}}
+{"state": "was i spending too much money on doughnuts last week", "answers": {"intent": "spending_history"}, "meta": {"source_label": "spending_history", "out_of_scope": false}}
+{"state": "how much money did i spent on grocery recently", "answers": {"intent": "spending_history"}, "meta": {"source_label": "spending_history", "out_of_scope": false}}
+{"state": "when will my vacation get okayed", "answers": {"intent": "pto_request_status"}, "meta": {"source_label": "pto_request_status", "out_of_scope": false}}
+{"state": "i would really like to know if i can go on vacation", "answers": {"intent": "pto_request_status"}, "meta": {"source_label": "pto_request_status", "out_of_scope": false}}
+{"state": "hey, have you approved my vacation time yet", "answers": {"intent": "pto_request_status"}, "meta": {"source_label": "pto_request_status", "out_of_scope": false}}
+{"state": "can you tell me whether or not you approved my vacation time", "answers": {"intent": "pto_request_status"}, "meta": {"source_label": "pto_request_status", "out_of_scope": false}}
+{"state": "what's my current credit rating", "answers": {"intent": "credit_score"}, "meta": {"source_label": "credit_score", "out_of_scope": false}}
+{"state": "where's my credit score", "answers": {"intent": "credit_score"}, "meta": {"source_label": "credit_score", "out_of_scope": false}}
+{"state": "how can i request my credit score", "answers": {"intent": "credit_score"}, "meta": {"source_label": "credit_score", "out_of_scope": false}}
+{"state": "can you tell me my credit rating", "answers": {"intent": "credit_score"}, "meta": {"source_label": "credit_score", "out_of_scope": false}}
+{"state": "can you suggest a few credit cards that have good rewards points", "answers": {"intent": "new_card"}, "meta": {"source_label": "new_card", "out_of_scope": false}}
+{"state": "i want to apply for a new credit card", "answers": {"intent": "new_card"}, "meta": {"source_label": "new_card", "out_of_scope": false}}
+{"state": "can i apply for a paypal master card", "answers": {"intent": "new_card"}, "meta": {"source_label": "new_card", "out_of_scope": false}}
+{"state": "how does one apply for a master card", "answers": {"intent": "new_card"}, "meta": {"source_label": "new_card", "out_of_scope": false}}
+{"state": "who do i contact for lost luggage", "answers": {"intent": "lost_luggage"}, "meta": {"source_label": "lost_luggage", "out_of_scope": false}}
+{"state": "howcan i locate my luggage", "answers": {"intent": "lost_luggage"}, "meta": {"source_label": "lost_luggage", "out_of_scope": false}}
+{"state": "what can i do if i lost my luggage", "answers": {"intent": "lost_luggage"}, "meta": {"source_label": "lost_luggage", "out_of_scope": false}}
+{"state": "i think my luggage is missing", "answers": {"intent": "lost_luggage"}, "meta": {"source_label": "lost_luggage", "out_of_scope": false}}
+{"state": "can you repeat what you said", "answers": {"intent": "repeat"}, "meta": {"source_label": "repeat", "out_of_scope": false}}
+{"state": "what did you just ask", "answers": {"intent": "repeat"}, "meta": {"source_label": "repeat", "out_of_scope": false}}
+{"state": "what was said", "answers": {"intent": "repeat"}, "meta": {"source_label": "repeat", "out_of_scope": false}}
+{"state": "what was that question again", "answers": {"intent": "repeat"}, "meta": {"source_label": "repeat", "out_of_scope": false}}
+{"state": "what kind of gas mileage does this car get when going through a city", "answers": {"intent": "mpg"}, "meta": {"source_label": "mpg", "out_of_scope": false}}
+{"state": "what is the gas mileage on a 2012 ford fusion", "answers": {"intent": "mpg"}, "meta": {"source_label": "mpg", "out_of_scope": false}}
+{"state": "how many miles does this car get per gallon", "answers": {"intent": "mpg"}, "meta": {"source_label": "mpg", "out_of_scope": false}}
+{"state": "how many mpg does my car get", "answers": {"intent": "mpg"}, "meta": {"source_label": "mpg", "out_of_scope": false}}
+{"state": "when is it time to change your oil", "answers": {"intent": "oil_change_when"}, "meta": {"source_label": "oil_change_when", "out_of_scope": false}}
+{"state": "when should i change my oil", "answers": {"intent": "oil_change_when"}, "meta": {"source_label": "oil_change_when", "out_of_scope": false}}
+{"state": "when do i need to change my motor oil next", "answers": {"intent": "oil_change_when"}, "meta": {"source_label": "oil_change_when", "out_of_scope": false}}
+{"state": "when will my car need new oil", "answers": {"intent": "oil_change_when"}, "meta": {"source_label": "oil_change_when", "out_of_scope": false}}
+{"state": "yes, that is true for sure", "answers": {"intent": "yes"}, "meta": {"source_label": "yes", "out_of_scope": false}}
+{"state": "true, most definitely", "answers": {"intent": "yes"}, "meta": {"source_label": "yes", "out_of_scope": false}}
+{"state": "agreed", "answers": {"intent": "yes"}, "meta": {"source_label": "yes", "out_of_scope": false}}
+{"state": "what's the best restaurant in arizona for pizza", "answers": {"intent": "travel_suggestion"}, "meta": {"source_label": "travel_suggestion", "out_of_scope": false}}
+{"state": "i want to know where to visit in bangkok", "answers": {"intent": "travel_suggestion"}, "meta": {"source_label": "travel_suggestion", "out_of_scope": false}}
+{"state": "i would like to find a list of cool things recommended for tourists in copenhagen, denmark", "answers": {"intent": "travel_suggestion"}, "meta": {"source_label": "travel_suggestion", "out_of_scope": false}}
+{"state": "what is the insurance plan i am enrolled in", "answers": {"intent": "insurance"}, "meta": {"source_label": "insurance", "out_of_scope": false}}
+{"state": "which was my insurance plan again", "answers": {"intent": "insurance"}, "meta": {"source_label": "insurance", "out_of_scope": false}}
+{"state": "do you know my health benefits", "answers": {"intent": "insurance"}, "meta": {"source_label": "insurance", "out_of_scope": false}}
+{"state": "what are my health benefits like", "answers": {"intent": "insurance"}, "meta": {"source_label": "insurance", "out_of_scope": false}}
+{"state": "put laundry on my list of things to do", "answers": {"intent": "todo_list_update"}, "meta": {"source_label": "todo_list_update", "out_of_scope": false}}
+{"state": "remind me to wash the dog, put on list of things to do", "answers": {"intent": "todo_list_update"}, "meta": {"source_label": "todo_list_update", "out_of_scope": false}}
+{"state": "add to my list of things to do: wash the dog", "answers": {"intent": "todo_list_update"}, "meta": {"source_label": "todo_list_update", "out_of_scope": false}}
+{"state": "put wash the dog on my to do list please", "answers": {"intent": "todo_list_update"}, "meta": {"source_label": "todo_list_update", "out_of_scope": false}}
+{"state": "please read my reminder list", "answers": {"intent": "reminder"}, "meta": {"source_label": "reminder", "out_of_scope": false}}
+{"state": "i wanted to remember somethings, what was it", "answers": {"intent": "reminder"}, "meta": {"source_label": "reminder", "out_of_scope": false}}
+{"state": "recall the things i wanted to remember", "answers": {"intent": "reminder"}, "meta": {"source_label": "reminder", "out_of_scope": false}}
+{"state": "what was it i wanted to remember", "answers": {"intent": "reminder"}, "meta": {"source_label": "reminder", "out_of_scope": false}}
+{"state": "can you slow down your rate of speech", "answers": {"intent": "change_speed"}, "meta": {"source_label": "change_speed", "out_of_scope": false}}
+{"state": "please talk slower for me if you can", "answers": {"intent": "change_speed"}, "meta": {"source_label": "change_speed", "out_of_scope": false}}
+{"state": "please speak to me quicker from now on", "answers": {"intent": "change_speed"}, "meta": {"source_label": "change_speed", "out_of_scope": false}}
+{"state": "can you slow down the rate at which you talk", "answers": {"intent": "change_speed"}, "meta": {"source_label": "change_speed", "out_of_scope": false}}
+{"state": "what is the tire pressure of the car", "answers": {"intent": "tire_pressure"}, "meta": {"source_label": "tire_pressure", "out_of_scope": false}}
+{"state": "how is my tire pressure", "answers": {"intent": "tire_pressure"}, "meta": {"source_label": "tire_pressure", "out_of_scope": false}}
+{"state": "can you tell me how much air are in my car tires", "answers": {"intent": "tire_pressure"}, "meta": {"source_label": "tire_pressure", "out_of_scope": false}}
+{"state": "please give me the amount of pressure in my car tires", "answers": {"intent": "tire_pressure"}, "meta": {"source_label": "tire_pressure", "out_of_scope": false}}
+{"state": "i would prefer not", "answers": {"intent": "no"}, "meta": {"source_label": "no", "out_of_scope": false}}
+{"state": "no good", "answers": {"intent": "no"}, "meta": {"source_label": "no", "out_of_scope": false}}
+{"state": "negatory", "answers": {"intent": "no"}, "meta": {"source_label": "no", "out_of_scope": false}}
+{"state": "no, that's wrong", "answers": {"intent": "no"}, "meta": {"source_label": "no", "out_of_scope": false}}
+{"state": "has the apr on my card changed and what is it now", "answers": {"intent": "apr"}, "meta": {"source_label": "apr", "out_of_scope": false}}
+{"state": "how good is my card's apr", "answers": {"intent": "apr"}, "meta": {"source_label": "apr", "out_of_scope": false}}
+{"state": "what is the apr on my first bank card account", "answers": {"intent": "apr"}, "meta": {"source_label": "apr", "out_of_scope": false}}
+{"state": "is my card's apr good", "answers": {"intent": "apr"}, "meta": {"source_label": "apr", "out_of_scope": false}}
+{"state": "how healthy is pumpkin pie", "answers": {"intent": "nutrition_info"}, "meta": {"source_label": "nutrition_info", "out_of_scope": false}}
+{"state": "are french fries health or not", "answers": {"intent": "nutrition_info"}, "meta": {"source_label": "nutrition_info", "out_of_scope": false}}
+{"state": "is chocolate healthy", "answers": {"intent": "nutrition_info"}, "meta": {"source_label": "nutrition_info", "out_of_scope": false}}
+{"state": "is raw carrot healthy to eat", "answers": {"intent": "nutrition_info"}, "meta": {"source_label": "nutrition_info", "out_of_scope": false}}
+{"state": "can you check what is on my calendar for tuesday", "answers": {"intent": "calendar"}, "meta": {"source_label": "calendar", "out_of_scope": false}}
+{"state": "where do i have to be on 12/03/2019", "answers": {"intent": "calendar"}, "meta": {"source_label": "calendar", "out_of_scope": false}}
+{"state": "what's my schedule like for thursday the 14th", "answers": {"intent": "calendar"}, "meta": {"source_label": "calendar", "out_of_scope": false}}
+{"state": "do i have anything scheduled for thursday the 14th", "answers": {"intent": "calendar"}, "meta": {"source_label": "calendar", "out_of_scope": false}}
+{"state": "i need an uber to come to my work at 5pm for three people going to the cineplex downtown", "answers": {"intent": "uber"}, "meta": {"source_label": "uber", "out_of_scope": false}}
+{"state": "connect me with an uber", "answers": {"intent": "uber"}, "meta": {"source_label": "uber", "out_of_scope": false}}
+{"state": "are there any ubers available for two people i need it to go to the stadium on grand", "answers": {"intent": "uber"}, "meta": {"source_label": "uber", "out_of_scope": false}}
+{"state": "help me solve this math equation", "answers": {"intent": "calculator"}, "meta": {"source_label": "calculator", "out_of_scope": false}}
+{"state": "add up 8 and 7", "answers": {"intent": "calculator"}, "meta": {"source_label": "calculator", "out_of_scope": false}}
+{"state": "what is the square root of 888", "answers": {"intent": "calculator"}, "meta": {"source_label": "calculator", "out_of_scope": false}}
+{"state": "can you factor x squared plus 4 x plus 4", "answers": {"intent": "calculator"}, "meta": {"source_label": "calculator", "out_of_scope": false}}
+{"state": "tell me the date it will be 5 days from now", "answers": {"intent": "date"}, "meta": {"source_label": "date", "out_of_scope": false}}
+{"state": "would you let me know today's date", "answers": {"intent": "date"}, "meta": {"source_label": "date", "out_of_scope": false}}
+{"state": "i need to know the date it will be 4 days from now", "answers": {"intent": "date"}, "meta": {"source_label": "date", "out_of_scope": false}}
+{"state": "what is the current date", "answers": {"intent": "date"}, "meta": {"source_label": "date", "out_of_scope": false}}
+{"state": "does more than one carry on cost extra at ryanair", "answers": {"intent": "carry_on"}, "meta": {"source_label": "carry_on", "out_of_scope": false}}
+{"state": "are more than one carry on allowed at klm", "answers": {"intent": "carry_on"}, "meta": {"source_label": "carry_on", "out_of_scope": false}}
+{"state": "can you tell me delta's carry on policy", "answers": {"intent": "carry_on"}, "meta": {"source_label": "carry_on", "out_of_scope": false}}
+{"state": "what's delta's carry on policy", "answers": {"intent": "carry_on"}, "meta": {"source_label": "carry_on", "out_of_scope": false}}
+{"state": "what is the amount of vacation day i have used", "answers": {"intent": "pto_used"}, "meta": {"source_label": "pto_used", "out_of_scope": false}}
+{"state": "my day offs history", "answers": {"intent": "pto_used"}, "meta": {"source_label": "pto_used", "out_of_scope": false}}
+{"state": "how many day off i have taken", "answers": {"intent": "pto_used"}, "meta": {"source_label": "pto_used", "out_of_scope": false}}
+{"state": "remind me of how days i had off so far for the year", "answers": {"intent": "pto_used"}, "meta": {"source_label": "pto_used", "out_of_scope": false}}
+{"state": "could you book me an appointment for an oil change", "answers": {"intent": "schedule_maintenance"}, "meta": {"source_label": "schedule_maintenance", "out_of_scope": false}}
+{"state": "can you help me find someone to look at my car's engine because the light is on", "answers": {"intent": "schedule_maintenance"}, "meta": {"source_label": "schedule_maintenance", "out_of_scope": false}}
+{"state": "i need to arrange an appointment to have my car's tires examined", "answers": {"intent": "schedule_maintenance"}, "meta": {"source_label": "schedule_maintenance", "out_of_scope": false}}
+{"state": "help me find somewhere to schedule a check up on my car's tires", "answers": {"intent": "schedule_maintenance"}, "meta": {"source_label": "schedule_maintenance", "out_of_scope": false}}
+{"state": "let my bank know i'm going to be in russia for a month", "answers": {"intent": "travel_notification"}, "meta": {"source_label": "travel_notification", "out_of_scope": false}}
+{"state": "my bank needs to know that i will be traveling to spain soon", "answers": {"intent": "travel_notification"}, "meta": {"source_label": "travel_notification", "out_of_scope": false}}
+{"state": "alert my bank and tell them that i will be in vermont", "answers": {"intent": "travel_notification"}, "meta": {"source_label": "travel_notification", "out_of_scope": false}}
+{"state": "don't connect to my phone anymore", "answers": {"intent": "sync_device"}, "meta": {"source_label": "sync_device", "out_of_scope": false}}
+{"state": "disconnect from phone", "answers": {"intent": "sync_device"}, "meta": {"source_label": "sync_device", "out_of_scope": false}}
+{"state": "please pair with my phone", "answers": {"intent": "sync_device"}, "meta": {"source_label": "sync_device", "out_of_scope": false}}
+{"state": "pair with phone", "answers": {"intent": "sync_device"}, "meta": {"source_label": "sync_device", "out_of_scope": false}}
+{"state": "thanks for helping me", "answers": {"intent": "thank_you"}, "meta": {"source_label": "thank_you", "out_of_scope": false}}
+{"state": "thank you for the help", "answers": {"intent": "thank_you"}, "meta": {"source_label": "thank_you", "out_of_scope": false}}
+{"state": "i am glad that you did that", "answers": {"intent": "thank_you"}, "meta": {"source_label": "thank_you", "out_of_scope": false}}
+{"state": "special thanks to you", "answers": {"intent": "thank_you"}, "meta": {"source_label": "thank_you", "out_of_scope": false}}
+{"state": "please roll a dice", "answers": {"intent": "roll_dice"}, "meta": {"source_label": "roll_dice", "out_of_scope": false}}
+{"state": "can you roll a dice with 6 sides", "answers": {"intent": "roll_dice"}, "meta": {"source_label": "roll_dice", "out_of_scope": false}}
+{"state": "i want you to roll a 5 sided dice for me", "answers": {"intent": "roll_dice"}, "meta": {"source_label": "roll_dice", "out_of_scope": false}}
+{"state": "i need a roll on a 6 sided dice", "answers": {"intent": "roll_dice"}, "meta": {"source_label": "roll_dice", "out_of_scope": false}}
+{"state": "is my milk safe to drink after being in the refrigerator for a week", "answers": {"intent": "food_last"}, "meta": {"source_label": "food_last", "out_of_scope": false}}
+{"state": "i have had farm fresh eggs in the fridge for a few months, are they still okay to ingest", "answers": {"intent": "food_last"}, "meta": {"source_label": "food_last", "out_of_scope": false}}
+{"state": "how do i know if my milk is expired", "answers": {"intent": "food_last"}, "meta": {"source_label": "food_last", "out_of_scope": false}}
+{"state": "how long can i keep beef in the freezer for before it gets nasty", "answers": {"intent": "food_last"}, "meta": {"source_label": "food_last", "out_of_scope": false}}
+{"state": "how long do i need to cook chili for", "answers": {"intent": "cook_time"}, "meta": {"source_label": "cook_time", "out_of_scope": false}}
+{"state": "how long should i cook steak for", "answers": {"intent": "cook_time"}, "meta": {"source_label": "cook_time", "out_of_scope": false}}
+{"state": "i need to know how long to cook chicken for", "answers": {"intent": "cook_time"}, "meta": {"source_label": "cook_time", "out_of_scope": false}}
+{"state": "what time should i leave this in the oven", "answers": {"intent": "cook_time"}, "meta": {"source_label": "cook_time", "out_of_scope": false}}
+{"state": "remind me to write that letter", "answers": {"intent": "reminder_update"}, "meta": {"source_label": "reminder_update", "out_of_scope": false}}
+{"state": "i need to set up a reminder for myself", "answers": {"intent": "reminder_update"}, "meta": {"source_label": "reminder_update", "out_of_scope": false}}
+{"state": "create a reminder", "answers": {"intent": "reminder_update"}, "meta": {"source_label": "reminder_update", "out_of_scope": false}}
+{"state": "set a reminder for me to request time off", "answers": {"intent": "reminder_update"}, "meta": {"source_label": "reminder_update", "out_of_scope": false}}
+{"state": "if i lost my card how do i report it", "answers": {"intent": "report_lost_card"}, "meta": {"source_label": "report_lost_card", "out_of_scope": false}}
+{"state": "what is the process of reporting a lost card", "answers": {"intent": "report_lost_card"}, "meta": {"source_label": "report_lost_card", "out_of_scope": false}}
+{"state": "i lost a card and i need to report it", "answers": {"intent": "report_lost_card"}, "meta": {"source_label": "report_lost_card", "out_of_scope": false}}
+{"state": "what are the steps to take to report a lost card", "answers": {"intent": "report_lost_card"}, "meta": {"source_label": "report_lost_card", "out_of_scope": false}}
+{"state": "let me know if i can use ketchup in place of the mustard", "answers": {"intent": "ingredient_substitution"}, "meta": {"source_label": "ingredient_substitution", "out_of_scope": false}}
+{"state": "are butter and oil interchangable", "answers": {"intent": "ingredient_substitution"}, "meta": {"source_label": "ingredient_substitution", "out_of_scope": false}}
+{"state": "is pepper a replacement for salt", "answers": {"intent": "ingredient_substitution"}, "meta": {"source_label": "ingredient_substitution", "out_of_scope": false}}
+{"state": "can i use pepper instead of salt", "answers": {"intent": "ingredient_substitution"}, "meta": {"source_label": "ingredient_substitution", "out_of_scope": false}}
+{"state": "let me call mark", "answers": {"intent": "make_call"}, "meta": {"source_label": "make_call", "out_of_scope": false}}
+{"state": "dial the last number that called me", "answers": {"intent": "make_call"}, "meta": {"source_label": "make_call", "out_of_scope": false}}
+{"state": "call aj", "answers": {"intent": "make_call"}, "meta": {"source_label": "make_call", "out_of_scope": false}}
+{"state": "siri, call jacob", "answers": {"intent": "make_call"}, "meta": {"source_label": "make_call", "out_of_scope": false}}
+{"state": "set my alarm for six tomorrow morning", "answers": {"intent": "alarm"}, "meta": {"source_label": "alarm", "out_of_scope": false}}
+{"state": "set an alarm for four thirty tomorrow, please", "answers": {"intent": "alarm"}, "meta": {"source_label": "alarm", "out_of_scope": false}}
+{"state": "please set an alarm for me", "answers": {"intent": "alarm"}, "meta": {"source_label": "alarm", "out_of_scope": false}}
+{"state": "set an alarm for 05:00 and one for 16:00", "answers": {"intent": "alarm"}, "meta": {"source_label": "alarm", "out_of_scope": false}}
+{"state": "recite my to do list", "answers": {"intent": "todo_list"}, "meta": {"source_label": "todo_list", "out_of_scope": false}}
+{"state": "what do i have on my todo list", "answers": {"intent": "todo_list"}, "meta": {"source_label": "todo_list", "out_of_scope": false}}
+{"state": "can you tell me if there is anything on my todo list", "answers": {"intent": "todo_list"}, "meta": {"source_label": "todo_list", "out_of_scope": false}}
+{"state": "is vacuuming on my todo list", "answers": {"intent": "todo_list"}, "meta": {"source_label": "todo_list", "out_of_scope": false}}
+{"state": "can you please change you accent to the male british one", "answers": {"intent": "change_accent"}, "meta": {"source_label": "change_accent", "out_of_scope": false}}
+{"state": "could you please change your accent to the male british one", "answers": {"intent": "change_accent"}, "meta": {"source_label": "change_accent", "out_of_scope": false}}
+{"state": "change to a new accent please", "answers": {"intent": "change_accent"}, "meta": {"source_label": "change_accent", "out_of_scope": false}}
+{"state": "change over to the female voice", "answers": {"intent": "change_accent"}, "meta": {"source_label": "change_accent", "out_of_scope": false}}
+{"state": "who do i contact for a w2 form", "answers": {"intent": "w2"}, "meta": {"source_label": "w2", "out_of_scope": false}}
+{"state": "who should i call for a w2", "answers": {"intent": "w2"}, "meta": {"source_label": "w2", "out_of_scope": false}}
+{"state": "where can i get the form for my taxes", "answers": {"intent": "w2"}, "meta": {"source_label": "w2", "out_of_scope": false}}
+{"state": "what day do i need to pay my internet and phone bill by", "answers": {"intent": "bill_due"}, "meta": {"source_label": "bill_due", "out_of_scope": false}}
+{"state": "tell me how i know when to pay my chase bill", "answers": {"intent": "bill_due"}, "meta": {"source_label": "bill_due", "out_of_scope": false}}
+{"state": "how long do i have to pay that bill", "answers": {"intent": "bill_due"}, "meta": {"source_label": "bill_due", "out_of_scope": false}}
+{"state": "i need to know what day i need to pay my water bill", "answers": {"intent": "bill_due"}, "meta": {"source_label": "bill_due", "out_of_scope": false}}
+{"state": "inform me of the calorie content of vanilla ice cream", "answers": {"intent": "calories"}, "meta": {"source_label": "calories", "out_of_scope": false}}
+{"state": "how many calories are in ice cream", "answers": {"intent": "calories"}, "meta": {"source_label": "calories", "out_of_scope": false}}
+{"state": "how many calories are in cake", "answers": {"intent": "calories"}, "meta": {"source_label": "calories", "out_of_scope": false}}
+{"state": "how many calories are in a ghirardelli sea salt caramel candy", "answers": {"intent": "calories"}, "meta": {"source_label": "calories", "out_of_scope": false}}
+{"state": "my card is scuffed up and won't work", "answers": {"intent": "damaged_card"}, "meta": {"source_label": "damaged_card", "out_of_scope": false}}
+{"state": "when my house burned down, so did my card", "answers": {"intent": "damaged_card"}, "meta": {"source_label": "damaged_card", "out_of_scope": false}}
+{"state": "my card was destroyed when my house burned down and i need a replacement", "answers": {"intent": "damaged_card"}, "meta": {"source_label": "damaged_card", "out_of_scope": false}}
+{"state": "i accidentally shredded my card", "answers": {"intent": "damaged_card"}, "meta": {"source_label": "damaged_card", "out_of_scope": false}}
+{"state": "what are the review for mcdonald's", "answers": {"intent": "restaurant_reviews"}, "meta": {"source_label": "restaurant_reviews", "out_of_scope": false}}
+{"state": "what are the ratings for yardhouse", "answers": {"intent": "restaurant_reviews"}, "meta": {"source_label": "restaurant_reviews", "out_of_scope": false}}
+{"state": "how good are the review for yardhouse", "answers": {"intent": "restaurant_reviews"}, "meta": {"source_label": "restaurant_reviews", "out_of_scope": false}}
+{"state": "can you inform if boston restaurant has good reviews", "answers": {"intent": "restaurant_reviews"}, "meta": {"source_label": "restaurant_reviews", "out_of_scope": false}}
+{"state": "help me find the chase routing number", "answers": {"intent": "routing"}, "meta": {"source_label": "routing", "out_of_scope": false}}
+{"state": "what would wells fargo use as routing", "answers": {"intent": "routing"}, "meta": {"source_label": "routing", "out_of_scope": false}}
+{"state": "i want to know what the routing is for chase", "answers": {"intent": "routing"}, "meta": {"source_label": "routing", "out_of_scope": false}}
+{"state": "where do i locate the routing number for the credit union", "answers": {"intent": "routing"}, "meta": {"source_label": "routing", "out_of_scope": false}}
+{"state": "what type of pet is in your home", "answers": {"intent": "do_you_have_pets"}, "meta": {"source_label": "do_you_have_pets", "out_of_scope": false}}
+{"state": "do you posses any types of pets", "answers": {"intent": "do_you_have_pets"}, "meta": {"source_label": "do_you_have_pets", "out_of_scope": false}}
+{"state": "what types of furry companions do you have", "answers": {"intent": "do_you_have_pets"}, "meta": {"source_label": "do_you_have_pets", "out_of_scope": false}}
+{"state": "given a choice would you take a dog or a cat", "answers": {"intent": "do_you_have_pets"}, "meta": {"source_label": "do_you_have_pets", "out_of_scope": false}}
+{"state": "what is the process to set up a meeting", "answers": {"intent": "schedule_meeting"}, "meta": {"source_label": "schedule_meeting", "out_of_scope": false}}
+{"state": "what is the process to schedule a meeting", "answers": {"intent": "schedule_meeting"}, "meta": {"source_label": "schedule_meeting", "out_of_scope": false}}
+{"state": "secure us a meeting room for 9am on friday", "answers": {"intent": "schedule_meeting"}, "meta": {"source_label": "schedule_meeting", "out_of_scope": false}}
+{"state": "make sure i get a meeting room for 9am on friday", "answers": {"intent": "schedule_meeting"}, "meta": {"source_label": "schedule_meeting", "out_of_scope": false}}
+{"state": "my car takes what kind of fuel", "answers": {"intent": "gas_type"}, "meta": {"source_label": "gas_type", "out_of_scope": false}}
+{"state": "what is the proper fuel type for my car", "answers": {"intent": "gas_type"}, "meta": {"source_label": "gas_type", "out_of_scope": false}}
+{"state": "i need gas so what should i get", "answers": {"intent": "gas_type"}, "meta": {"source_label": "gas_type", "out_of_scope": false}}
+{"state": "what kind of gas does my car need", "answers": {"intent": "gas_type"}, "meta": {"source_label": "gas_type", "out_of_scope": false}}
+{"state": "what kind of sockets do the us use", "answers": {"intent": "plug_type"}, "meta": {"source_label": "plug_type", "out_of_scope": false}}
+{"state": "i'm going to paris, what plug type do i need", "answers": {"intent": "plug_type"}, "meta": {"source_label": "plug_type", "out_of_scope": false}}
+{"state": "do they use a different plug in brazil", "answers": {"intent": "plug_type"}, "meta": {"source_label": "plug_type", "out_of_scope": false}}
+{"state": "what plugs are in england", "answers": {"intent": "plug_type"}, "meta": {"source_label": "plug_type", "out_of_scope": false}}
+{"state": "at what point will i need to change my tires", "answers": {"intent": "tire_change"}, "meta": {"source_label": "tire_change", "out_of_scope": false}}
+{"state": "when could i get my tires changed next", "answers": {"intent": "tire_change"}, "meta": {"source_label": "tire_change", "out_of_scope": false}}
+{"state": "when can i commute my tires next", "answers": {"intent": "tire_change"}, "meta": {"source_label": "tire_change", "out_of_scope": false}}
+{"state": "when is it time for a tire change", "answers": {"intent": "tire_change"}, "meta": {"source_label": "tire_change", "out_of_scope": false}}
+{"state": "how much is 100 dollars in euros", "answers": {"intent": "exchange_rate"}, "meta": {"source_label": "exchange_rate", "out_of_scope": false}}
+{"state": "how much is $1 usd in euros", "answers": {"intent": "exchange_rate"}, "meta": {"source_label": "exchange_rate", "out_of_scope": false}}
+{"state": "what can i get for 10 usd in cad", "answers": {"intent": "exchange_rate"}, "meta": {"source_label": "exchange_rate", "out_of_scope": false}}
+{"state": "what is the rate for 500 cad in usd", "answers": {"intent": "exchange_rate"}, "meta": {"source_label": "exchange_rate", "out_of_scope": false}}
+{"state": "is there a holiday this month", "answers": {"intent": "next_holiday"}, "meta": {"source_label": "next_holiday", "out_of_scope": false}}
+{"state": "i'd like to know when my next day off is", "answers": {"intent": "next_holiday"}, "meta": {"source_label": "next_holiday", "out_of_scope": false}}
+{"state": "when will be the next holiday here", "answers": {"intent": "next_holiday"}, "meta": {"source_label": "next_holiday", "out_of_scope": false}}
+{"state": "when is the next break", "answers": {"intent": "next_holiday"}, "meta": {"source_label": "next_holiday", "out_of_scope": false}}
+{"state": "i want your volume lowered", "answers": {"intent": "change_volume"}, "meta": {"source_label": "change_volume", "out_of_scope": false}}
+{"state": "please turn your volume up", "answers": {"intent": "change_volume"}, "meta": {"source_label": "change_volume", "out_of_scope": false}}
+{"state": "would you please increase the speaker volume", "answers": {"intent": "change_volume"}, "meta": {"source_label": "change_volume", "out_of_scope": false}}
+{"state": "please turn your speaker volume up", "answers": {"intent": "change_volume"}, "meta": {"source_label": "change_volume", "out_of_scope": false}}
+{"state": "do you work for another person", "answers": {"intent": "who_do_you_work_for"}, "meta": {"source_label": "who_do_you_work_for", "out_of_scope": false}}
+{"state": "who are you employed by", "answers": {"intent": "who_do_you_work_for"}, "meta": {"source_label": "who_do_you_work_for", "out_of_scope": false}}
+{"state": "who is your boss by the way", "answers": {"intent": "who_do_you_work_for"}, "meta": {"source_label": "who_do_you_work_for", "out_of_scope": false}}
+{"state": "what is the limit on my victoria's secret card", "answers": {"intent": "credit_limit"}, "meta": {"source_label": "credit_limit", "out_of_scope": false}}
+{"state": "i need to know what my limit is on my american express card", "answers": {"intent": "credit_limit"}, "meta": {"source_label": "credit_limit", "out_of_scope": false}}
+{"state": "how high is my spending limit on my wells fargo card", "answers": {"intent": "credit_limit"}, "meta": {"source_label": "credit_limit", "out_of_scope": false}}
+{"state": "tell me the highest amount i can spend on my discover card", "answers": {"intent": "credit_limit"}, "meta": {"source_label": "credit_limit", "out_of_scope": false}}
+{"state": "what is the wait time for torris", "answers": {"intent": "how_busy"}, "meta": {"source_label": "how_busy", "out_of_scope": false}}
+{"state": "how long is the wait at chipotle right now", "answers": {"intent": "how_busy"}, "meta": {"source_label": "how_busy", "out_of_scope": false}}
+{"state": "what is the average wait time to be seated for dinner at rouge", "answers": {"intent": "how_busy"}, "meta": {"source_label": "how_busy", "out_of_scope": false}}
+{"state": "how long would the wait at the restaurant be", "answers": {"intent": "how_busy"}, "meta": {"source_label": "how_busy", "out_of_scope": false}}
+{"state": "what is the reservation policy for spago in beverly hills", "answers": {"intent": "accept_reservations"}, "meta": {"source_label": "accept_reservations", "out_of_scope": false}}
+{"state": "can i make reservations at spago in beverly hills", "answers": {"intent": "accept_reservations"}, "meta": {"source_label": "accept_reservations", "out_of_scope": false}}
+{"state": "does the bellagio have any reservations", "answers": {"intent": "accept_reservations"}, "meta": {"source_label": "accept_reservations", "out_of_scope": false}}
+{"state": "will i be able to schedule a reservation at 4 seasons in los angeles", "answers": {"intent": "accept_reservations"}, "meta": {"source_label": "accept_reservations", "out_of_scope": false}}
+{"state": "was my order brought here", "answers": {"intent": "order_status"}, "meta": {"source_label": "order_status", "out_of_scope": false}}
+{"state": "has my purchase been delivered yet", "answers": {"intent": "order_status"}, "meta": {"source_label": "order_status", "out_of_scope": false}}
+{"state": "have my goods been delivered yet", "answers": {"intent": "order_status"}, "meta": {"source_label": "order_status", "out_of_scope": false}}
+{"state": "when will the clothes i ordered online arrive", "answers": {"intent": "order_status"}, "meta": {"source_label": "order_status", "out_of_scope": false}}
+{"state": "i want to change my bank of america account pin number", "answers": {"intent": "pin_change"}, "meta": {"source_label": "pin_change", "out_of_scope": false}}
+{"state": "i need my pin number for my bank of america account and i can't remember it", "answers": {"intent": "pin_change"}, "meta": {"source_label": "pin_change", "out_of_scope": false}}
+{"state": "i can't remember my pin for my first national debit account", "answers": {"intent": "pin_change"}, "meta": {"source_label": "pin_change", "out_of_scope": false}}
+{"state": "switch the pin on my chase account", "answers": {"intent": "pin_change"}, "meta": {"source_label": "pin_change", "out_of_scope": false}}
+{"state": "i enjoyed our talk, bye", "answers": {"intent": "goodbye"}, "meta": {"source_label": "goodbye", "out_of_scope": false}}
+{"state": "thank you for the chat, goodbye", "answers": {"intent": "goodbye"}, "meta": {"source_label": "goodbye", "out_of_scope": false}}
+{"state": "it was a pleasure talking to you, goodbye now", "answers": {"intent": "goodbye"}, "meta": {"source_label": "goodbye", "out_of_scope": false}}
+{"state": "have a good day", "answers": {"intent": "goodbye"}, "meta": {"source_label": "goodbye", "out_of_scope": false}}
+{"state": "my account appears to be blocked but i have no idea why that could be", "answers": {"intent": "account_blocked"}, "meta": {"source_label": "account_blocked", "out_of_scope": false}}
+{"state": "how did my bank account is frozen", "answers": {"intent": "account_blocked"}, "meta": {"source_label": "account_blocked", "out_of_scope": false}}
+{"state": "need help with frozen bank account", "answers": {"intent": "account_blocked"}, "meta": {"source_label": "account_blocked", "out_of_scope": false}}
+{"state": "great western bank's login screen tells me i'm locked out but not why", "answers": {"intent": "account_blocked"}, "meta": {"source_label": "account_blocked", "out_of_scope": false}}
+{"state": "whats this song", "answers": {"intent": "what_song"}, "meta": {"source_label": "what_song", "out_of_scope": false}}
+{"state": "do you know the song on the speaker right now", "answers": {"intent": "what_song"}, "meta": {"source_label": "what_song", "out_of_scope": false}}
+{"state": "tell me the title of the song playing", "answers": {"intent": "what_song"}, "meta": {"source_label": "what_song", "out_of_scope": false}}
+{"state": "does my visa have international transaction fees", "answers": {"intent": "international_fees"}, "meta": {"source_label": "international_fees", "out_of_scope": false}}
+{"state": "are there international transaction fees associated with my td bank card", "answers": {"intent": "international_fees"}, "meta": {"source_label": "international_fees", "out_of_scope": false}}
+{"state": "will i get charged extra for using my card while in tulsa", "answers": {"intent": "international_fees"}, "meta": {"source_label": "international_fees", "out_of_scope": false}}
+{"state": "using my card in tulsa won't cause me to be charged extra will it", "answers": {"intent": "international_fees"}, "meta": {"source_label": "international_fees", "out_of_scope": false}}
+{"state": "on what day, month and year did i get new tires", "answers": {"intent": "last_maintenance"}, "meta": {"source_label": "last_maintenance", "out_of_scope": false}}
+{"state": "could you inform me of when i last got my car checked", "answers": {"intent": "last_maintenance"}, "meta": {"source_label": "last_maintenance", "out_of_scope": false}}
+{"state": "when did the oil get changed", "answers": {"intent": "last_maintenance"}, "meta": {"source_label": "last_maintenance", "out_of_scope": false}}
+{"state": "when was the car last services", "answers": {"intent": "last_maintenance"}, "meta": {"source_label": "last_maintenance", "out_of_scope": false}}
+{"state": "do i have any meetings today between 9:30 and 10:30", "answers": {"intent": "meeting_schedule"}, "meta": {"source_label": "meeting_schedule", "out_of_scope": false}}
+{"state": "do i have any meetings today between 9:20 and 10:30", "answers": {"intent": "meeting_schedule"}, "meta": {"source_label": "meeting_schedule", "out_of_scope": false}}
+{"state": "what is my schedule like today, any meetings with dan", "answers": {"intent": "meeting_schedule"}, "meta": {"source_label": "meeting_schedule", "out_of_scope": false}}
+{"state": "how many meetings do i have today", "answers": {"intent": "meeting_schedule"}, "meta": {"source_label": "meeting_schedule", "out_of_scope": false}}
+{"state": "what kind of ingredients go into the chicken a la king", "answers": {"intent": "ingredients_list"}, "meta": {"source_label": "ingredients_list", "out_of_scope": false}}
+{"state": "for pasta primavera, what ingredients will i use", "answers": {"intent": "ingredients_list"}, "meta": {"source_label": "ingredients_list", "out_of_scope": false}}
+{"state": "what ingredients do i need for shrimp scampi", "answers": {"intent": "ingredients_list"}, "meta": {"source_label": "ingredients_list", "out_of_scope": false}}
+{"state": "for peppercorn steak, what ingredients do i need", "answers": {"intent": "ingredients_list"}, "meta": {"source_label": "ingredients_list", "out_of_scope": false}}
+{"state": "there's something fishy on my card, report it", "answers": {"intent": "report_fraud"}, "meta": {"source_label": "report_fraud", "out_of_scope": false}}
+{"state": "how do i report fraud on my chase bank card", "answers": {"intent": "report_fraud"}, "meta": {"source_label": "report_fraud", "out_of_scope": false}}
+{"state": "help! i'm a victim of credit card fraud!", "answers": {"intent": "report_fraud"}, "meta": {"source_label": "report_fraud", "out_of_scope": false}}
+{"state": "can you assist me on my fradulent activity on my chase card", "answers": {"intent": "report_fraud"}, "meta": {"source_label": "report_fraud", "out_of_scope": false}}
+{"state": "how many tablespoons are there in half of a cup", "answers": {"intent": "measurement_conversion"}, "meta": {"source_label": "measurement_conversion", "out_of_scope": false}}
+{"state": "how many ounces in a liter", "answers": {"intent": "measurement_conversion"}, "meta": {"source_label": "measurement_conversion", "out_of_scope": false}}
+{"state": "how many ounces in a cup", "answers": {"intent": "measurement_conversion"}, "meta": {"source_label": "measurement_conversion", "out_of_scope": false}}
+{"state": "how many teaspoons make up in 1 tablespoon", "answers": {"intent": "measurement_conversion"}, "meta": {"source_label": "measurement_conversion", "out_of_scope": false}}
+{"state": "the ac, could you tell me the temperature", "answers": {"intent": "smart_home"}, "meta": {"source_label": "smart_home", "out_of_scope": false}}
+{"state": "will you please turn the tv on", "answers": {"intent": "smart_home"}, "meta": {"source_label": "smart_home", "out_of_scope": false}}
+{"state": "i'd like the lights in the garage to be turned on", "answers": {"intent": "smart_home"}, "meta": {"source_label": "smart_home", "out_of_scope": false}}
+{"state": "set all doors to locked", "answers": {"intent": "smart_home"}, "meta": {"source_label": "smart_home", "out_of_scope": false}}
+{"state": "by chance would it be possible to reserve me a hotel in afghanistan at the zoo for the 10th to the 15th", "answers": {"intent": "book_hotel"}, "meta": {"source_label": "book_hotel", "out_of_scope": false}}
+{"state": "show me a hotel that has good reviews in kansas city", "answers": {"intent": "book_hotel"}, "meta": {"source_label": "book_hotel", "out_of_scope": false}}
+{"state": "i am looking for a hotel in new york city that has good reviews", "answers": {"intent": "book_hotel"}, "meta": {"source_label": "book_hotel", "out_of_scope": false}}
+{"state": "can you make a reservation in tampa from may 2 to may 4", "answers": {"intent": "book_hotel"}, "meta": {"source_label": "book_hotel", "out_of_scope": false}}
+{"state": "can you tell me where i am", "answers": {"intent": "current_location"}, "meta": {"source_label": "current_location", "out_of_scope": false}}
+{"state": "i need to know the name of my current location for the tow truck", "answers": {"intent": "current_location"}, "meta": {"source_label": "current_location", "out_of_scope": false}}
+{"state": "where exactly am i at the moment", "answers": {"intent": "current_location"}, "meta": {"source_label": "current_location", "out_of_scope": false}}
+{"state": "latitude and longitude please", "answers": {"intent": "current_location"}, "meta": {"source_label": "current_location", "out_of_scope": false}}
+{"state": "i need to know the weather", "answers": {"intent": "weather"}, "meta": {"source_label": "weather", "out_of_scope": false}}
+{"state": "is it going to rain tomorrow", "answers": {"intent": "weather"}, "meta": {"source_label": "weather", "out_of_scope": false}}
+{"state": "what is the weather in atlanta", "answers": {"intent": "weather"}, "meta": {"source_label": "weather", "out_of_scope": false}}
+{"state": "how much money a year do i spend in taxes", "answers": {"intent": "taxes"}, "meta": {"source_label": "taxes", "out_of_scope": false}}
+{"state": "what kinds of taxes am i facing", "answers": {"intent": "taxes"}, "meta": {"source_label": "taxes", "out_of_scope": false}}
+{"state": "what do i get taxed at my income level", "answers": {"intent": "taxes"}, "meta": {"source_label": "taxes", "out_of_scope": false}}
+{"state": "what's my tax rate", "answers": {"intent": "taxes"}, "meta": {"source_label": "taxes", "out_of_scope": false}}
+{"state": "whats the minimum payment on my electric bill", "answers": {"intent": "min_payment"}, "meta": {"source_label": "min_payment", "out_of_scope": false}}
+{"state": "what is the least i can pay towards my car bill", "answers": {"intent": "min_payment"}, "meta": {"source_label": "min_payment", "out_of_scope": false}}
+{"state": "could you tell me my bill's minimum payment", "answers": {"intent": "min_payment"}, "meta": {"source_label": "min_payment", "out_of_scope": false}}
+{"state": "i'd like to know my minimum payment please", "answers": {"intent": "min_payment"}, "meta": {"source_label": "min_payment", "out_of_scope": false}}
+{"state": "set up whisper mode", "answers": {"intent": "whisper_mode"}, "meta": {"source_label": "whisper_mode", "out_of_scope": false}}
+{"state": "how do i go to whisper mode", "answers": {"intent": "whisper_mode"}, "meta": {"source_label": "whisper_mode", "out_of_scope": false}}
+{"state": "i'd like to be out of whisper mode", "answers": {"intent": "whisper_mode"}, "meta": {"source_label": "whisper_mode", "out_of_scope": false}}
+{"state": "stop please", "answers": {"intent": "cancel"}, "meta": {"source_label": "cancel", "out_of_scope": false}}
+{"state": "scrap", "answers": {"intent": "cancel"}, "meta": {"source_label": "cancel", "out_of_scope": false}}
+{"state": "how to cancel", "answers": {"intent": "cancel"}, "meta": {"source_label": "cancel", "out_of_scope": false}}
+{"state": "please don't talk any further", "answers": {"intent": "cancel"}, "meta": {"source_label": "cancel", "out_of_scope": false}}
+{"state": "for going to that country, do i need a visa", "answers": {"intent": "international_visa"}, "meta": {"source_label": "international_visa", "out_of_scope": false}}
+{"state": "does going to taiwan require me to get an international visa", "answers": {"intent": "international_visa"}, "meta": {"source_label": "international_visa", "out_of_scope": false}}
+{"state": "will i need an international visa to go to madagascar", "answers": {"intent": "international_visa"}, "meta": {"source_label": "international_visa", "out_of_scope": false}}
+{"state": "do i need an international visa to get into italy", "answers": {"intent": "international_visa"}, "meta": {"source_label": "international_visa", "out_of_scope": false}}
+{"state": "what shots are required to visit australia", "answers": {"intent": "vaccines"}, "meta": {"source_label": "vaccines", "out_of_scope": false}}
+{"state": "is a shot required before traveling to mexico", "answers": {"intent": "vaccines"}, "meta": {"source_label": "vaccines", "out_of_scope": false}}
+{"state": "do i have to get shots to enter cuba", "answers": {"intent": "vaccines"}, "meta": {"source_label": "vaccines", "out_of_scope": false}}
+{"state": "how many days of vacation do i have saved", "answers": {"intent": "pto_balance"}, "meta": {"source_label": "pto_balance", "out_of_scope": false}}
+{"state": "what number of vacation days do i have available", "answers": {"intent": "pto_balance"}, "meta": {"source_label": "pto_balance", "out_of_scope": false}}
+{"state": "could you tell me how many pto days do i have left", "answers": {"intent": "pto_balance"}, "meta": {"source_label": "pto_balance", "out_of_scope": false}}
+{"state": "what is the amount of time i can request off in the coming year", "answers": {"intent": "pto_balance"}, "meta": {"source_label": "pto_balance", "out_of_scope": false}}
+{"state": "how do i get to the grocery store by bus", "answers": {"intent": "directions"}, "meta": {"source_label": "directions", "out_of_scope": false}}
+{"state": "how do i get to san fransisco by bus", "answers": {"intent": "directions"}, "meta": {"source_label": "directions", "out_of_scope": false}}
+{"state": "where is the nearest gas station", "answers": {"intent": "directions"}, "meta": {"source_label": "directions", "out_of_scope": false}}
+{"state": "where is the closest park", "answers": {"intent": "directions"}, "meta": {"source_label": "directions", "out_of_scope": false}}
+{"state": "tell me how to spell the word dessert", "answers": {"intent": "spelling"}, "meta": {"source_label": "spelling", "out_of_scope": false}}
+{"state": "what is the correct spelling of the word: dessert", "answers": {"intent": "spelling"}, "meta": {"source_label": "spelling", "out_of_scope": false}}
+{"state": "can you spell the word umbrella for me", "answers": {"intent": "spelling"}, "meta": {"source_label": "spelling", "out_of_scope": false}}
+{"state": "how should i spell malignant", "answers": {"intent": "spelling"}, "meta": {"source_label": "spelling", "out_of_scope": false}}
+{"state": "how ya doin", "answers": {"intent": "greeting"}, "meta": {"source_label": "greeting", "out_of_scope": false}}
+{"state": "are you good", "answers": {"intent": "greeting"}, "meta": {"source_label": "greeting", "out_of_scope": false}}
+{"state": "how've you been", "answers": {"intent": "greeting"}, "meta": {"source_label": "greeting", "out_of_scope": false}}
+{"state": "wassup", "answers": {"intent": "greeting"}, "meta": {"source_label": "greeting", "out_of_scope": false}}
+{"state": "i want you to reset to factory settings", "answers": {"intent": "reset_settings"}, "meta": {"source_label": "reset_settings", "out_of_scope": false}}
+{"state": "i want you to go back to factory settings", "answers": {"intent": "reset_settings"}, "meta": {"source_label": "reset_settings", "out_of_scope": false}}
+{"state": "go back to default settings", "answers": {"intent": "reset_settings"}, "meta": {"source_label": "reset_settings", "out_of_scope": false}}
+{"state": "please revert to the original settings", "answers": {"intent": "reset_settings"}, "meta": {"source_label": "reset_settings", "out_of_scope": false}}
+{"state": "what is your names", "answers": {"intent": "what_is_your_name"}, "meta": {"source_label": "what_is_your_name", "out_of_scope": false}}
+{"state": "what's the name i should use to talk to you", "answers": {"intent": "what_is_your_name"}, "meta": {"source_label": "what_is_your_name", "out_of_scope": false}}
+{"state": "what do you go by", "answers": {"intent": "what_is_your_name"}, "meta": {"source_label": "what_is_your_name", "out_of_scope": false}}
+{"state": "how do i set up direct deposit for my fifth third account", "answers": {"intent": "direct_deposit"}, "meta": {"source_label": "direct_deposit", "out_of_scope": false}}
+{"state": "how do i go about getting direct deposit in my usaa account", "answers": {"intent": "direct_deposit"}, "meta": {"source_label": "direct_deposit", "out_of_scope": false}}
+{"state": "please assist me in linking my chase account to direct deposit for my paycheck", "answers": {"intent": "direct_deposit"}, "meta": {"source_label": "direct_deposit", "out_of_scope": false}}
+{"state": "please show me how to set up my paycheck for direct deposit to my chase account", "answers": {"intent": "direct_deposit"}, "meta": {"source_label": "direct_deposit", "out_of_scope": false}}
+{"state": "what's my interest rate with my capital one account", "answers": {"intent": "interest_rate"}, "meta": {"source_label": "interest_rate", "out_of_scope": false}}
+{"state": "what is my interest rate for my scotiabank account", "answers": {"intent": "interest_rate"}, "meta": {"source_label": "interest_rate", "out_of_scope": false}}
+{"state": "where do i find the interest rate for my platinum account", "answers": {"intent": "interest_rate"}, "meta": {"source_label": "interest_rate", "out_of_scope": false}}
+{"state": "whats the amount of interest i'm paying on my mortgage", "answers": {"intent": "interest_rate"}, "meta": {"source_label": "interest_rate", "out_of_scope": false}}
+{"state": "the credit limit i have needs to be changed", "answers": {"intent": "credit_limit_change"}, "meta": {"source_label": "credit_limit_change", "out_of_scope": false}}
+{"state": "can i increase my credit limit", "answers": {"intent": "credit_limit_change"}, "meta": {"source_label": "credit_limit_change", "out_of_scope": false}}
+{"state": "raise my credit limit", "answers": {"intent": "credit_limit_change"}, "meta": {"source_label": "credit_limit_change", "out_of_scope": false}}
+{"state": "can you help me increase my credit limit", "answers": {"intent": "credit_limit_change"}, "meta": {"source_label": "credit_limit_change", "out_of_scope": false}}
+{"state": "what do you do in your spare time siri", "answers": {"intent": "what_are_your_hobbies"}, "meta": {"source_label": "what_are_your_hobbies", "out_of_scope": false}}
+{"state": "what do you do for fun alexa", "answers": {"intent": "what_are_your_hobbies"}, "meta": {"source_label": "what_are_your_hobbies", "out_of_scope": false}}
+{"state": "which hobbies do you like", "answers": {"intent": "what_are_your_hobbies"}, "meta": {"source_label": "what_are_your_hobbies", "out_of_scope": false}}
+{"state": "can you find me a flight from denver international to new york international on the 4th for under 700 dollars", "answers": {"intent": "book_flight"}, "meta": {"source_label": "book_flight", "out_of_scope": false}}
+{"state": "i need a flight from the 3rd to the 7th round rip from denver international to new york international", "answers": {"intent": "book_flight"}, "meta": {"source_label": "book_flight", "out_of_scope": false}}
+{"state": "need airplane ridge from philadelphia to atlanta leaving on the 5th of june and returning on the 8th of june", "answers": {"intent": "book_flight"}, "meta": {"source_label": "book_flight", "out_of_scope": false}}
+{"state": "i'm looking for a back and forth flight from lax to portland for w to sunday", "answers": {"intent": "book_flight"}, "meta": {"source_label": "book_flight", "out_of_scope": false}}
+{"state": "is there lettuce on my shopping list", "answers": {"intent": "shopping_list"}, "meta": {"source_label": "shopping_list", "out_of_scope": false}}
+{"state": "did i put elbow noodles on the shopping list", "answers": {"intent": "shopping_list"}, "meta": {"source_label": "shopping_list", "out_of_scope": false}}
+{"state": "did i forget to put protein shakes on my shopping list", "answers": {"intent": "shopping_list"}, "meta": {"source_label": "shopping_list", "out_of_scope": false}}
+{"state": "did i remember to put eggs on my shopping list", "answers": {"intent": "shopping_list"}, "meta": {"source_label": "shopping_list", "out_of_scope": false}}
+{"state": "text john with the message 'where are you", "answers": {"intent": "text"}, "meta": {"source_label": "text", "out_of_scope": false}}
+{"state": "message carl, you suck", "answers": {"intent": "text"}, "meta": {"source_label": "text", "out_of_scope": false}}
+{"state": "i need leslie to be texted saying have a good day", "answers": {"intent": "text"}, "meta": {"source_label": "text", "out_of_scope": false}}
+{"state": "send a text to mom saying i'm on my way", "answers": {"intent": "text"}, "meta": {"source_label": "text", "out_of_scope": false}}
+{"state": "what is the amount i owe on my phone", "answers": {"intent": "bill_balance"}, "meta": {"source_label": "bill_balance", "out_of_scope": false}}
+{"state": "what do i owe on telephone and cable bill", "answers": {"intent": "bill_balance"}, "meta": {"source_label": "bill_balance", "out_of_scope": false}}
+{"state": "can you tell me how much i need to pay on my bills this month", "answers": {"intent": "bill_balance"}, "meta": {"source_label": "bill_balance", "out_of_scope": false}}
+{"state": "how much is my bill for capital one", "answers": {"intent": "bill_balance"}, "meta": {"source_label": "bill_balance", "out_of_scope": false}}
+{"state": "give my location to stan", "answers": {"intent": "share_location"}, "meta": {"source_label": "share_location", "out_of_scope": false}}
+{"state": "can you share my location with roger", "answers": {"intent": "share_location"}, "meta": {"source_label": "share_location", "out_of_scope": false}}
+{"state": "share my location with apple", "answers": {"intent": "share_location"}, "meta": {"source_label": "share_location", "out_of_scope": false}}
+{"state": "share my location with steve", "answers": {"intent": "share_location"}, "meta": {"source_label": "share_location", "out_of_scope": false}}
+{"state": "cash in my credit card points", "answers": {"intent": "redeem_rewards"}, "meta": {"source_label": "redeem_rewards", "out_of_scope": false}}
+{"state": "where i can use credit card points", "answers": {"intent": "redeem_rewards"}, "meta": {"source_label": "redeem_rewards", "out_of_scope": false}}
+{"state": "help with credit card points", "answers": {"intent": "redeem_rewards"}, "meta": {"source_label": "redeem_rewards", "out_of_scope": false}}
+{"state": "what should i use the points from my credit card on", "answers": {"intent": "redeem_rewards"}, "meta": {"source_label": "redeem_rewards", "out_of_scope": false}}
+{"state": "please start the song penny lane", "answers": {"intent": "play_music"}, "meta": {"source_label": "play_music", "out_of_scope": false}}
+{"state": "can you play the song amazing grace and it goes like this, amazing grace how sweet the sound", "answers": {"intent": "play_music"}, "meta": {"source_label": "play_music", "out_of_scope": false}}
+{"state": "can you play music by the beatles", "answers": {"intent": "play_music"}, "meta": {"source_label": "play_music", "out_of_scope": false}}
+{"state": "are you able to play beatles songs", "answers": {"intent": "play_music"}, "meta": {"source_label": "play_music", "out_of_scope": false}}
+{"state": "you can remove the dinner party from my calendar for january 21, 2019", "answers": {"intent": "calendar_update"}, "meta": {"source_label": "calendar_update", "out_of_scope": false}}
+{"state": "for friday, add a doctor's appointment to my calendar", "answers": {"intent": "calendar_update"}, "meta": {"source_label": "calendar_update", "out_of_scope": false}}
+{"state": "on the 22nd of this month, we need to clear our calendar so we can leave it open for mark to visit", "answers": {"intent": "calendar_update"}, "meta": {"source_label": "calendar_update", "out_of_scope": false}}
+{"state": "can you remove this event from my calendar", "answers": {"intent": "calendar_update"}, "meta": {"source_label": "calendar_update", "out_of_scope": false}}
+{"state": "i would like to know if you are a robot", "answers": {"intent": "are_you_a_bot"}, "meta": {"source_label": "are_you_a_bot", "out_of_scope": false}}
+{"state": "do you consider yourself an artificial intelligence being", "answers": {"intent": "are_you_a_bot"}, "meta": {"source_label": "are_you_a_bot", "out_of_scope": false}}
+{"state": "i am curious to know if you are a bot", "answers": {"intent": "are_you_a_bot"}, "meta": {"source_label": "are_you_a_bot", "out_of_scope": false}}
+{"state": "can you tell me what kind of life form you are", "answers": {"intent": "are_you_a_bot"}, "meta": {"source_label": "are_you_a_bot", "out_of_scope": false}}
+{"state": "is my gas tank full or empty", "answers": {"intent": "gas"}, "meta": {"source_label": "gas", "out_of_scope": false}}
+{"state": "can you inform me of my gas amount", "answers": {"intent": "gas"}, "meta": {"source_label": "gas", "out_of_scope": false}}
+{"state": "what's left in the tank", "answers": {"intent": "gas"}, "meta": {"source_label": "gas", "out_of_scope": false}}
+{"state": "how much fuel do i need to get to buffalo", "answers": {"intent": "gas"}, "meta": {"source_label": "gas", "out_of_scope": false}}
+{"state": "what is the date that my visa card expires", "answers": {"intent": "expiration_date"}, "meta": {"source_label": "expiration_date", "out_of_scope": false}}
+{"state": "what month does my card stop working", "answers": {"intent": "expiration_date"}, "meta": {"source_label": "expiration_date", "out_of_scope": false}}
+{"state": "when do i need a new credit card", "answers": {"intent": "expiration_date"}, "meta": {"source_label": "expiration_date", "out_of_scope": false}}
+{"state": "i need to know when my credit card is going to expire", "answers": {"intent": "expiration_date"}, "meta": {"source_label": "expiration_date", "out_of_scope": false}}
+{"state": "please add this song to my morning job playlist", "answers": {"intent": "update_playlist"}, "meta": {"source_label": "update_playlist", "out_of_scope": false}}
+{"state": "add welcome to the jungle to my workout mix", "answers": {"intent": "update_playlist"}, "meta": {"source_label": "update_playlist", "out_of_scope": false}}
+{"state": "put this in my workout playlist", "answers": {"intent": "update_playlist"}, "meta": {"source_label": "update_playlist", "out_of_scope": false}}
+{"state": "i'd like to cancel my reservation for 5 at hoss's steak house", "answers": {"intent": "cancel_reservation"}, "meta": {"source_label": "cancel_reservation", "out_of_scope": false}}
+{"state": "i need to cancel my reservation for 2 at franklin's grille", "answers": {"intent": "cancel_reservation"}, "meta": {"source_label": "cancel_reservation", "out_of_scope": false}}
+{"state": "i no longer want my reservation for 5 at the loft cancel it please", "answers": {"intent": "cancel_reservation"}, "meta": {"source_label": "cancel_reservation", "out_of_scope": false}}
+{"state": "hey siri, please cancel my reservation at the loft for 5", "answers": {"intent": "cancel_reservation"}, "meta": {"source_label": "cancel_reservation", "out_of_scope": false}}
+{"state": "i want to hear something hilarious", "answers": {"intent": "tell_joke"}, "meta": {"source_label": "tell_joke", "out_of_scope": false}}
+{"state": "could you tell me a good joke", "answers": {"intent": "tell_joke"}, "meta": {"source_label": "tell_joke", "out_of_scope": false}}
+{"state": "do you have any funny jokes you can tell", "answers": {"intent": "tell_joke"}, "meta": {"source_label": "tell_joke", "out_of_scope": false}}
+{"state": "do you know any good jokes you would like to share", "answers": {"intent": "tell_joke"}, "meta": {"source_label": "tell_joke", "out_of_scope": false}}
+{"state": "i want to call you maggie", "answers": {"intent": "change_ai_name"}, "meta": {"source_label": "change_ai_name", "out_of_scope": false}}
+{"state": "can i change you name to gretchen", "answers": {"intent": "change_ai_name"}, "meta": {"source_label": "change_ai_name", "out_of_scope": false}}
+{"state": "can i call you adam instead of the current name", "answers": {"intent": "change_ai_name"}, "meta": {"source_label": "change_ai_name", "out_of_scope": false}}
+{"state": "i would like to change your name to fred", "answers": {"intent": "change_ai_name"}, "meta": {"source_label": "change_ai_name", "out_of_scope": false}}
+{"state": "how many birthdays have you had", "answers": {"intent": "how_old_are_you"}, "meta": {"source_label": "how_old_are_you", "out_of_scope": false}}
+{"state": "do you have an age", "answers": {"intent": "how_old_are_you"}, "meta": {"source_label": "how_old_are_you", "out_of_scope": false}}
+{"state": "in what year were you born", "answers": {"intent": "how_old_are_you"}, "meta": {"source_label": "how_old_are_you", "out_of_scope": false}}
+{"state": "what is your date of birth", "answers": {"intent": "how_old_are_you"}, "meta": {"source_label": "how_old_are_you", "out_of_scope": false}}
+{"state": "help me book a car rental in austin for april 11th to 13th get me a sedan if possible", "answers": {"intent": "car_rental"}, "meta": {"source_label": "car_rental", "out_of_scope": false}}
+{"state": "i need to book a car rental in las vegas", "answers": {"intent": "car_rental"}, "meta": {"source_label": "car_rental", "out_of_scope": false}}
+{"state": "can you help me rent a car in las vegas", "answers": {"intent": "car_rental"}, "meta": {"source_label": "car_rental", "out_of_scope": false}}
+{"state": "i really must rent a car out of sky harbor airport from the 3rd to the 5th of february", "answers": {"intent": "car_rental"}, "meta": {"source_label": "car_rental", "out_of_scope": false}}
+{"state": "how can i jump start my car if my battery is dead", "answers": {"intent": "jump_start"}, "meta": {"source_label": "jump_start", "out_of_scope": false}}
+{"state": "what do i need in order to jump start my car", "answers": {"intent": "jump_start"}, "meta": {"source_label": "jump_start", "out_of_scope": false}}
+{"state": "do i need jumper cables for my dead car battery", "answers": {"intent": "jump_start"}, "meta": {"source_label": "jump_start", "out_of_scope": false}}
+{"state": "there is no juice in my battery please help", "answers": {"intent": "jump_start"}, "meta": {"source_label": "jump_start", "out_of_scope": false}}
+{"state": "please suggest a chinese meal", "answers": {"intent": "meal_suggestion"}, "meta": {"source_label": "meal_suggestion", "out_of_scope": false}}
+{"state": "i need an italian dinner idea", "answers": {"intent": "meal_suggestion"}, "meta": {"source_label": "meal_suggestion", "out_of_scope": false}}
+{"state": "suggestions for thai food", "answers": {"intent": "meal_suggestion"}, "meta": {"source_label": "meal_suggestion", "out_of_scope": false}}
+{"state": "give recommendations for thai food", "answers": {"intent": "meal_suggestion"}, "meta": {"source_label": "meal_suggestion", "out_of_scope": false}}
+{"state": "i need a pancake recipe", "answers": {"intent": "recipe"}, "meta": {"source_label": "recipe", "out_of_scope": false}}
+{"state": "can you give me instructions on how to make alfredo", "answers": {"intent": "recipe"}, "meta": {"source_label": "recipe", "out_of_scope": false}}
+{"state": "how do you make dumplings", "answers": {"intent": "recipe"}, "meta": {"source_label": "recipe", "out_of_scope": false}}
+{"state": "how do i make chicken alfredo", "answers": {"intent": "recipe"}, "meta": {"source_label": "recipe", "out_of_scope": false}}
+{"state": "what's my income from work", "answers": {"intent": "income"}, "meta": {"source_label": "income", "out_of_scope": false}}
+{"state": "how much is my salary", "answers": {"intent": "income"}, "meta": {"source_label": "income", "out_of_scope": false}}
+{"state": "i would like to know what my income is", "answers": {"intent": "income"}, "meta": {"source_label": "income", "out_of_scope": false}}
+{"state": "how much do you start at", "answers": {"intent": "income"}, "meta": {"source_label": "income", "out_of_scope": false}}
+{"state": "order more bread please", "answers": {"intent": "order"}, "meta": {"source_label": "order", "out_of_scope": false}}
+{"state": "since i ran out , order more bread", "answers": {"intent": "order"}, "meta": {"source_label": "order", "out_of_scope": false}}
+{"state": "everything needs ordered off my list", "answers": {"intent": "order"}, "meta": {"source_label": "order", "out_of_scope": false}}
+{"state": "aquire me them kyrie 4s", "answers": {"intent": "order"}, "meta": {"source_label": "order", "out_of_scope": false}}
+{"state": "is there much traffic between here and work right now", "answers": {"intent": "traffic"}, "meta": {"source_label": "traffic", "out_of_scope": false}}
+{"state": "is the traffic bad going downtown right now", "answers": {"intent": "traffic"}, "meta": {"source_label": "traffic", "out_of_scope": false}}
+{"state": "is there heavy traffic on the way to the city", "answers": {"intent": "traffic"}, "meta": {"source_label": "traffic", "out_of_scope": false}}
+{"state": "tell me how the traffic is on rt 7 to the airport today", "answers": {"intent": "traffic"}, "meta": {"source_label": "traffic", "out_of_scope": false}}
+{"state": "i would like more checks sent to my address", "answers": {"intent": "order_checks"}, "meta": {"source_label": "order_checks", "out_of_scope": false}}
+{"state": "i just used my final check order more", "answers": {"intent": "order_checks"}, "meta": {"source_label": "order_checks", "out_of_scope": false}}
+{"state": "i need to know how to order checks for my bank of america account", "answers": {"intent": "order_checks"}, "meta": {"source_label": "order_checks", "out_of_scope": false}}
+{"state": "who do i contact to order more checks for my td bank account", "answers": {"intent": "order_checks"}, "meta": {"source_label": "order_checks", "out_of_scope": false}}
+{"state": "my debit card was rejected at ella's and i want to know why", "answers": {"intent": "card_declined"}, "meta": {"source_label": "card_declined", "out_of_scope": false}}
+{"state": "my card was declined at mcdonald's and i want to know why", "answers": {"intent": "card_declined"}, "meta": {"source_label": "card_declined", "out_of_scope": false}}
+{"state": "tell me why my card was declined", "answers": {"intent": "card_declined"}, "meta": {"source_label": "card_declined", "out_of_scope": false}}
+{"state": "my card just got declined when i was in home depot buying tile", "answers": {"intent": "card_declined"}, "meta": {"source_label": "card_declined", "out_of_scope": false}}
+{"state": "how many onions do i have on hand", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "what were the top stories this week", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "can i mix antifreeze with water", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "how can i keep my windshield from fogging up in winter", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "can you tell me how to compute price per ounce", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "does hypnosis work to break bad habits", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "king of acid", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "suo2", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "where do black holes come from", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "how the birds fly", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "where does cannabis originate from", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "is marijuana addictive", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "how is crypto legal", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "are there any cybersecurity jobs available in pittsburgh", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "is it bad to not remember your dreams", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "why do we dream", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "what do geese eat", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "how can i easily replace a string on my guitar", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}
+{"state": "what site publishes the most fake news", "answers": {"intent": "none_of_the_above"}, "meta": {"source_label": "oos", "out_of_scope": true}}

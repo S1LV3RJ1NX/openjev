@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+.claude/
+# Rows for datasets whose licence does not permit redistribution.
+# Rebuild with: uv run python scripts/build_heldout.py --fetch
+tasks/heldout/sst5/*.jsonl
+tasks/heldout/ag_news/*.jsonl

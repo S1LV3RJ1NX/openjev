@@ -1,0 +1,29 @@
+{
+ "task": "clinc_oos",
+ "hf_dataset": "clinc/clinc_oos",
+ "config": "plus",
+ "homepage": "https://huggingface.co/datasets/clinc/clinc_oos",
+ "license": "CC-BY-3.0",
+ "redistributable": true,
+ "license_note": "CC-BY-3.0 permits redistribution with attribution.",
+ "tasksource_leak_paths": [],
+ "description_source": "train split",
+ "primitive": "choice",
+ "n_options": 151,
+ "n_test": 600,
+ "n_dev": 600,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 151,
+  "options_present_as_gold": 151,
+  "options_never_gold": [],
+  "min_per_option": 3,
+  "max_per_option": 109
+ },
+ "related_not_excluded": [],
+ "sha256": {
+  "test.jsonl": "4c710f3f10abeee57527a174d7e2d76a6a00d587bfa4ad4fecec81747dc9f09e",
+  "dev.jsonl": "88d1c94ccacf82a6e39ca18ddde0ac9d892de9bb2a80fd6194e54df474ce0cd9"
+ }
+}

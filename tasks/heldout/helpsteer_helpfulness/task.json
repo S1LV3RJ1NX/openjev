@@ -1,0 +1,52 @@
+{
+ "name": "helpsteer_helpfulness",
+ "description": "HelpSteer response helpfulness on the annotators' 0-4 Likert scale. A non-sentiment ordinal rubric with real human labels, so `score` is not evaluated purely on sentiment. The state is a JSON object, which also exercises the structured-state path.",
+ "questions": {
+  "helpfulness": {
+   "instructions": "Below is a prompt given to an AI assistant and the response it produced. Rate how helpful the response is as an answer to that specific prompt. Judge only helpfulness: a response can be fluent and well written and still be unhelpful if it does not do what was asked. Ignore how long, how sophisticated or how well styled it is except where that affects whether the request was met.",
+   "criteria": [
+    "Not helpful at all. The response does not address the prompt: it refuses, asks for input that was already supplied, restates the instructions, emits a fragment or placeholder, or answers a different question entirely.",
+    "Barely helpful. It engages with the right topic but largely fails the request: it misreads what was asked, ignores explicit constraints such as format or length, or is wrong on most of the substance. A user would have to start over.",
+    "Partially helpful. It does some of what was asked and a user could get value from it, but there are real gaps: part of the request is unaddressed, some content is wrong, or a stated constraint is only half met. A user would have to follow up.",
+    "Helpful. It does what was asked and is substantially correct. Any shortfall is minor: a small omission, a little padding, or a detail that could be sharper. A user would be satisfied without needing to ask again.",
+    "Completely helpful. It fully satisfies the request, is accurate, and respects the constraints in the prompt. Nothing important is missing and nothing needs correcting."
+   ],
+   "type": "score"
+  }
+ },
+ "costs": {},
+ "cost_escalate": null,
+ "recall_floors": {},
+ "holdout_of": [
+  "HelpSteer",
+  "nvidia/HelpSteer",
+  "helpsteer",
+  "HelpSteer/helpfulness",
+  "HelpSteer/correctness",
+  "HelpSteer/coherence",
+  "HelpSteer/complexity",
+  "HelpSteer/verbosity",
+  "helpsteer__helpfulness",
+  "helpsteer__correctness",
+  "helpsteer__coherence",
+  "helpsteer__complexity",
+  "helpsteer__verbosity",
+  "HelpSteer2",
+  "nvidia/HelpSteer2",
+  "HelpSteer2/helpfulness",
+  "HelpSteer2/correctness",
+  "HelpSteer2/coherence",
+  "HelpSteer2/complexity",
+  "HelpSteer2/verbosity",
+  "helpsteer_2__helpfulness",
+  "helpsteer_2__correctness",
+  "helpsteer_2__coherence",
+  "helpsteer_2__complexity",
+  "helpsteer_2__verbosity",
+  "HelpSteer3",
+  "nvidia/HelpSteer3",
+  "Weyaxi/HelpSteer-filtered",
+  "RLHFlow/Helpsteer-preference-standard",
+  "Columbia-NLP/DPO-HelpSteer"
+ ]
+}

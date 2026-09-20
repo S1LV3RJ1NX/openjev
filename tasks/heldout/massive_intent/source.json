@@ -1,0 +1,34 @@
+{
+ "task": "massive_intent",
+ "hf_dataset": "mteb/amazon_massive_intent",
+ "config": "en",
+ "homepage": "https://huggingface.co/datasets/mteb/amazon_massive_intent",
+ "license": "CC-BY-4.0",
+ "redistributable": true,
+ "license_note": "Upstream Amazon MASSIVE is CC-BY-4.0; the mteb mirror is labelled Apache-2.0. Both permit redistribution.",
+ "tasksource_leak_paths": [],
+ "description_source": "train split",
+ "primitive": "choice",
+ "n_options": 60,
+ "n_test": 600,
+ "n_dev": 600,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 60,
+  "options_present_as_gold": 59,
+  "options_never_gold": [
+   "cooking_query"
+  ],
+  "min_per_option": 0,
+  "max_per_option": 11
+ },
+ "related_not_excluded": [
+  "snips_built_in_intents",
+  "bigbench/intent_recognition"
+ ],
+ "sha256": {
+  "test.jsonl": "606285646f7b3ff3631313699851a2b252f52e4a5988fa9da9ee34f2c8268c27",
+  "dev.jsonl": "cf6287cefd16947cab3cc06a347a89969b073d6fed9245d53ce5afb90f036f3a"
+ }
+}

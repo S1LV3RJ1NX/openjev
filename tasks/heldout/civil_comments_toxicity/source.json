@@ -1,0 +1,46 @@
+{
+ "task": "civil_comments_toxicity",
+ "hf_dataset": "google/civil_comments",
+ "config": "default",
+ "homepage": "https://huggingface.co/datasets/google/civil_comments",
+ "license": "CC0-1.0",
+ "redistributable": true,
+ "license_note": "CC0-1.0 public domain dedication; redistribution is unrestricted.",
+ "tasksource_leak_paths": [
+  "civil_comments/toxicity",
+  "civil_comments/severe_toxicity",
+  "civil_comments/obscene",
+  "civil_comments/threat",
+  "civil_comments/insult",
+  "civil_comments/identity_attack",
+  "civil_comments/sexual_explicit",
+  "jigsaw_toxicity",
+  "toxic_conversations"
+ ],
+ "description_source": "dataset documentation (the Jigsaw crowd-rating question)",
+ "primitive": "noul",
+ "n_options": 2,
+ "n_test": 600,
+ "n_dev": 600,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 2,
+  "options_present_as_gold": 2,
+  "options_never_gold": [],
+  "min_per_option": 300,
+  "max_per_option": 300
+ },
+ "related_not_excluded": [
+  "tweet_eval/hate",
+  "hate_speech18",
+  "hate_speech_offensive",
+  "implicit-hate-stg1",
+  "dynahate",
+  "google/jigsaw_toxicity_pred"
+ ],
+ "sha256": {
+  "test.jsonl": "2676a052052c3dce3d809d0f778e8c1d480bf8411ffebb7f73742d45fbf40280",
+  "dev.jsonl": "7a92d963063dc73aacaf3958dc854e68c254cff3c1de05031e621427ff83f33b"
+ }
+}

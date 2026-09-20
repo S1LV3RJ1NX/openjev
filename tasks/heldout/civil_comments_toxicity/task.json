@@ -1,0 +1,54 @@
+{
+ "name": "civil_comments_toxicity",
+ "description": "Civil Comments toxicity as a binary noul question. Real crowd labels, CC0, and the canonical shape of a production gate. Sampled 50/50, which is NOT the deployment prevalence of about 8%.",
+ "questions": {
+  "toxic": {
+   "instructions": "This is a reader comment posted under a news article. Would the majority of human moderators rate this comment as toxic, meaning rude, disrespectful, hateful or aggressive enough that a reasonable person would be likely to leave the discussion rather than reply to it?",
+   "criteria": {
+    "true": "A majority of raters would call this toxic: it insults, demeans, threatens or attacks a person or a group, uses obscenity or slurs aggressively, or is contemptuous enough to drive people out of the conversation. Strength of opinion alone does not make a comment toxic; the hostility has to be directed at people.",
+    "false": "A majority of raters would not call this toxic. This includes blunt, sarcastic, partisan, angry and strongly worded comments, and criticism of policies, institutions or public figures' actions, as long as the comment is not demeaning or abusive towards people."
+   },
+   "type": "noul"
+  }
+ },
+ "costs": {},
+ "cost_escalate": null,
+ "recall_floors": {},
+ "holdout_of": [
+  "civil_comments",
+  "google/civil_comments",
+  "civil_comments/toxicity",
+  "civil_comments/severe_toxicity",
+  "civil_comments/obscene",
+  "civil_comments/threat",
+  "civil_comments/insult",
+  "civil_comments/identity_attack",
+  "civil_comments/sexual_explicit",
+  "civil_comments__toxicity",
+  "civil_comments__severe_toxicity",
+  "civil_comments__obscene",
+  "civil_comments__threat",
+  "civil_comments__insult",
+  "civil_comments__identity_attack",
+  "civil_comments__sexual_explicit",
+  "jigsaw_unintended_bias",
+  "google/jigsaw_unintended_bias",
+  "jigsaw_toxicity",
+  "tasksource/jigsaw_toxicity",
+  "toxic_conversations",
+  "SetFit/toxic_conversations",
+  "SetFit/toxic_conversations_50k",
+  "mteb/toxic_conversations_50k",
+  "mteb/ToxicConversationsClassification",
+  "civilcomments_wilds",
+  "pietrolesci/civilcomments-wilds",
+  "shlomihod/civil-comments-wilds",
+  "lighteval/civil_comments_helm",
+  "Lots-of-LoRAs/task1720_civil_comments_toxicity_classification",
+  "Lots-of-LoRAs/task1721_civil_comments_obscenity_classification",
+  "Lots-of-LoRAs/task1722_civil_comments_threat_classification",
+  "Lots-of-LoRAs/task1723_civil_comments_sexuallyexplicit_classification",
+  "Lots-of-LoRAs/task1724_civil_comments_insult_classification",
+  "Lots-of-LoRAs/task1725_civil_comments_severtoxicity_classification"
+ ]
+}

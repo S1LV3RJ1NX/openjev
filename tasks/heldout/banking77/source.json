@@ -1,0 +1,30 @@
+{
+ "task": "banking77",
+ "hf_dataset": "mteb/banking77",
+ "config": "default",
+ "homepage": "https://huggingface.co/datasets/PolyAI/banking77",
+ "license": "CC-BY-4.0",
+ "redistributable": true,
+ "license_note": "Upstream PolyAI/banking77 is CC-BY-4.0; the mteb mirror we read is labelled MIT. Both permit redistribution with attribution.",
+ "tasksource_leak_paths": [
+  "banking77"
+ ],
+ "description_source": "train split (verbatim from the measured +5.1pt description set)",
+ "primitive": "choice",
+ "n_options": 77,
+ "n_test": 600,
+ "n_dev": 0,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 77,
+  "options_present_as_gold": 77,
+  "options_never_gold": [],
+  "min_per_option": 6,
+  "max_per_option": 8
+ },
+ "related_not_excluded": [],
+ "sha256": {
+  "test.jsonl": "580fa5e1c4e5dcebf7771821bd70cf55775db028b420b0a94ca3a7b8f6b104d0"
+ }
+}

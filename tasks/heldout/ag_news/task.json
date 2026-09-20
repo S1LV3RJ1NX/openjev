@@ -1,0 +1,34 @@
+{
+ "name": "ag_news",
+ "description": "AG News topic classification, 4 options. A deliberately easy low-cardinality control that separates 'the model is broken' from 'the task is hard'.",
+ "questions": {
+  "topic": {
+   "instructions": "This is the title and opening sentences of a news wire article from around 2004. Which one of the following four topics does the article belong to?",
+   "criteria": {
+    "World": "International and national news: politics, conflict, diplomacy, disasters and crime. The default for a story about events in a country rather than about a company, a team or a technology.",
+    "Sports": "Sport of any kind: matches, results, players, transfers, championships and sporting bodies.",
+    "Business": "Commerce and finance: companies, markets, earnings, oil prices, mergers, jobs and the economy. Use this when a technology company appears in a story about its share price, profits or deals rather than its products.",
+    "Sci/Tech": "Science and technology: research findings, space, the environment, software, hardware, telecoms and the internet. Use this when the story is about the technology or the science itself rather than about the money around it."
+   },
+   "type": "choice"
+  }
+ },
+ "costs": {},
+ "cost_escalate": null,
+ "recall_floors": {},
+ "holdout_of": [
+  "ag_news",
+  "fancyzhx/ag_news",
+  "SetFit/ag_news",
+  "sh0416/ag_news",
+  "pietrolesci/agnews",
+  "sentence-transformers/agnews",
+  "contemmcm/ag_news",
+  "r-three/ag_news_subset",
+  "ag_news_subset",
+  "Recognai/ag_news_corrected_labels",
+  "Recognai/corrected_labels_ag_news",
+  "Lots-of-LoRAs/task379_agnews_topic_classification",
+  "Lots-of-LoRAs/task1541_agnews_classification"
+ ]
+}

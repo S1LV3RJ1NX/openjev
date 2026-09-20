@@ -1,0 +1,600 @@
+{"state": "wake me up at five am this week", "answers": {"intent": "alarm_set"}, "meta": {"row": 0, "lang": "en"}}
+{"state": "pink is all we need", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 2, "lang": "en"}}
+{"state": "and the darkness has fallen", "answers": {"intent": "iot_hue_lighton"}, "meta": {"row": 3, "lang": "en"}}
+{"state": "what's up olly", "answers": {"intent": "general_greet"}, "meta": {"row": 8, "lang": "en"}}
+{"state": "olly tell me the time in g. m. t. plus five", "answers": {"intent": "datetime_convert"}, "meta": {"row": 10, "lang": "en"}}
+{"state": "cancel my seven am alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 11, "lang": "en"}}
+{"state": "set lights brightness higher", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 15, "lang": "en"}}
+{"state": "tell me today's date", "answers": {"intent": "datetime_query"}, "meta": {"row": 16, "lang": "en"}}
+{"state": "send a giggle my way", "answers": {"intent": "general_joke"}, "meta": {"row": 22, "lang": "en"}}
+{"state": "i like this song", "answers": {"intent": "music_likeness"}, "meta": {"row": 26, "lang": "en"}}
+{"state": "lower the lights", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 28, "lang": "en"}}
+{"state": "set wake up thursday seven am", "answers": {"intent": "alarm_set"}, "meta": {"row": 33, "lang": "en"}}
+{"state": "delete the alarm i just set", "answers": {"intent": "alarm_remove"}, "meta": {"row": 40, "lang": "en"}}
+{"state": "i can't hear you", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 46, "lang": "en"}}
+{"state": "i can barely hear you", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 47, "lang": "en"}}
+{"state": "let's have the lights blue", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 48, "lang": "en"}}
+{"state": "light up the lights in the kitchen", "answers": {"intent": "iot_hue_lighton"}, "meta": {"row": 51, "lang": "en"}}
+{"state": "start a vacuum cleaner", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 52, "lang": "en"}}
+{"state": "disable my okug", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 61, "lang": "en"}}
+{"state": "enable my plug", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 62, "lang": "en"}}
+{"state": "turn the smart plug on", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 75, "lang": "en"}}
+{"state": "play a retro song in my playlist", "answers": {"intent": "play_music"}, "meta": {"row": 77, "lang": "en"}}
+{"state": "remove the first alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 79, "lang": "en"}}
+{"state": "tell me a funny joke", "answers": {"intent": "general_joke"}, "meta": {"row": 83, "lang": "en"}}
+{"state": "power up the plug socket one", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 85, "lang": "en"}}
+{"state": "turn off the lights in the bathroom", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 86, "lang": "en"}}
+{"state": "raise volume", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 92, "lang": "en"}}
+{"state": "run coffee maker", "answers": {"intent": "iot_coffee"}, "meta": {"row": 93, "lang": "en"}}
+{"state": "play mf doom anything", "answers": {"intent": "play_music"}, "meta": {"row": 110, "lang": "en"}}
+{"state": "unmute after", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 117, "lang": "en"}}
+{"state": "please start vacuum cleaner", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 122, "lang": "en"}}
+{"state": "turn off room lights", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 123, "lang": "en"}}
+{"state": "i want two burgers and one coke order it fast", "answers": {"intent": "takeaway_order"}, "meta": {"row": 126, "lang": "en"}}
+{"state": "don't talk until i ask you to", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 134, "lang": "en"}}
+{"state": "confirm my alarm settings", "answers": {"intent": "alarm_query"}, "meta": {"row": 145, "lang": "en"}}
+{"state": "hey siri mute the speakers", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 146, "lang": "en"}}
+{"state": "hey what will be the predicted weather for tomorrow", "answers": {"intent": "weather_query"}, "meta": {"row": 149, "lang": "en"}}
+{"state": "alarm settings", "answers": {"intent": "alarm_query"}, "meta": {"row": 153, "lang": "en"}}
+{"state": "opinion save", "answers": {"intent": "music_likeness"}, "meta": {"row": 155, "lang": "en"}}
+{"state": "lower the speaker volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 180, "lang": "en"}}
+{"state": "turn on the robot vacuum cleaner", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 181, "lang": "en"}}
+{"state": "where is volume setting", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 184, "lang": "en"}}
+{"state": "brighten the lights in the hallway", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 185, "lang": "en"}}
+{"state": "please turn up the screen brightness all the way", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 186, "lang": "en"}}
+{"state": "do not play rock metal", "answers": {"intent": "music_dislikeness"}, "meta": {"row": 187, "lang": "en"}}
+{"state": "user friendly", "answers": {"intent": "news_query"}, "meta": {"row": 188, "lang": "en"}}
+{"state": "go to the washington post website", "answers": {"intent": "news_query"}, "meta": {"row": 190, "lang": "en"}}
+{"state": "crack a joke", "answers": {"intent": "general_joke"}, "meta": {"row": 203, "lang": "en"}}
+{"state": "if it's sunrise in stockholm what time is it in okinawa", "answers": {"intent": "datetime_convert"}, "meta": {"row": 207, "lang": "en"}}
+{"state": "disable alarm for three p. m.", "answers": {"intent": "alarm_remove"}, "meta": {"row": 209, "lang": "en"}}
+{"state": "olly change the lighting to blue", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 210, "lang": "en"}}
+{"state": "i need to know if mr. pizza delivers", "answers": {"intent": "takeaway_query"}, "meta": {"row": 212, "lang": "en"}}
+{"state": "what's the funniest joke you know", "answers": {"intent": "general_joke"}, "meta": {"row": 215, "lang": "en"}}
+{"state": "is my alarm set for tomorrow morning", "answers": {"intent": "alarm_query"}, "meta": {"row": 216, "lang": "en"}}
+{"state": "if it's five am in berlin what time is it here", "answers": {"intent": "datetime_convert"}, "meta": {"row": 217, "lang": "en"}}
+{"state": "fast", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 220, "lang": "en"}}
+{"state": "please slow down volume of speaker", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 226, "lang": "en"}}
+{"state": "what's a good joke", "answers": {"intent": "general_joke"}, "meta": {"row": 229, "lang": "en"}}
+{"state": "please turn off the light of my son's room", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 231, "lang": "en"}}
+{"state": "remove the alarm for tomorrow", "answers": {"intent": "alarm_remove"}, "meta": {"row": 243, "lang": "en"}}
+{"state": "do not make any noise until morning alarm", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 250, "lang": "en"}}
+{"state": "show me the available colors of lights", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 252, "lang": "en"}}
+{"state": "order a pizza with sausage from domino's", "answers": {"intent": "takeaway_order"}, "meta": {"row": 254, "lang": "en"}}
+{"state": "turn on wemo", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 262, "lang": "en"}}
+{"state": "start the vacuum cleaner", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 264, "lang": "en"}}
+{"state": "raise the volume of the current music", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 273, "lang": "en"}}
+{"state": "please turn the volume down", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 276, "lang": "en"}}
+{"state": "turn it up olly", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 277, "lang": "en"}}
+{"state": "i want to see all set alarms", "answers": {"intent": "alarm_query"}, "meta": {"row": 281, "lang": "en"}}
+{"state": "find some smooth jazz for me", "answers": {"intent": "play_music"}, "meta": {"row": 288, "lang": "en"}}
+{"state": "change the music mode to rock", "answers": {"intent": "music_settings"}, "meta": {"row": 290, "lang": "en"}}
+{"state": "lower volume by fifty percent", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 291, "lang": "en"}}
+{"state": "set alarm of only monday morning six am", "answers": {"intent": "alarm_set"}, "meta": {"row": 292, "lang": "en"}}
+{"state": "brighten the lights", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 298, "lang": "en"}}
+{"state": "turn off the alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 301, "lang": "en"}}
+{"state": "please dim the lights", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 303, "lang": "en"}}
+{"state": "turn off the dining room", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 304, "lang": "en"}}
+{"state": "please make me coffee without sweetener", "answers": {"intent": "iot_coffee"}, "meta": {"row": 313, "lang": "en"}}
+{"state": "i want to eat some spicy thing", "answers": {"intent": "takeaway_order"}, "meta": {"row": 314, "lang": "en"}}
+{"state": "order one pizza from pizza hut", "answers": {"intent": "takeaway_order"}, "meta": {"row": 315, "lang": "en"}}
+{"state": "when does my alarm go off", "answers": {"intent": "alarm_query"}, "meta": {"row": 318, "lang": "en"}}
+{"state": "add song to running list", "answers": {"intent": "music_likeness"}, "meta": {"row": 322, "lang": "en"}}
+{"state": "get me match highlights", "answers": {"intent": "news_query"}, "meta": {"row": 323, "lang": "en"}}
+{"state": "clean my house", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 328, "lang": "en"}}
+{"state": "can you turn up the lights", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 332, "lang": "en"}}
+{"state": "current song playing what is it", "answers": {"intent": "music_query"}, "meta": {"row": 338, "lang": "en"}}
+{"state": "i never want to hear that song again", "answers": {"intent": "music_dislikeness"}, "meta": {"row": 340, "lang": "en"}}
+{"state": "color of light should be dimmed bright", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 351, "lang": "en"}}
+{"state": "what's the date of the winter solstice two years from now", "answers": {"intent": "datetime_query"}, "meta": {"row": 353, "lang": "en"}}
+{"state": "i'm going to sleep now", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 355, "lang": "en"}}
+{"state": "set an alarm for tomorrow at six in the morning", "answers": {"intent": "alarm_set"}, "meta": {"row": 359, "lang": "en"}}
+{"state": "get me up in half an hour", "answers": {"intent": "alarm_set"}, "meta": {"row": 360, "lang": "en"}}
+{"state": "what day of the week was december four one thousand nine hundred and eighty two", "answers": {"intent": "datetime_query"}, "meta": {"row": 364, "lang": "en"}}
+{"state": "from now on mute", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 368, "lang": "en"}}
+{"state": "read me the latest international news", "answers": {"intent": "news_query"}, "meta": {"row": 375, "lang": "en"}}
+{"state": "light color for study room", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 379, "lang": "en"}}
+{"state": "put the lights off now", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 385, "lang": "en"}}
+{"state": "alexa turn the lights down to seven", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 387, "lang": "en"}}
+{"state": "what's the news for today", "answers": {"intent": "news_query"}, "meta": {"row": 388, "lang": "en"}}
+{"state": "noodles one pack make it as takeaway", "answers": {"intent": "takeaway_order"}, "meta": {"row": 394, "lang": "en"}}
+{"state": "put dark colors instead of light ones in the house", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 396, "lang": "en"}}
+{"state": "which type of music it is", "answers": {"intent": "music_query"}, "meta": {"row": 398, "lang": "en"}}
+{"state": "give me the latest news", "answers": {"intent": "news_query"}, "meta": {"row": 403, "lang": "en"}}
+{"state": "start robot vacuum cleaner", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 413, "lang": "en"}}
+{"state": "i feel like having soup for lunch order from wangs kitchen restaurant a chicken manchow soup", "answers": {"intent": "takeaway_order"}, "meta": {"row": 416, "lang": "en"}}
+{"state": "seven hundred", "answers": {"intent": "datetime_convert"}, "meta": {"row": 417, "lang": "en"}}
+{"state": "call for take-out", "answers": {"intent": "takeaway_order"}, "meta": {"row": 419, "lang": "en"}}
+{"state": "today is what date", "answers": {"intent": "datetime_query"}, "meta": {"row": 421, "lang": "en"}}
+{"state": "change the lights in my home to green", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 431, "lang": "en"}}
+{"state": "turn off my wemo socket", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 434, "lang": "en"}}
+{"state": "turn up the brightness", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 438, "lang": "en"}}
+{"state": "current weather forecast", "answers": {"intent": "weather_query"}, "meta": {"row": 442, "lang": "en"}}
+{"state": "could you please create a pandora channel for adele", "answers": {"intent": "music_settings"}, "meta": {"row": 446, "lang": "en"}}
+{"state": "is the last order is ready", "answers": {"intent": "takeaway_query"}, "meta": {"row": 451, "lang": "en"}}
+{"state": "do you have a funny joke for me", "answers": {"intent": "general_joke"}, "meta": {"row": 459, "lang": "en"}}
+{"state": "give me news from c. n. n.", "answers": {"intent": "news_query"}, "meta": {"row": 460, "lang": "en"}}
+{"state": "how long until my order is ready", "answers": {"intent": "takeaway_query"}, "meta": {"row": 464, "lang": "en"}}
+{"state": "set the living room lights to fifty percent", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 475, "lang": "en"}}
+{"state": "is there an alarm for ten am", "answers": {"intent": "alarm_query"}, "meta": {"row": 493, "lang": "en"}}
+{"state": "initialize the robot vacuum", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 494, "lang": "en"}}
+{"state": "start the vacuum", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 495, "lang": "en"}}
+{"state": "remove set alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 499, "lang": "en"}}
+{"state": "does louie's do take out", "answers": {"intent": "takeaway_query"}, "meta": {"row": 505, "lang": "en"}}
+{"state": "take out available louies", "answers": {"intent": "takeaway_query"}, "meta": {"row": 506, "lang": "en"}}
+{"state": "i hate this song", "answers": {"intent": "music_dislikeness"}, "meta": {"row": 507, "lang": "en"}}
+{"state": "i love this song", "answers": {"intent": "music_likeness"}, "meta": {"row": 508, "lang": "en"}}
+{"state": "it's time for junk food", "answers": {"intent": "takeaway_order"}, "meta": {"row": 516, "lang": "en"}}
+{"state": "don't play this song again", "answers": {"intent": "music_dislikeness"}, "meta": {"row": 522, "lang": "en"}}
+{"state": "make me a cup of coffee with salted carmel flavored cream", "answers": {"intent": "iot_coffee"}, "meta": {"row": 530, "lang": "en"}}
+{"state": "what year did this song come out", "answers": {"intent": "music_query"}, "meta": {"row": 537, "lang": "en"}}
+{"state": "stop start the juice", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 538, "lang": "en"}}
+{"state": "set a new alarm for that time", "answers": {"intent": "alarm_set"}, "meta": {"row": 545, "lang": "en"}}
+{"state": "lower the lights please", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 552, "lang": "en"}}
+{"state": "does the nearby dominoes have delivery", "answers": {"intent": "takeaway_query"}, "meta": {"row": 553, "lang": "en"}}
+{"state": "power off the wemo plug", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 554, "lang": "en"}}
+{"state": "please activate my coffee pot for me", "answers": {"intent": "iot_coffee"}, "meta": {"row": 557, "lang": "en"}}
+{"state": "please turn on my coffee pot", "answers": {"intent": "iot_coffee"}, "meta": {"row": 559, "lang": "en"}}
+{"state": "turn the plug off", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 560, "lang": "en"}}
+{"state": "i want to hear a joke", "answers": {"intent": "general_joke"}, "meta": {"row": 562, "lang": "en"}}
+{"state": "report weather for largo", "answers": {"intent": "weather_query"}, "meta": {"row": 564, "lang": "en"}}
+{"state": "where is the car", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 565, "lang": "en"}}
+{"state": "no lights in the kitchen", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 568, "lang": "en"}}
+{"state": "make it red in here", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 570, "lang": "en"}}
+{"state": "are there any forecasts of rain or snow this week", "answers": {"intent": "weather_query"}, "meta": {"row": 575, "lang": "en"}}
+{"state": "is the weather going to be nice this weekend", "answers": {"intent": "weather_query"}, "meta": {"row": 576, "lang": "en"}}
+{"state": "do you know the eta of my order", "answers": {"intent": "takeaway_query"}, "meta": {"row": 577, "lang": "en"}}
+{"state": "is it ten", "answers": {"intent": "datetime_query"}, "meta": {"row": 584, "lang": "en"}}
+{"state": "quiet time", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 586, "lang": "en"}}
+{"state": "please lower music volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 587, "lang": "en"}}
+{"state": "speak softer please", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 589, "lang": "en"}}
+{"state": "play only my list", "answers": {"intent": "play_music"}, "meta": {"row": 594, "lang": "en"}}
+{"state": "please turn on my balcony lights", "answers": {"intent": "iot_hue_lighton"}, "meta": {"row": 596, "lang": "en"}}
+{"state": "please turn off the lights in patio", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 607, "lang": "en"}}
+{"state": "brighter", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 613, "lang": "en"}}
+{"state": "what kind of music do you think i like", "answers": {"intent": "music_query"}, "meta": {"row": 623, "lang": "en"}}
+{"state": "i would like the like in the kitchen to be a different color", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 626, "lang": "en"}}
+{"state": "lights at percent", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 631, "lang": "en"}}
+{"state": "olly do i have an alarm set for tomorrow", "answers": {"intent": "alarm_query"}, "meta": {"row": 632, "lang": "en"}}
+{"state": "play best friends by yelawolf", "answers": {"intent": "play_music"}, "meta": {"row": 637, "lang": "en"}}
+{"state": "what song is playing right now", "answers": {"intent": "music_query"}, "meta": {"row": 639, "lang": "en"}}
+{"state": "raise the lights", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 643, "lang": "en"}}
+{"state": "slow down the speaker volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 651, "lang": "en"}}
+{"state": "mute the music", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 658, "lang": "en"}}
+{"state": "turn off the sounds", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 659, "lang": "en"}}
+{"state": "activate the roomba", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 660, "lang": "en"}}
+{"state": "any alarms currently listed", "answers": {"intent": "alarm_query"}, "meta": {"row": 667, "lang": "en"}}
+{"state": "this is a good tune please notate file accordingly", "answers": {"intent": "music_likeness"}, "meta": {"row": 672, "lang": "en"}}
+{"state": "set an alarm at six am", "answers": {"intent": "alarm_set"}, "meta": {"row": 678, "lang": "en"}}
+{"state": "can you make the lights go out", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 679, "lang": "en"}}
+{"state": "please power down", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 685, "lang": "en"}}
+{"state": "power off", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 686, "lang": "en"}}
+{"state": "play the song i listen to the most", "answers": {"intent": "play_music"}, "meta": {"row": 688, "lang": "en"}}
+{"state": "please find out of charley's steakhouse delivers", "answers": {"intent": "takeaway_query"}, "meta": {"row": 690, "lang": "en"}}
+{"state": "i want to set an alarm when i'm driving home tomorrow to remember to stop at the store and get food", "answers": {"intent": "alarm_set"}, "meta": {"row": 694, "lang": "en"}}
+{"state": "nice lyrics", "answers": {"intent": "music_likeness"}, "meta": {"row": 696, "lang": "en"}}
+{"state": "turn up the volume on my speakers", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 698, "lang": "en"}}
+{"state": "convert current time from g. m. t. to e. s. t.", "answers": {"intent": "datetime_convert"}, "meta": {"row": 700, "lang": "en"}}
+{"state": "where can i get a shot of tequila and some to go mexican food", "answers": {"intent": "takeaway_query"}, "meta": {"row": 704, "lang": "en"}}
+{"state": "is my reminder alarm set for dance class", "answers": {"intent": "alarm_query"}, "meta": {"row": 705, "lang": "en"}}
+{"state": "could you please confirm if paradise does takeaway", "answers": {"intent": "takeaway_query"}, "meta": {"row": 708, "lang": "en"}}
+{"state": "turn off my wifi", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 711, "lang": "en"}}
+{"state": "change volume to thirty five percent", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 712, "lang": "en"}}
+{"state": "change volume level to maximum", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 713, "lang": "en"}}
+{"state": "give me the latest political headlines across the world", "answers": {"intent": "news_query"}, "meta": {"row": 718, "lang": "en"}}
+{"state": "power on wemo", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 724, "lang": "en"}}
+{"state": "i would like to hear some good funny jokes", "answers": {"intent": "general_joke"}, "meta": {"row": 728, "lang": "en"}}
+{"state": "switch on the roomba", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 733, "lang": "en"}}
+{"state": "move to the next song in the list", "answers": {"intent": "music_settings"}, "meta": {"row": 743, "lang": "en"}}
+{"state": "my coffee is cold please make more coffee", "answers": {"intent": "iot_coffee"}, "meta": {"row": 745, "lang": "en"}}
+{"state": "make the light in here redder", "answers": {"intent": "iot_hue_lightchange"}, "meta": {"row": 749, "lang": "en"}}
+{"state": "what is the time in china", "answers": {"intent": "datetime_query"}, "meta": {"row": 756, "lang": "en"}}
+{"state": "give me some good sounds", "answers": {"intent": "play_music"}, "meta": {"row": 760, "lang": "en"}}
+{"state": "start the coffee machine at three", "answers": {"intent": "iot_coffee"}, "meta": {"row": 774, "lang": "en"}}
+{"state": "hey what time is it in london now", "answers": {"intent": "datetime_query"}, "meta": {"row": 786, "lang": "en"}}
+{"state": "order a twelve piece honey mustard wing combo with seasonimg altnon the fries and a sprite as the drink", "answers": {"intent": "takeaway_order"}, "meta": {"row": 789, "lang": "en"}}
+{"state": "hey olly i like music by sigur ros", "answers": {"intent": "music_likeness"}, "meta": {"row": 791, "lang": "en"}}
+{"state": "can you make some coffee", "answers": {"intent": "iot_coffee"}, "meta": {"row": 792, "lang": "en"}}
+{"state": "enable smart socket", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 801, "lang": "en"}}
+{"state": "turn on new smart socket", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 802, "lang": "en"}}
+{"state": "change volume settings in the negative alexa", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 803, "lang": "en"}}
+{"state": "do not talk", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 806, "lang": "en"}}
+{"state": "do you know the weather", "answers": {"intent": "weather_query"}, "meta": {"row": 813, "lang": "en"}}
+{"state": "please turn my speakers on google", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 815, "lang": "en"}}
+{"state": "do not wake me up tomorrow", "answers": {"intent": "alarm_remove"}, "meta": {"row": 817, "lang": "en"}}
+{"state": "is it going to rain on monday", "answers": {"intent": "weather_query"}, "meta": {"row": 818, "lang": "en"}}
+{"state": "please turn on the wemo plug socket", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 825, "lang": "en"}}
+{"state": "remember how i fell about this song", "answers": {"intent": "music_likeness"}, "meta": {"row": 827, "lang": "en"}}
+{"state": "speaker volume increase", "answers": {"intent": "audio_volume_up"}, "meta": {"row": 830, "lang": "en"}}
+{"state": "clear data", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 831, "lang": "en"}}
+{"state": "how many hours distance is between my location and new york", "answers": {"intent": "datetime_convert"}, "meta": {"row": 834, "lang": "en"}}
+{"state": "enter song suggestion", "answers": {"intent": "music_likeness"}, "meta": {"row": 839, "lang": "en"}}
+{"state": "search to find current local time and time zone", "answers": {"intent": "datetime_query"}, "meta": {"row": 840, "lang": "en"}}
+{"state": "what time is it in a city", "answers": {"intent": "datetime_query"}, "meta": {"row": 841, "lang": "en"}}
+{"state": "save my opinion on adele's song", "answers": {"intent": "music_likeness"}, "meta": {"row": 842, "lang": "en"}}
+{"state": "lower the overhead lights", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 844, "lang": "en"}}
+{"state": "turn off my first alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 848, "lang": "en"}}
+{"state": "what is the funniest joke ever", "answers": {"intent": "general_joke"}, "meta": {"row": 861, "lang": "en"}}
+{"state": "turn off sockets", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 864, "lang": "en"}}
+{"state": "what times are my alarms set for", "answers": {"intent": "alarm_query"}, "meta": {"row": 867, "lang": "en"}}
+{"state": "set my alarm for twelve p. m.", "answers": {"intent": "alarm_set"}, "meta": {"row": 878, "lang": "en"}}
+{"state": "alexa please turn down the lights in the house", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 879, "lang": "en"}}
+{"state": "off all type of active devices", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 880, "lang": "en"}}
+{"state": "new alarm for six am", "answers": {"intent": "alarm_set"}, "meta": {"row": 884, "lang": "en"}}
+{"state": "olly cancel all soccer practice alarms", "answers": {"intent": "alarm_remove"}, "meta": {"row": 886, "lang": "en"}}
+{"state": "check if default alarm is set", "answers": {"intent": "alarm_query"}, "meta": {"row": 889, "lang": "en"}}
+{"state": "please skip two songs", "answers": {"intent": "music_settings"}, "meta": {"row": 895, "lang": "en"}}
+{"state": "turn the light off in the living room", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 896, "lang": "en"}}
+{"state": "olly turn the light off in the living room", "answers": {"intent": "iot_hue_lightoff"}, "meta": {"row": 897, "lang": "en"}}
+{"state": "lower the intensity of light", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 901, "lang": "en"}}
+{"state": "turn my lights down to a lower level of brightness", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 906, "lang": "en"}}
+{"state": "convert eight am manila time to new york time", "answers": {"intent": "datetime_convert"}, "meta": {"row": 907, "lang": "en"}}
+{"state": "please reduce the speaker volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 908, "lang": "en"}}
+{"state": "title of song", "answers": {"intent": "music_query"}, "meta": {"row": 914, "lang": "en"}}
+{"state": "show b. b. c. news of migration", "answers": {"intent": "news_query"}, "meta": {"row": 920, "lang": "en"}}
+{"state": "what is the weather going to be like on march twentieth two thousand and seventeen", "answers": {"intent": "weather_query"}, "meta": {"row": 924, "lang": "en"}}
+{"state": "please play only are rehman's songs", "answers": {"intent": "play_music"}, "meta": {"row": 926, "lang": "en"}}
+{"state": "time between us and canada", "answers": {"intent": "datetime_convert"}, "meta": {"row": 931, "lang": "en"}}
+{"state": "time difference between u. k. and us", "answers": {"intent": "datetime_convert"}, "meta": {"row": 932, "lang": "en"}}
+{"state": "please turn socket off", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 941, "lang": "en"}}
+{"state": "cut down the volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 954, "lang": "en"}}
+{"state": "what is the time difference between california and new york", "answers": {"intent": "datetime_convert"}, "meta": {"row": 956, "lang": "en"}}
+{"state": "convert eight thirty from gtm four to g. m. t. five thirty", "answers": {"intent": "datetime_convert"}, "meta": {"row": 958, "lang": "en"}}
+{"state": "who takes less of duration of time for delivery", "answers": {"intent": "takeaway_query"}, "meta": {"row": 965, "lang": "en"}}
+{"state": "is this song ed sheeran", "answers": {"intent": "music_query"}, "meta": {"row": 966, "lang": "en"}}
+{"state": "find food and order", "answers": {"intent": "takeaway_order"}, "meta": {"row": 969, "lang": "en"}}
+{"state": "brighten of lights in living room", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 971, "lang": "en"}}
+{"state": "can you change the volume at", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 974, "lang": "en"}}
+{"state": "reduce volume", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 979, "lang": "en"}}
+{"state": "what's on the radio right now", "answers": {"intent": "music_query"}, "meta": {"row": 980, "lang": "en"}}
+{"state": "what's the name of the piece you are playing", "answers": {"intent": "music_query"}, "meta": {"row": 981, "lang": "en"}}
+{"state": "opinion petabit", "answers": {"intent": "music_likeness"}, "meta": {"row": 995, "lang": "en"}}
+{"state": "listen to my favorites", "answers": {"intent": "play_music"}, "meta": {"row": 998, "lang": "en"}}
+{"state": "brighten the light of hall", "answers": {"intent": "iot_hue_lightup"}, "meta": {"row": 1001, "lang": "en"}}
+{"state": "a quarter to two", "answers": {"intent": "datetime_query"}, "meta": {"row": 1003, "lang": "en"}}
+{"state": "set the default audio setting", "answers": {"intent": "audio_volume_other"}, "meta": {"row": 1007, "lang": "en"}}
+{"state": "decrease twenty percent", "answers": {"intent": "audio_volume_down"}, "meta": {"row": 1010, "lang": "en"}}
+{"state": "power off please", "answers": {"intent": "iot_wemo_off"}, "meta": {"row": 1016, "lang": "en"}}
+{"state": "replay the musics", "answers": {"intent": "music_settings"}, "meta": {"row": 1018, "lang": "en"}}
+{"state": "cut the songs in this musics", "answers": {"intent": "music_settings"}, "meta": {"row": 1019, "lang": "en"}}
+{"state": "say a good joke for me right now", "answers": {"intent": "general_joke"}, "meta": {"row": 1024, "lang": "en"}}
+{"state": "can you please stop speaking", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 1027, "lang": "en"}}
+{"state": "adjust the lights to a lower setting please", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 1032, "lang": "en"}}
+{"state": "what artist is this", "answers": {"intent": "music_query"}, "meta": {"row": 1036, "lang": "en"}}
+{"state": "decrease brightness of lights", "answers": {"intent": "iot_hue_lightdim"}, "meta": {"row": 1037, "lang": "en"}}
+{"state": "coffee", "answers": {"intent": "iot_coffee"}, "meta": {"row": 1042, "lang": "en"}}
+{"state": "will i need sunscreen later", "answers": {"intent": "weather_query"}, "meta": {"row": 1046, "lang": "en"}}
+{"state": "please start the coffee pot", "answers": {"intent": "iot_coffee"}, "meta": {"row": 1049, "lang": "en"}}
+{"state": "create an alarm for today at ten am", "answers": {"intent": "alarm_set"}, "meta": {"row": 1057, "lang": "en"}}
+{"state": "hey order two wings with french fries from the chinese food store", "answers": {"intent": "takeaway_order"}, "meta": {"row": 1062, "lang": "en"}}
+{"state": "find funny jokes", "answers": {"intent": "general_joke"}, "meta": {"row": 1068, "lang": "en"}}
+{"state": "clean the floor", "answers": {"intent": "iot_cleaning"}, "meta": {"row": 1070, "lang": "en"}}
+{"state": "delete alarm", "answers": {"intent": "alarm_remove"}, "meta": {"row": 1071, "lang": "en"}}
+{"state": "please mute for five minutes", "answers": {"intent": "audio_volume_mute"}, "meta": {"row": 1072, "lang": "en"}}
+{"state": "will i need an umbrella today", "answers": {"intent": "weather_query"}, "meta": {"row": 1075, "lang": "en"}}
+{"state": "hey tell me more about my meetings today", "answers": {"intent": "general_quirky"}, "meta": {"row": 1081, "lang": "en"}}
+{"state": "what is your name", "answers": {"intent": "general_quirky"}, "meta": {"row": 1090, "lang": "en"}}
+{"state": "what's shakin bacon", "answers": {"intent": "general_quirky"}, "meta": {"row": 1099, "lang": "en"}}
+{"state": "today i saw a bulldog", "answers": {"intent": "general_quirky"}, "meta": {"row": 1102, "lang": "en"}}
+{"state": "please tell me the score of the game", "answers": {"intent": "general_quirky"}, "meta": {"row": 1104, "lang": "en"}}
+{"state": "tell me some best tourist places to visit in america", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 1110, "lang": "en"}}
+{"state": "what is a good iranian film from two thousand and sixteen", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 1114, "lang": "en"}}
+{"state": "web searches", "answers": {"intent": "general_quirky"}, "meta": {"row": 1140, "lang": "en"}}
+{"state": "is soft cheese better than hard", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1151, "lang": "en"}}
+{"state": "is there anything i should be reminded about", "answers": {"intent": "calendar_query"}, "meta": {"row": 1189, "lang": "en"}}
+{"state": "add meeting reminder for sunday with my parents in law", "answers": {"intent": "calendar_set"}, "meta": {"row": 1193, "lang": "en"}}
+{"state": "show me my meetings this friday", "answers": {"intent": "calendar_query"}, "meta": {"row": 1205, "lang": "en"}}
+{"state": "remind me about the meeting tomorrow at six", "answers": {"intent": "calendar_set"}, "meta": {"row": 1209, "lang": "en"}}
+{"state": "remind me to pick up linda at five in the evening on seventh", "answers": {"intent": "calendar_set"}, "meta": {"row": 1217, "lang": "en"}}
+{"state": "erase all the events", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1224, "lang": "en"}}
+{"state": "remove succeeding event", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1239, "lang": "en"}}
+{"state": "please remind me to call mom in half an hour", "answers": {"intent": "calendar_set"}, "meta": {"row": 1280, "lang": "en"}}
+{"state": "what are my pending tasks", "answers": {"intent": "calendar_query"}, "meta": {"row": 1283, "lang": "en"}}
+{"state": "in my calendar delete all of my golf events for the current month", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1339, "lang": "en"}}
+{"state": "remind me i take mom to the hairdresser's thursday at one thousand one hundred am", "answers": {"intent": "calendar_set"}, "meta": {"row": 1357, "lang": "en"}}
+{"state": "set a meeting between myself and john at two p. m. tomorrow", "answers": {"intent": "calendar_set"}, "meta": {"row": 1375, "lang": "en"}}
+{"state": "remind me to take out the garbage at six p. m.", "answers": {"intent": "calendar_set"}, "meta": {"row": 1378, "lang": "en"}}
+{"state": "remove my appointment with my doctor on saturday please", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1384, "lang": "en"}}
+{"state": "yesterday at noontime in times square what was the protest about", "answers": {"intent": "news_query"}, "meta": {"row": 1445, "lang": "en"}}
+{"state": "delete my dinner tomorrow", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1460, "lang": "en"}}
+{"state": "remove my dinner event for monday", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1461, "lang": "en"}}
+{"state": "tell me current events between yesterday and this morning", "answers": {"intent": "calendar_query"}, "meta": {"row": 1465, "lang": "en"}}
+{"state": "cancel all my appointments", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1466, "lang": "en"}}
+{"state": "delete calendar item", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1480, "lang": "en"}}
+{"state": "remind me that i have a birthday party on the thirtieth", "answers": {"intent": "calendar_set"}, "meta": {"row": 1492, "lang": "en"}}
+{"state": "where is my meeting at nine am", "answers": {"intent": "calendar_query"}, "meta": {"row": 1505, "lang": "en"}}
+{"state": "delete the shopping trip i have scheduled march twenty third", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1518, "lang": "en"}}
+{"state": "is my schedule for july seventh completely open", "answers": {"intent": "calendar_query"}, "meta": {"row": 1519, "lang": "en"}}
+{"state": "am i free at four p. m.", "answers": {"intent": "calendar_query"}, "meta": {"row": 1520, "lang": "en"}}
+{"state": "what do i have scheduled for the nineteenth at two p. m.", "answers": {"intent": "calendar_query"}, "meta": {"row": 1525, "lang": "en"}}
+{"state": "cancel my plans to pick up my parents from the airport", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1589, "lang": "en"}}
+{"state": "research the clients that will attend the meeting", "answers": {"intent": "calendar_set"}, "meta": {"row": 1590, "lang": "en"}}
+{"state": "please set this date to repeat", "answers": {"intent": "calendar_set"}, "meta": {"row": 1591, "lang": "en"}}
+{"state": "play my station", "answers": {"intent": "play_radio"}, "meta": {"row": 1598, "lang": "en"}}
+{"state": "open pandora", "answers": {"intent": "play_radio"}, "meta": {"row": 1600, "lang": "en"}}
+{"state": "turn on the radio and play channel one hundred and six point nine", "answers": {"intent": "play_radio"}, "meta": {"row": 1602, "lang": "en"}}
+{"state": "put on", "answers": {"intent": "play_radio"}, "meta": {"row": 1610, "lang": "en"}}
+{"state": "tune to classic hits", "answers": {"intent": "play_radio"}, "meta": {"row": 1613, "lang": "en"}}
+{"state": "play kiss f. m. for me", "answers": {"intent": "play_radio"}, "meta": {"row": 1614, "lang": "en"}}
+{"state": "play the radio please", "answers": {"intent": "play_radio"}, "meta": {"row": 1622, "lang": "en"}}
+{"state": "play the last doctor who radio broadcast", "answers": {"intent": "play_radio"}, "meta": {"row": 1644, "lang": "en"}}
+{"state": "turn on some n. p. r. and play them out of my speakers", "answers": {"intent": "play_radio"}, "meta": {"row": 1646, "lang": "en"}}
+{"state": "play me this mornings show from one hundred and one point nine", "answers": {"intent": "play_radio"}, "meta": {"row": 1661, "lang": "en"}}
+{"state": "resume my audio book from karl pilkington", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1673, "lang": "en"}}
+{"state": "pause the book", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1676, "lang": "en"}}
+{"state": "open audio book history of rome", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1677, "lang": "en"}}
+{"state": "resume the playback of a child called it", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1678, "lang": "en"}}
+{"state": "play biography of jackie kennedy", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1679, "lang": "en"}}
+{"state": "play audiobook of planets", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1691, "lang": "en"}}
+{"state": "keep reading the audiobook to me", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1692, "lang": "en"}}
+{"state": "resume born to run", "answers": {"intent": "play_music"}, "meta": {"row": 1695, "lang": "en"}}
+{"state": "resume the song from the audiobook by the beatles", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1698, "lang": "en"}}
+{"state": "alexa start from my last session of joes book", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1701, "lang": "en"}}
+{"state": "start audio playback of twilight again", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1702, "lang": "en"}}
+{"state": "play me a random audio book that has to do with love", "answers": {"intent": "play_audiobook"}, "meta": {"row": 1713, "lang": "en"}}
+{"state": "olly how long should i boil the egg", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1720, "lang": "en"}}
+{"state": "how long does it take to make vegetable lasagna", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1724, "lang": "en"}}
+{"state": "knowledge about food processing", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1730, "lang": "en"}}
+{"state": "thanksgiving turkey cooking procedure in five sentences is what", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1740, "lang": "en"}}
+{"state": "what should i make for dinner", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1751, "lang": "en"}}
+{"state": "how long should i cook a steak to be medium", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1767, "lang": "en"}}
+{"state": "i need to know how to make stuffed peppers", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1769, "lang": "en"}}
+{"state": "search in the web for buying bakeware for muffins", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1779, "lang": "en"}}
+{"state": "it must be taste", "answers": {"intent": "cooking_recipe"}, "meta": {"row": 1782, "lang": "en"}}
+{"state": "lets play battleship", "answers": {"intent": "play_game"}, "meta": {"row": 1789, "lang": "en"}}
+{"state": "please begin clash of clans", "answers": {"intent": "play_game"}, "meta": {"row": 1791, "lang": "en"}}
+{"state": "play me a game of tic tac toe", "answers": {"intent": "play_game"}, "meta": {"row": 1792, "lang": "en"}}
+{"state": "let's play", "answers": {"intent": "play_game"}, "meta": {"row": 1800, "lang": "en"}}
+{"state": "play for me the game harry potter and the chamber of secrets", "answers": {"intent": "play_game"}, "meta": {"row": 1803, "lang": "en"}}
+{"state": "start a game and play with me", "answers": {"intent": "play_game"}, "meta": {"row": 1805, "lang": "en"}}
+{"state": "let's play you'll be the keeper and never change position", "answers": {"intent": "play_game"}, "meta": {"row": 1806, "lang": "en"}}
+{"state": "bring up papa pear saga", "answers": {"intent": "play_game"}, "meta": {"row": 1809, "lang": "en"}}
+{"state": "play chess", "answers": {"intent": "play_game"}, "meta": {"row": 1810, "lang": "en"}}
+{"state": "open games", "answers": {"intent": "play_game"}, "meta": {"row": 1816, "lang": "en"}}
+{"state": "open parcheese game for you and i", "answers": {"intent": "play_game"}, "meta": {"row": 1817, "lang": "en"}}
+{"state": "any special events on my list", "answers": {"intent": "lists_query"}, "meta": {"row": 1822, "lang": "en"}}
+{"state": "remove events from my list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1823, "lang": "en"}}
+{"state": "what i am going to do today", "answers": {"intent": "lists_query"}, "meta": {"row": 1825, "lang": "en"}}
+{"state": "i need to create a new to do list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1828, "lang": "en"}}
+{"state": "help me start my kitchen list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1829, "lang": "en"}}
+{"state": "add the post office to my list of errands for saturday", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1834, "lang": "en"}}
+{"state": "how the to do list for today", "answers": {"intent": "lists_query"}, "meta": {"row": 1841, "lang": "en"}}
+{"state": "can you create a list for me", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1843, "lang": "en"}}
+{"state": "delete all lists", "answers": {"intent": "lists_remove"}, "meta": {"row": 1844, "lang": "en"}}
+{"state": "remove the old music list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1845, "lang": "en"}}
+{"state": "reset my locations list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1849, "lang": "en"}}
+{"state": "add detergent to the list of things i need to buy", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1856, "lang": "en"}}
+{"state": "if there is event of show then remove it", "answers": {"intent": "lists_remove"}, "meta": {"row": 1865, "lang": "en"}}
+{"state": "replace", "answers": {"intent": "lists_remove"}, "meta": {"row": 1866, "lang": "en"}}
+{"state": "create a new list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1869, "lang": "en"}}
+{"state": "can you remove this item from the list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1870, "lang": "en"}}
+{"state": "read what is on my list", "answers": {"intent": "lists_query"}, "meta": {"row": 1871, "lang": "en"}}
+{"state": "can you please add an item to my grocery list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1872, "lang": "en"}}
+{"state": "remove my dentist's appointment from today's schedule", "answers": {"intent": "calendar_remove"}, "meta": {"row": 1881, "lang": "en"}}
+{"state": "do i have a grocery list ready", "answers": {"intent": "lists_query"}, "meta": {"row": 1882, "lang": "en"}}
+{"state": "clear the list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1893, "lang": "en"}}
+{"state": "what are my available lists", "answers": {"intent": "lists_query"}, "meta": {"row": 1900, "lang": "en"}}
+{"state": "take that off there", "answers": {"intent": "lists_remove"}, "meta": {"row": 1901, "lang": "en"}}
+{"state": "begin a new list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1910, "lang": "en"}}
+{"state": "remind me of how many lists i have", "answers": {"intent": "lists_query"}, "meta": {"row": 1918, "lang": "en"}}
+{"state": "let me know the list", "answers": {"intent": "lists_query"}, "meta": {"row": 1922, "lang": "en"}}
+{"state": "add to list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1931, "lang": "en"}}
+{"state": "what lists are in my notebook", "answers": {"intent": "lists_query"}, "meta": {"row": 1935, "lang": "en"}}
+{"state": "get rid of tax list from nineteen ninety", "answers": {"intent": "lists_remove"}, "meta": {"row": 1937, "lang": "en"}}
+{"state": "what are my current list", "answers": {"intent": "lists_query"}, "meta": {"row": 1938, "lang": "en"}}
+{"state": "list items on my work list", "answers": {"intent": "lists_query"}, "meta": {"row": 1939, "lang": "en"}}
+{"state": "add business contacts to contact list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1944, "lang": "en"}}
+{"state": "i want to remove apples from list", "answers": {"intent": "lists_remove"}, "meta": {"row": 1947, "lang": "en"}}
+{"state": "add a wrist watch to the shopping list", "answers": {"intent": "lists_createoradd"}, "meta": {"row": 1953, "lang": "en"}}
+{"state": "my party planning", "answers": {"intent": "calendar_query"}, "meta": {"row": 1954, "lang": "en"}}
+{"state": "go to the podcast and play the next episode in friends", "answers": {"intent": "play_podcasts"}, "meta": {"row": 1970, "lang": "en"}}
+{"state": "find the latest disney podcast", "answers": {"intent": "play_podcasts"}, "meta": {"row": 1983, "lang": "en"}}
+{"state": "move to the next episode of hipsterhood", "answers": {"intent": "play_podcasts"}, "meta": {"row": 1984, "lang": "en"}}
+{"state": "please skip to the next podcast episode", "answers": {"intent": "play_podcasts"}, "meta": {"row": 1993, "lang": "en"}}
+{"state": "start the next episode", "answers": {"intent": "play_podcasts"}, "meta": {"row": 1994, "lang": "en"}}
+{"state": "i want to listen to the latest mike and mike podcast", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2004, "lang": "en"}}
+{"state": "play the most recent podcast for this american life", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2010, "lang": "en"}}
+{"state": "resume series podcast", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2012, "lang": "en"}}
+{"state": "start playing ringcast", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2014, "lang": "en"}}
+{"state": "next button", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2016, "lang": "en"}}
+{"state": "add podcast favorites to playlist and start", "answers": {"intent": "play_podcasts"}, "meta": {"row": 2022, "lang": "en"}}
+{"state": "what can i do in berlin", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2026, "lang": "en"}}
+{"state": "any cultural events in california", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2029, "lang": "en"}}
+{"state": "what movie should i watch today", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2038, "lang": "en"}}
+{"state": "what movies are going around me", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2039, "lang": "en"}}
+{"state": "show me events in sacramento", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2041, "lang": "en"}}
+{"state": "i would like to know the best rating pubs in the local area", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2046, "lang": "en"}}
+{"state": "do you have any suggestion action movies", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2049, "lang": "en"}}
+{"state": "show me reviews of my nearest location food court", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2050, "lang": "en"}}
+{"state": "what shops are round here", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2052, "lang": "en"}}
+{"state": "swimming", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2053, "lang": "en"}}
+{"state": "olly what are new drama movies opening this weekend", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2055, "lang": "en"}}
+{"state": "cisco system", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2057, "lang": "en"}}
+{"state": "olly what events are happening in pondichery this weekend", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2058, "lang": "en"}}
+{"state": "find an oscar nominee movie", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2060, "lang": "en"}}
+{"state": "are there any good pizza places around here", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2065, "lang": "en"}}
+{"state": "what movies are playing tonight", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2066, "lang": "en"}}
+{"state": "where can i go tonight", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2068, "lang": "en"}}
+{"state": "tell me the local events", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2074, "lang": "en"}}
+{"state": "what is the highest rated movie now out", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2075, "lang": "en"}}
+{"state": "is there a sporting event tomorrow in chicago", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2077, "lang": "en"}}
+{"state": "recommend a movie playing in my area", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2078, "lang": "en"}}
+{"state": "search for local shops", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2080, "lang": "en"}}
+{"state": "i need a drink", "answers": {"intent": "iot_coffee"}, "meta": {"row": 2085, "lang": "en"}}
+{"state": "what are some theme parks nearby", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2086, "lang": "en"}}
+{"state": "what are some restaurants near me", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2091, "lang": "en"}}
+{"state": "is there anything special going on nearby", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2095, "lang": "en"}}
+{"state": "tell me all events for today in my city", "answers": {"intent": "recommendation_events"}, "meta": {"row": 2098, "lang": "en"}}
+{"state": "what shops are near me", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2105, "lang": "en"}}
+{"state": "kung fu panda three", "answers": {"intent": "recommendation_movies"}, "meta": {"row": 2109, "lang": "en"}}
+{"state": "can you book an uber for me", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2113, "lang": "en"}}
+{"state": "what are the traffic conditions on the one hundred and one", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2118, "lang": "en"}}
+{"state": "call city cab to airport", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2120, "lang": "en"}}
+{"state": "get city cab here to airport", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2121, "lang": "en"}}
+{"state": "google train tickets to washington d. c.", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2122, "lang": "en"}}
+{"state": "olly find the nearest uber", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2127, "lang": "en"}}
+{"state": "what time are the trains going to chennai leaving", "answers": {"intent": "transport_query"}, "meta": {"row": 2129, "lang": "en"}}
+{"state": "tell me about city traffic", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2130, "lang": "en"}}
+{"state": "how is the traffic presently near central park road", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2131, "lang": "en"}}
+{"state": "ticket for delhi", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2138, "lang": "en"}}
+{"state": "call yellow cab", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2144, "lang": "en"}}
+{"state": "can you please book train tickets for two for this friday", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2146, "lang": "en"}}
+{"state": "give me the train time", "answers": {"intent": "transport_query"}, "meta": {"row": 2148, "lang": "en"}}
+{"state": "get me a uber", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2152, "lang": "en"}}
+{"state": "book a train ticket from baltimore maryland to new york new york", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2153, "lang": "en"}}
+{"state": "find a taxi to book", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2154, "lang": "en"}}
+{"state": "how long will it take to get to the airport", "answers": {"intent": "transport_query"}, "meta": {"row": 2161, "lang": "en"}}
+{"state": "what is the traffic situation at the bazaar highway", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2163, "lang": "en"}}
+{"state": "can you tell me the times the train leaves for chicago", "answers": {"intent": "transport_query"}, "meta": {"row": 2164, "lang": "en"}}
+{"state": "travel book a train ticket", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2170, "lang": "en"}}
+{"state": "what is the fastest way to get to starbucks", "answers": {"intent": "transport_query"}, "meta": {"row": 2171, "lang": "en"}}
+{"state": "i need a ride home", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2175, "lang": "en"}}
+{"state": "please book me a taxi uber", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2177, "lang": "en"}}
+{"state": "what time does the first metrolink arrive in the morning", "answers": {"intent": "transport_query"}, "meta": {"row": 2179, "lang": "en"}}
+{"state": "how do i book a train ticket online", "answers": {"intent": "transport_query"}, "meta": {"row": 2180, "lang": "en"}}
+{"state": "i need to get a ticket via train to orlando from hwood", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2181, "lang": "en"}}
+{"state": "i need to get a ticket via train to orlando from hwood", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2182, "lang": "en"}}
+{"state": "how is traffic in city", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2188, "lang": "en"}}
+{"state": "is traffic light", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2189, "lang": "en"}}
+{"state": "what is the traffic like right now", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2190, "lang": "en"}}
+{"state": "book a train ticket from here to charleston west virginia at eight am today", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2191, "lang": "en"}}
+{"state": "what does the traffic look like on my usual route to work", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2192, "lang": "en"}}
+{"state": "call taxi", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2194, "lang": "en"}}
+{"state": "what is the traffic like now", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2196, "lang": "en"}}
+{"state": "road traffic", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2200, "lang": "en"}}
+{"state": "reserve the closest uber", "answers": {"intent": "transport_taxi"}, "meta": {"row": 2203, "lang": "en"}}
+{"state": "can you tell me about the traffic", "answers": {"intent": "transport_traffic"}, "meta": {"row": 2204, "lang": "en"}}
+{"state": "book a ticket to ny by train", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2207, "lang": "en"}}
+{"state": "please book a ticket form jaipur to mumbai on tuesday", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2209, "lang": "en"}}
+{"state": "how do i get to the mall", "answers": {"intent": "transport_query"}, "meta": {"row": 2210, "lang": "en"}}
+{"state": "how much is a train ticket to chicago", "answers": {"intent": "transport_query"}, "meta": {"row": 2211, "lang": "en"}}
+{"state": "directions please", "answers": {"intent": "transport_query"}, "meta": {"row": 2219, "lang": "en"}}
+{"state": "book a train ticket weekend of the twenty sixth phoenix to los angeles", "answers": {"intent": "transport_ticket"}, "meta": {"row": 2224, "lang": "en"}}
+{"state": "olly i need directions to madison street", "answers": {"intent": "transport_query"}, "meta": {"row": 2228, "lang": "en"}}
+{"state": "what is the nearest pizza shop", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2240, "lang": "en"}}
+{"state": "what is two hundred divided by ten", "answers": {"intent": "qa_maths"}, "meta": {"row": 2241, "lang": "en"}}
+{"state": "what is one plus one", "answers": {"intent": "qa_maths"}, "meta": {"row": 2253, "lang": "en"}}
+{"state": "tell me all about hurricane", "answers": {"intent": "qa_definition"}, "meta": {"row": 2259, "lang": "en"}}
+{"state": "what is the root of six hundred and twenty five", "answers": {"intent": "qa_maths"}, "meta": {"row": 2271, "lang": "en"}}
+{"state": "do you know math", "answers": {"intent": "qa_maths"}, "meta": {"row": 2273, "lang": "en"}}
+{"state": "what was george eliot's first november el", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2280, "lang": "en"}}
+{"state": "please give me information about john abraham lincon", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2281, "lang": "en"}}
+{"state": "what's two plus two", "answers": {"intent": "qa_maths"}, "meta": {"row": 2287, "lang": "en"}}
+{"state": "alexa i've got dollars for the month how much can i spend every day this month", "answers": {"intent": "qa_maths"}, "meta": {"row": 2288, "lang": "en"}}
+{"state": "i want to know what supermarket near me has the best price on gluten free bread", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2289, "lang": "en"}}
+{"state": "i need to ask you how many angels can dance on a pinhead", "answers": {"intent": "general_quirky"}, "meta": {"row": 2295, "lang": "en"}}
+{"state": "what's ten percent off forty dollars", "answers": {"intent": "qa_maths"}, "meta": {"row": 2302, "lang": "en"}}
+{"state": "what causes osteoperosis", "answers": {"intent": "general_quirky"}, "meta": {"row": 2305, "lang": "en"}}
+{"state": "what is four plus five", "answers": {"intent": "qa_maths"}, "meta": {"row": 2307, "lang": "en"}}
+{"state": "tell me what the product of eighteen and thirty one is", "answers": {"intent": "qa_maths"}, "meta": {"row": 2312, "lang": "en"}}
+{"state": "why are whales big", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2322, "lang": "en"}}
+{"state": "i'd like you to turn turn on the t. v.", "answers": {"intent": "iot_wemo_on"}, "meta": {"row": 2328, "lang": "en"}}
+{"state": "what is six divided by two", "answers": {"intent": "qa_maths"}, "meta": {"row": 2329, "lang": "en"}}
+{"state": "how tall is brad pitt", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2330, "lang": "en"}}
+{"state": "currency converter please", "answers": {"intent": "qa_currency"}, "meta": {"row": 2331, "lang": "en"}}
+{"state": "what brand hair spray does donald trump use", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2348, "lang": "en"}}
+{"state": "what color are chairs", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2353, "lang": "en"}}
+{"state": "what is terranova stock going for", "answers": {"intent": "qa_stock"}, "meta": {"row": 2361, "lang": "en"}}
+{"state": "what's the exchange rates between u. s. a. and china", "answers": {"intent": "qa_currency"}, "meta": {"row": 2362, "lang": "en"}}
+{"state": "what are lady gagas most popular songs", "answers": {"intent": "music_query"}, "meta": {"row": 2382, "lang": "en"}}
+{"state": "list me the stock of apple right now", "answers": {"intent": "qa_stock"}, "meta": {"row": 2383, "lang": "en"}}
+{"state": "what is the definition of logic", "answers": {"intent": "qa_definition"}, "meta": {"row": 2384, "lang": "en"}}
+{"state": "what is the temperature in indianapolis indiana", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2389, "lang": "en"}}
+{"state": "from dollar to euro", "answers": {"intent": "qa_currency"}, "meta": {"row": 2391, "lang": "en"}}
+{"state": "what is the birthday of hemingway", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2395, "lang": "en"}}
+{"state": "dollar rate at present", "answers": {"intent": "qa_currency"}, "meta": {"row": 2401, "lang": "en"}}
+{"state": "describe a sloth", "answers": {"intent": "qa_definition"}, "meta": {"row": 2406, "lang": "en"}}
+{"state": "describe hell", "answers": {"intent": "qa_definition"}, "meta": {"row": 2410, "lang": "en"}}
+{"state": "if a pencil cost four dollars and a book ten dollars cost how much i should pay if i buy two pencil and three book", "answers": {"intent": "qa_maths"}, "meta": {"row": 2412, "lang": "en"}}
+{"state": "what is the us dollar and euro exchange rate", "answers": {"intent": "qa_currency"}, "meta": {"row": 2413, "lang": "en"}}
+{"state": "what is the exchange rates in this region", "answers": {"intent": "qa_currency"}, "meta": {"row": 2417, "lang": "en"}}
+{"state": "facebook current stock rate", "answers": {"intent": "qa_stock"}, "meta": {"row": 2423, "lang": "en"}}
+{"state": "how much is the british pound", "answers": {"intent": "qa_currency"}, "meta": {"row": 2433, "lang": "en"}}
+{"state": "how much is the us dollar worth in canada", "answers": {"intent": "qa_currency"}, "meta": {"row": 2446, "lang": "en"}}
+{"state": "how much is the us dollar versus the pound", "answers": {"intent": "qa_currency"}, "meta": {"row": 2448, "lang": "en"}}
+{"state": "how much is amazon stock", "answers": {"intent": "qa_stock"}, "meta": {"row": 2452, "lang": "en"}}
+{"state": "hey what's a book", "answers": {"intent": "qa_definition"}, "meta": {"row": 2454, "lang": "en"}}
+{"state": "tell me about economy and g. d. p. about india versus china", "answers": {"intent": "general_quirky"}, "meta": {"row": 2464, "lang": "en"}}
+{"state": "what is the stock price of hdfc", "answers": {"intent": "qa_stock"}, "meta": {"row": 2465, "lang": "en"}}
+{"state": "what is a hypothesis", "answers": {"intent": "qa_definition"}, "meta": {"row": 2466, "lang": "en"}}
+{"state": "how big is the empire state building", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2475, "lang": "en"}}
+{"state": "open stock price for name", "answers": {"intent": "qa_stock"}, "meta": {"row": 2493, "lang": "en"}}
+{"state": "detail for stock price", "answers": {"intent": "qa_stock"}, "meta": {"row": 2494, "lang": "en"}}
+{"state": "for how many years was abraham lincoln president of united states", "answers": {"intent": "qa_factoid"}, "meta": {"row": 2517, "lang": "en"}}
+{"state": "describe what a sphere is", "answers": {"intent": "qa_definition"}, "meta": {"row": 2522, "lang": "en"}}
+{"state": "what exactly is a resin tooth filling", "answers": {"intent": "qa_definition"}, "meta": {"row": 2534, "lang": "en"}}
+{"state": "where is a walking trail near me", "answers": {"intent": "recommendation_locations"}, "meta": {"row": 2548, "lang": "en"}}
+{"state": "more stock price", "answers": {"intent": "qa_stock"}, "meta": {"row": 2551, "lang": "en"}}
+{"state": "could you explain the meaning of exorbitant for me please", "answers": {"intent": "qa_definition"}, "meta": {"row": 2554, "lang": "en"}}
+{"state": "meaning of", "answers": {"intent": "qa_definition"}, "meta": {"row": 2558, "lang": "en"}}
+{"state": "please describe that object for me", "answers": {"intent": "qa_definition"}, "meta": {"row": 2560, "lang": "en"}}
+{"state": "were the stocks rising or declining", "answers": {"intent": "qa_stock"}, "meta": {"row": 2562, "lang": "en"}}
+{"state": "how have megatel shares done last week", "answers": {"intent": "qa_stock"}, "meta": {"row": 2565, "lang": "en"}}
+{"state": "how much would it cost to buy stock in apple", "answers": {"intent": "qa_stock"}, "meta": {"row": 2567, "lang": "en"}}
+{"state": "let me know about the exchange rate of rupee to dirham", "answers": {"intent": "qa_currency"}, "meta": {"row": 2568, "lang": "en"}}
+{"state": "what is the prevailing exchange rate us versus indian rupees", "answers": {"intent": "qa_currency"}, "meta": {"row": 2574, "lang": "en"}}
+{"state": "check my social networks", "answers": {"intent": "social_query"}, "meta": {"row": 2595, "lang": "en"}}
+{"state": "do i have any new friend requests", "answers": {"intent": "social_query"}, "meta": {"row": 2599, "lang": "en"}}
+{"state": "post in twitter my visit to japan", "answers": {"intent": "social_post"}, "meta": {"row": 2603, "lang": "en"}}
+{"state": "give me my facebook update every three hours", "answers": {"intent": "social_query"}, "meta": {"row": 2607, "lang": "en"}}
+{"state": "show me latest notifications", "answers": {"intent": "social_query"}, "meta": {"row": 2612, "lang": "en"}}
+{"state": "is there any post from my friend mike in facebook", "answers": {"intent": "social_query"}, "meta": {"row": 2613, "lang": "en"}}
+{"state": "facebook", "answers": {"intent": "social_query"}, "meta": {"row": 2620, "lang": "en"}}
+{"state": "post the message now", "answers": {"intent": "social_post"}, "meta": {"row": 2621, "lang": "en"}}
+{"state": "olly what's hot social media topics", "answers": {"intent": "social_query"}, "meta": {"row": 2623, "lang": "en"}}
+{"state": "has anyone follow me today on twitter today", "answers": {"intent": "social_query"}, "meta": {"row": 2624, "lang": "en"}}
+{"state": "tell me what's going on with facebook", "answers": {"intent": "social_query"}, "meta": {"row": 2626, "lang": "en"}}
+{"state": "has anyone commented on my status", "answers": {"intent": "social_query"}, "meta": {"row": 2628, "lang": "en"}}
+{"state": "who is doing facebook live right now", "answers": {"intent": "social_query"}, "meta": {"row": 2633, "lang": "en"}}
+{"state": "can you contact samsung and say my washer is on fire", "answers": {"intent": "social_post"}, "meta": {"row": 2638, "lang": "en"}}
+{"state": "get me a person a. s. a. p.", "answers": {"intent": "social_post"}, "meta": {"row": 2644, "lang": "en"}}
+{"state": "new tweet to consumer service", "answers": {"intent": "social_post"}, "meta": {"row": 2657, "lang": "en"}}
+{"state": "i need you to tweet a complaint", "answers": {"intent": "social_post"}, "meta": {"row": 2668, "lang": "en"}}
+{"state": "clear out the problem", "answers": {"intent": "general_quirky"}, "meta": {"row": 2671, "lang": "en"}}
+{"state": "post a tweet as follows very bad follow up by a. b. c. company not satisfied in my account", "answers": {"intent": "social_post"}, "meta": {"row": 2677, "lang": "en"}}
+{"state": "tweet esurance and tell them they suck", "answers": {"intent": "social_post"}, "meta": {"row": 2678, "lang": "en"}}
+{"state": "tweet to google costumer service my new nexus phone stop working help please", "answers": {"intent": "social_post"}, "meta": {"row": 2685, "lang": "en"}}
+{"state": "submit a negative review about a company", "answers": {"intent": "social_post"}, "meta": {"row": 2702, "lang": "en"}}
+{"state": "add this person's email", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2703, "lang": "en"}}
+{"state": "who am i meeting today", "answers": {"intent": "calendar_query"}, "meta": {"row": 2710, "lang": "en"}}
+{"state": "here is a new email address to be added to the contacts", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2717, "lang": "en"}}
+{"state": "please check my mails", "answers": {"intent": "email_query"}, "meta": {"row": 2726, "lang": "en"}}
+{"state": "send this email to reply to the latest emails", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2732, "lang": "en"}}
+{"state": "add this new email with contact", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2744, "lang": "en"}}
+{"state": "please compose a new email to coworker", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2753, "lang": "en"}}
+{"state": "remember this email", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2777, "lang": "en"}}
+{"state": "send reply", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2778, "lang": "en"}}
+{"state": "open inbox to check unread mails", "answers": {"intent": "email_query"}, "meta": {"row": 2783, "lang": "en"}}
+{"state": "tell me about mary s.", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2788, "lang": "en"}}
+{"state": "open contacts", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2789, "lang": "en"}}
+{"state": "which contact haven't i called in twelve months", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2791, "lang": "en"}}
+{"state": "how do i reach sarah", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2797, "lang": "en"}}
+{"state": "send an email to margaret", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2804, "lang": "en"}}
+{"state": "has tom emailed me about ammunition", "answers": {"intent": "email_query"}, "meta": {"row": 2811, "lang": "en"}}
+{"state": "please sent this email to my friend", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2829, "lang": "en"}}
+{"state": "i need this email sent now", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2830, "lang": "en"}}
+{"state": "please check for recent emailstudy from this sender", "answers": {"intent": "email_query"}, "meta": {"row": 2831, "lang": "en"}}
+{"state": "add new email to my contacts macs at gmail dot com", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2832, "lang": "en"}}
+{"state": "can you tell me the contact information of jo", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2843, "lang": "en"}}
+{"state": "make a call to", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2845, "lang": "en"}}
+{"state": "does my company worker have a home phone number", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2850, "lang": "en"}}
+{"state": "write and send email to my boss", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2855, "lang": "en"}}
+{"state": "have any emails come in since four hundred today", "answers": {"intent": "email_query"}, "meta": {"row": 2867, "lang": "en"}}
+{"state": "add lowes hardware to my contact emails located in cleveland ohio", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2871, "lang": "en"}}
+{"state": "locate the email to giant eagle and put it into my contact list", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2872, "lang": "en"}}
+{"state": "how many of my contacts live or work in detroit", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2876, "lang": "en"}}
+{"state": "could you please email john saying i'm on leave", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2880, "lang": "en"}}
+{"state": "add this email address to my contacts and send an email to", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2894, "lang": "en"}}
+{"state": "what is mr. taxi's phone number it is in my contacts", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2896, "lang": "en"}}
+{"state": "please add an email for john doe to my contacts johndoe at yahoo dot com", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2902, "lang": "en"}}
+{"state": "what about new mail", "answers": {"intent": "email_query"}, "meta": {"row": 2911, "lang": "en"}}
+{"state": "have i received any emails from jeffrey burnette", "answers": {"intent": "email_query"}, "meta": {"row": 2915, "lang": "en"}}
+{"state": "please place my new email address to the contact", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2917, "lang": "en"}}
+{"state": "send an email to grandma saying we are dropping by on saturday see you then", "answers": {"intent": "email_sendemail"}, "meta": {"row": 2923, "lang": "en"}}
+{"state": "please find a contact number of jayesh and tell me", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2929, "lang": "en"}}
+{"state": "please check for new email", "answers": {"intent": "email_query"}, "meta": {"row": 2935, "lang": "en"}}
+{"state": "just add a new email in my contacts from michael", "answers": {"intent": "email_addcontact"}, "meta": {"row": 2945, "lang": "en"}}
+{"state": "contacts please", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2950, "lang": "en"}}
+{"state": "contact detail of paul", "answers": {"intent": "email_querycontact"}, "meta": {"row": 2955, "lang": "en"}}
+{"state": "display list of recent emails", "answers": {"intent": "email_query"}, "meta": {"row": 2958, "lang": "en"}}
+{"state": "hey check email", "answers": {"intent": "email_query"}, "meta": {"row": 2966, "lang": "en"}}

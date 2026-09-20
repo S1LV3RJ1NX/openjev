@@ -1,0 +1,43 @@
+{
+ "task": "helpsteer_helpfulness",
+ "hf_dataset": "nvidia/HelpSteer",
+ "config": "default",
+ "homepage": "https://huggingface.co/datasets/nvidia/HelpSteer",
+ "license": "CC-BY-4.0",
+ "redistributable": true,
+ "license_note": "CC-BY-4.0 permits redistribution with attribution.",
+ "tasksource_leak_paths": [
+  "HelpSteer/helpfulness",
+  "HelpSteer/correctness",
+  "HelpSteer/coherence",
+  "HelpSteer/complexity",
+  "HelpSteer/verbosity",
+  "HelpSteer2/helpfulness",
+  "HelpSteer2/correctness",
+  "HelpSteer2/coherence",
+  "HelpSteer2/complexity",
+  "HelpSteer2/verbosity"
+ ],
+ "description_source": "dataset documentation (card definition) and train split",
+ "primitive": "score",
+ "n_options": 5,
+ "n_test": 600,
+ "n_dev": 0,
+ "seed": 0,
+ "cap": 600,
+ "test_label_coverage": {
+  "options_in_menu": 5,
+  "options_present_as_gold": 5,
+  "options_never_gold": [],
+  "min_per_option": 58,
+  "max_per_option": 140
+ },
+ "related_not_excluded": [
+  "oasst2_dense_flat/helpfulness",
+  "oasst2_dense_flat/quality",
+  "openai/summarize_from_feedback"
+ ],
+ "sha256": {
+  "test.jsonl": "db6ed17f2610aead7ce35933ac372d32cc541f6719c75c73bb5c79af9cfec0fa"
+ }
+}

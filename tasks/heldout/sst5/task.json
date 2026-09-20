@@ -1,0 +1,41 @@
+{
+ "name": "sst5",
+ "description": "SST-5 fine-grained sentiment as a 5-level ordinal score. Tests whether ordinal questions transfer at all; Jev's score head was measured not to be genuinely ordinal.",
+ "questions": {
+  "sentiment": {
+   "instructions": "This is one sentence from a film review. Place the sentiment the writer expresses about the film on the scale below, from most negative to most positive.",
+   "criteria": [
+    "very negative: the writer condemns the film outright. Dismissive or hostile throughout, with no redeeming feature offered.",
+    "negative: the writer is unfavourable, but measured rather than scathing. Faint praise, disappointment, or a criticism that stops short of contempt.",
+    "neutral: no clear verdict either way. Descriptive, purely factual, genuinely mixed with the two sides in balance, or an aside that carries no evaluation at all.",
+    "positive: the writer is favourable, but measured rather than effusive. Approving with reservations, or praising one aspect without claiming the film is excellent.",
+    "very positive: the writer is enthusiastic and unqualified. Strong praise, superlatives, or a clear recommendation."
+   ],
+   "type": "score"
+  }
+ },
+ "costs": {},
+ "cost_escalate": null,
+ "recall_floors": {},
+ "holdout_of": [
+  "sst5",
+  "SetFit/sst5",
+  "sst-5",
+  "Realgon/sst5",
+  "Samsoup/SST5",
+  "VirtualRoyalty/SST5",
+  "gimmaru/SetFit-sst5",
+  "sst2",
+  "glue/sst2",
+  "stanfordnlp/sst2",
+  "SetFit/sst2",
+  "gpt3mix/sst2",
+  "sst",
+  "stanfordnlp/sst",
+  "sst/default",
+  "rotten_tomatoes",
+  "cornell-movie-review-data/rotten_tomatoes",
+  "mattymchen/mr",
+  "SetFit/rotten_tomatoes"
+ ]
+}
