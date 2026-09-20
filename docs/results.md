@@ -63,6 +63,56 @@ The fitted temperature is **1.917**, comfortably above 1, meaning the model was
 overconfident — the standard consequence of training to convergence on
 cross-entropy, and the reason the calibration step exists at all.
 
+## Zero-shot from the warm start alone: a negative result
+
+The scoring head can reuse the backbone's own pretrained masked-LM head at
+each option marker (`logit(yes) - logit(no)`), which adds no parameters and
+can therefore be evaluated with **no training whatsoever**. The question that
+answers: how much zero-shot ability does a good encoder give us for free?
+
+```bash
+uv run python scripts/eval_zeroshot.py --backbone answerdotai/ModernBERT-large --limit 40
+```
+
+40 rows per task, accuracy as a multiple of chance (1/K), since option counts
+run from 2 to 151 and raw accuracy is not comparable across them:
+
+| task | K | base | large |
+|---|---|---|---|
+| banking77 | 77 | 0.0x | 11.5x |
+| clinc_oos | 151 | 0.0x | 0.0x |
+| massive_intent | 60 | 1.5x | 0.0x |
+| sst5 | 5 | 0.9x | 0.7x |
+| ag_news | 4 | 0.8x | 1.1x |
+| civil_comments_toxicity | 2 | 1.0x | 1.1x |
+| helpsteer_helpfulness | 5 | 1.0x | 1.0x |
+| **mean** | | **0.7x** | **2.2x** |
+
+**The answer is: nothing usable.** ModernBERT-base is at chance across the
+board and scores a literal 0.0000 on both high-cardinality tasks.
+ModernBERT-large is better but still unusable — its 2.2x mean is carried
+almost entirely by one task, and it is *below* chance on three.
+
+This is worth stating plainly because it is easy to assume otherwise: a strong
+bidirectional encoder plus a clever output format does **not** produce a
+zero-shot decision model. The format makes zero-shot *possible*, since the
+scoring head has no per-class parameters and a new label set is just new
+input. It does not make it *present*.
+
+That is consistent with UniMC, which needed a multi-task "MC tuning" stage to
+get zero-shot behaviour, and with the Flan Collection finding that held-out
+performance is a function of training task count. **The multi-task stage is
+not an optimisation on top of the architecture; it is where the capability
+comes from.** Any plan that treated it as optional was wrong, including an
+earlier version of ours that framed the warm start as the cheap lever.
+
+One caveat on the comparison we wanted but could not run: the obvious
+alternative warm starts — `MoritzLaurer/ModernBERT-large-zeroshot-v2.0` and
+`tasksource/ModernBERT-large-nli` — are sequence-classification checkpoints
+with no masked-LM head, so they cannot be scored this way at all. Comparing
+them needs the trained scorer, which means it belongs after the multi-task
+run, not before it.
+
 ## Packing benchmark
 
 See [`architecture.md`](architecture.md#measured-is-packing-worth-its-complexity).
