@@ -263,6 +263,77 @@ from a good base needs far fewer examples than one starting from a raw
 encoder. That is the argument for the project having a general model at all,
 and it is the work below.
 
+## Zero-shot generalization: it works, and it is almost entirely prompt format
+
+The decoder path (causal backbone, per-option yes/no readout at a marker, no
+generation) transfers to schemas it has never trained on. **No training of any
+kind** — this is a stock Qwen3-1.7B with a prompt.
+
+### Headline, n=200 per task
+
+| task | primitive | K | accuracy | x chance |
+|---|---|---|---|---|
+| clinc_oos | choice | 151 | 0.285 | **43.0x** |
+| massive_intent | choice | 60 | 0.335 | 20.1x |
+| banking77 | choice | 77 | 0.170 | 13.1x |
+| sst5 | score | 5 | 0.270 | 1.4x |
+| ag_news | choice | 4 | 0.275 | 1.1x |
+| civil_comments_toxicity | noul | 2 | 0.515 | 1.0x |
+| helpsteer_helpfulness | score | 5 | 0.150 | 0.7x |
+| **mean** | | | | **11.5x** |
+
+For comparison, the encoder path scores a literal **0.000** on both
+`banking77` and `clinc_oos`, and the same decoder with a naive prompt scores
+0.8x chance overall.
+
+### The progression is the finding
+
+Every gain came from prompt format. Same model, same architecture, no
+training:
+
+| change | mean x chance |
+|---|---|
+| bare concatenation of state and options | 0.8x |
+| + each option framed as an explicit yes/no question | 2.9x |
+| + a preamble stating the task | 6.8x † |
+| + context budget raised so `clinc_oos` stops dropping out | 12.3x † |
+| + one worked demonstration (n=200) | **11.5x** |
+
+† measured at n=40; see the correction below.
+
+The control that makes this convincing is the failure: shortening the option
+framing to `{opt}\ncorrect? answer` collapsed the mean from 6.8x to 2.9x and
+`banking77` from 0.325 to 0.125. Terser prompts are not neutral here.
+
+### Correction: the n=40 numbers were inflated
+
+An earlier commit reported `banking77` at 0.325 (25.0x chance) and a 12.3x
+mean. Those were measured on **40 rows per task**. Re-run at 200 rows,
+`banking77` is **0.205** without demonstrations and 0.170 with, and the mean
+is 9.2x to 11.5x.
+
+The large jump from chance to roughly 11x is robust. The fine-grained
+comparisons between prompt variants at n=40 were not, and should not have
+been reported as results — a 6-item swing looked like a 2x difference.
+
+### What one demonstration does
+
+Paired at n=200, adding a single worked example is a net gain but not
+uniformly: mean 9.2x → 11.5x, driven by `massive_intent` (0.220 → 0.335) and
+`clinc_oos` (0.210 → 0.285), while `banking77` slips (0.205 → 0.170). It helps
+most where the label space is largest.
+
+### Honest positioning
+
+Jev scores **0.820** zero-shot on `banking77`; we score 0.170 to 0.205. That
+is not parity and nothing here should be read as approaching it. What changed
+is the qualitative gap: the model went from indistinguishable from chance to
+clearly better than chance on 60-, 77- and 151-way menus it has never seen.
+
+The ordinal (`score`) and binary (`noul`) primitives remain at chance, which
+is its own finding: whatever the format is teaching, it is not transferring to
+those.
+
 ## Not yet measured
 
 - Held-out schema transfer, which is the number that matters for the zero-shot
