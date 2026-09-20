@@ -91,9 +91,12 @@ class OpenJev(nn.Module):
         super().__init__()
         cfg = AutoConfig.from_pretrained(backbone)
         # flash-attn cannot take an arbitrary mask; SDPA can. ModernBERT's
-        # torch.compile path is also unreliable on non-CUDA backends.
+        # torch.compile path is also unreliable on non-CUDA backends, and it
+        # is a config field rather than a from_pretrained kwarg.
+        if hasattr(cfg, "reference_compile"):
+            cfg.reference_compile = False
         self.backbone = AutoModel.from_pretrained(
-            backbone, attn_implementation="sdpa", reference_compile=False
+            backbone, config=cfg, attn_implementation="sdpa"
         )
         if vocab_size is not None and vocab_size != cfg.vocab_size:
             self.backbone.resize_token_embeddings(vocab_size)
