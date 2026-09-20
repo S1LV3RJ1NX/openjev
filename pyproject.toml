@@ -6,10 +6,24 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
 keywords = ["classification", "calibration", "encoder", "routing", "typed-decisions"]
-dependencies = []
+dependencies = [
+    "accelerate>=1.15.0",
+    "pandas>=2.3.3",
+    "pyarrow>=25.0.1",
+    "safetensors>=0.8.0",
+    "scikit-learn>=1.7.2",
+    "torch>=2.14.0",
+    "tqdm>=4.70.1",
+    "transformers>=5.17.0",
+]
 
 [project.optional-dependencies]
-data = ["pandas>=2.0", "pyarrow>=15.0", "datasets>=2.0"]
+data = [
+    "pandas>=2.0",
+    "pyarrow>=15.0",
+    "datasets>=2.0",
+    "tasksource>=0.0.47",
+]
 train = ["torch>=2.5", "transformers>=4.48", "numpy>=1.26"]
 
 [project.urls]
