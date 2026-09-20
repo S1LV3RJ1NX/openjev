@@ -91,13 +91,13 @@ class TaskDataset(Dataset):
         self.distractor_prob = distractor_prob
         self.max_options = max_options
 
-    def _pad_menu(self, q: Choice) -> Choice:
+    def _pad_menu(self, q: Choice, shrink: int = 0) -> Choice:
         if not self.distractors or self.rng.random() >= self.distractor_prob:
             return q
         have = {k.strip().lower() for k in q.criteria}
         # Sample a target size log-uniformly so small menus stay common and
         # large ones appear often enough to matter.
-        hi = max(len(q.criteria) + 1, self.max_options)
+        hi = max(len(q.criteria) + 1, self.max_options // (2 ** shrink))
         target = int(math.exp(self.rng.uniform(math.log(len(q.criteria) + 1), math.log(hi))))
         extra: dict[str, str] = {}
         for _ in range(8 * (target - len(q.criteria))):
@@ -119,7 +119,7 @@ class TaskDataset(Dataset):
     def __len__(self) -> int:
         return len(self.task.examples)
 
-    def _questions_for(self, ex: Example) -> dict[str, Question]:
+    def _questions_for(self, ex: Example, shrink: int = 0) -> dict[str, Question]:
         qs = {k: v for k, v in self.task.questions.items() if k in ex.answers}
         if self.max_questions and len(qs) > self.max_questions:
             keep = self.rng.sample(list(qs), self.max_questions)
@@ -129,7 +129,7 @@ class TaskDataset(Dataset):
         out = {}
         for qid, q in qs.items():
             if isinstance(q, Choice):
-                q = self._pad_menu(q)
+                q = self._pad_menu(q, shrink)
                 keys = list(q.criteria)
                 self.rng.shuffle(keys)
                 out[qid] = Choice(
@@ -142,8 +142,20 @@ class TaskDataset(Dataset):
 
     def __getitem__(self, i: int) -> Sample:
         ex = self.task.examples[i]
-        qs = self._questions_for(ex)
-        packed = self.packer.pack(ex.state, qs)
+        # Padding a menu can push the sequence over the context budget. An
+        # augmentation that kills a multi-hour run is worse than no
+        # augmentation, so back off to progressively smaller menus and, in
+        # the limit, to the original one.
+        for attempt in range(6):
+            qs = self._questions_for(ex, shrink=attempt)
+            try:
+                packed = self.packer.pack(ex.state, qs)
+                break
+            except ValueError:
+                continue
+        else:
+            qs = {k: v for k, v in self.task.questions.items() if k in ex.answers}
+            packed = self.packer.pack(ex.state, qs)
         packed.labels = {qid: option_labels(q) for qid, q in qs.items()}  # type: ignore[attr-defined]
         targets = {}
         for qid, q in qs.items():
