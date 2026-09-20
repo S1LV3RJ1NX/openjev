@@ -138,6 +138,11 @@ def main() -> None:
     ap.add_argument("--distractor-prob", type=float, default=0.0,
                     help="probability of padding a choice menu with borrowed labels")
     ap.add_argument("--max-options", type=int, default=128)
+    ap.add_argument("--decoder", action="store_true",
+                    help="causal LM backbone with yes/no readout")
+    ap.add_argument("--freeze-backbone", action="store_true",
+                    help="train only the calibration head (use with --decoder)")
+    ap.add_argument("--preamble", default=None)
     ap.add_argument("--out", default="checkpoints")
     args = ap.parse_args()
 
@@ -153,7 +158,15 @@ def main() -> None:
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
-    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2)
+    template = (
+        "\nOption: {opt}\nIs this the correct answer to the question? answer"
+        if args.decoder else None
+    )
+    packer = Packer(
+        tok, max_len=args.max_len, max_state_len=args.max_len // 2,
+        marker=":" if args.decoder else None,
+        marker_after=args.decoder, option_template=template, preamble=args.preamble,
+    )
 
     splits = {}
     if args.mixture:
@@ -223,13 +236,29 @@ def main() -> None:
         if s != "train"
     }
 
-    model = OpenJev(backbone=args.backbone, vocab_size=len(tok)).to(device)
-    head = [p for n, p in model.named_parameters() if n.startswith("scorer")]
-    body = [p for n, p in model.named_parameters() if not n.startswith("scorer")]
-    opt = torch.optim.AdamW(
-        [{"params": body, "lr": args.lr}, {"params": head, "lr": args.head_lr}],
-        weight_decay=0.01,
-    )
+    if args.decoder:
+        from openjev.decoder import OpenJevDecoder
+
+        model = OpenJevDecoder(
+            backbone=args.backbone, tokenizer=tok, learned_head=True,
+            dtype=torch.bfloat16 if device == "cuda" else torch.float32,
+        ).to(device)
+        if args.freeze_backbone:
+            n = model.freeze_backbone()
+            total = sum(p.numel() for p in model.parameters())
+            print(f"frozen backbone: training {n / 1e6:.2f}M of {total / 1e6:.0f}M "
+                  f"({100 * n / total:.3f}%)")
+    else:
+        model = OpenJev(backbone=args.backbone, vocab_size=len(tok)).to(device)
+
+    head = [p for n, p in model.named_parameters()
+            if n.startswith("scorer") and p.requires_grad]
+    body = [p for n, p in model.named_parameters()
+            if not n.startswith("scorer") and p.requires_grad]
+    groups = [{"params": head, "lr": args.head_lr}]
+    if body:
+        groups.insert(0, {"params": body, "lr": args.lr})
+    opt = torch.optim.AdamW(groups, weight_decay=0.01)
     steps = len(train_dl) * args.epochs
     sched = get_cosine_schedule_with_warmup(opt, int(0.06 * steps), steps)
     scaler_dtype = torch.bfloat16

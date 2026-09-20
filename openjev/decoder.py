@@ -54,8 +54,24 @@ class OpenJevDecoder(nn.Module):
         self.yes_id = _one_token(tokenizer, yes_token)
         self.no_id = _one_token(tokenizer, no_token)
 
-        # Optional: a small learned scorer on top of the hidden state, for
-        # fine-tuning. Off by default so the model works untrained.
+        # A small head trained on top of the frozen backbone's hidden state.
+        #
+        # It is a *residual on the zero-shot readout*, not a replacement:
+        #
+        #     score = (logit_yes - logit_no) + head(h)
+        #
+        # with the final layer zero-initialised, so at step 0 the model is
+        # exactly the untrained zero-shot model and training can only correct
+        # it. That matters because the zero-shot readout already reaches 11.5x
+        # chance on the held-out suite, and a freshly initialised replacement
+        # head would throw that away and have to relearn it from a much
+        # smaller signal.
+        #
+        # What this is for: the untrained readout ranks options weakly and its
+        # probabilities are badly calibrated (ECE 0.56-0.81 on the tasks that
+        # sit at chance). A few hundred thousand examples of "which option is
+        # correct" should fix the calibration without touching the 1.7B
+        # backbone, which stays frozen so there are no optimizer states for it.
         self.learned_head = learned_head
         d = cfg.hidden_size
         self.scorer = (
@@ -64,7 +80,17 @@ class OpenJevDecoder(nn.Module):
             else None
         )
         if self.scorer is not None:
+            nn.init.zeros_(self.scorer[-1].weight)
             nn.init.zeros_(self.scorer[-1].bias)
+
+    def freeze_backbone(self) -> int:
+        """Freeze everything but the head. Returns the trainable count."""
+        for p in self.lm.parameters():
+            p.requires_grad_(False)
+        if self.scorer is not None:
+            for p in self.scorer.parameters():
+                p.requires_grad_(True)
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
     def _mask_mapping(self, ids, attn, blocks):
         from transformers.masking_utils import create_causal_mask
@@ -98,11 +124,12 @@ class OpenJevDecoder(nn.Module):
         flat = h.reshape(-1, h.shape[-1])
         markers = flat.index_select(0, batch["marker_flat"])
 
+        vocab = self.lm.lm_head(markers)
+        logits = (vocab[:, self.yes_id] - vocab[:, self.no_id]).float()
         if self.scorer is not None:
-            logits = self.scorer(markers).squeeze(-1)
-        else:
-            vocab = self.lm.lm_head(markers)
-            logits = (vocab[:, self.yes_id] - vocab[:, self.no_id]).float()
+            # Residual: zero at initialisation, so this starts as the exact
+            # zero-shot model.
+            logits = logits + self.scorer(markers).squeeze(-1).float()
 
         lp = grouped_log_softmax(logits, batch["marker_group"], int(batch["n_groups"]))
         return OpenJevOutput(log_probs=lp, marker_group=batch["marker_group"])
