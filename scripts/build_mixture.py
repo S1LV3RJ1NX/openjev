@@ -186,6 +186,8 @@ def main() -> None:
     ap.add_argument("--retries", type=int, default=4)
     ap.add_argument("--throttle", type=float, default=0.4,
                     help="seconds between successful loads, to stay under Hub limits")
+    ap.add_argument("--out", default=str(OUT),
+                    help="output directory for the task dirs")
     ap.add_argument("--min-k", type=int, default=0,
                     help="only keep tasks with at least this many options")
     args = ap.parse_args()
@@ -198,7 +200,8 @@ def main() -> None:
     listing = listing[listing.task_type == "Classification"]
     print(f"{len(listing)} Classification tasks in tasksource")
 
-    OUT.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
     built, skipped_holdout, failed, rejected = 0, [], [], 0
     manifest = []
 
@@ -225,14 +228,13 @@ def main() -> None:
         if args.min_k and len(next(iter(task.questions.values())).labels) < args.min_k:
             rejected += 1
             continue
-        task.save(OUT.parent / "mixture_tmp", split="train")
-        (OUT.parent / "mixture_tmp" / task.name).rename(OUT / task.name)
+        task.save(out_dir, split="train")
         built += 1
         k = len(next(iter(task.questions.values())).labels)
         manifest.append({"name": task.name, "source": tid, "n": len(task), "K": k})
         print(f"[{built:3d}] {task.name[:44]:<46} n={len(task):<5} K={k}")
 
-    (OUT / "manifest.json").write_text(
+    (out_dir / "manifest.json").write_text(
         json.dumps(
             {
                 "tasks": manifest,
