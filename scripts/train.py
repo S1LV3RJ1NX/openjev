@@ -124,7 +124,10 @@ def fit_temperature(per_q):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--task", required=True)
+    ap.add_argument("--task")
+    ap.add_argument("--mixture", help="directory of task dirs, trained jointly")
+    ap.add_argument("--eval-heldout", action="store_true",
+                    help="score the held-out suite after training")
     ap.add_argument("--backbone", default="answerdotai/ModernBERT-base")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--bs", type=int, default=16)
@@ -139,22 +142,43 @@ def main() -> None:
     # hung for minutes at a time. Line-buffer so `tail -f` is useful.
     sys.stdout.reconfigure(line_buffering=True)
 
-    name = Path(args.task).name
-    heldout_check(name, args.allow_heldout)
+    if not (args.task or args.mixture):
+        raise SystemExit("pass --task or --mixture")
+    name = Path(args.mixture or args.task).name
+    if args.task:
+        heldout_check(name, args.allow_heldout)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
     packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2)
 
     splits = {}
-    for s in ("train", "dev", "test"):
-        t = Task.load(args.task, s)
-        if len(t):
-            splits[s] = t
-    print(f"task {name}: " + "  ".join(f"{k}={len(v)}" for k, v in splits.items()))
-    print(f"questions: {len(splits['train'].questions)}  device: {device}")
+    if args.mixture:
+        from torch.utils.data import ConcatDataset
 
-    train_ds = TaskDataset(splits["train"], packer, shuffle_options=True)
+        dirs = sorted(p for p in Path(args.mixture).iterdir() if (p / "task.json").exists())
+        tasks = [Task.load(p, "train") for p in dirs]
+        tasks = [t for t in tasks if len(t)]
+        # Every task in a mixture must be disjoint from the held-out suite.
+        # The builder already filtered, but a mixture can be assembled by
+        # hand, so check again rather than trust it.
+        from openjev.heldout import assert_training_mixture_clean
+        assert_training_mixture_clean([t.description.replace("tasksource ", "") for t in tasks])
+        train_ds = ConcatDataset(
+            [TaskDataset(t, packer, shuffle_options=True, seed=i) for i, t in enumerate(tasks)]
+        )
+        ks = [len(next(iter(t.questions.values())).labels) for t in tasks]
+        print(f"mixture {name}: {len(tasks)} tasks, {sum(len(t) for t in tasks)} rows")
+        print(f"option counts: min {min(ks)} median {sorted(ks)[len(ks)//2]} max {max(ks)}")
+        print(f"device: {device}")
+    else:
+        for s in ("train", "dev", "test"):
+            t = Task.load(args.task, s)
+            if len(t):
+                splits[s] = t
+        print(f"task {name}: " + "  ".join(f"{k}={len(v)}" for k, v in splits.items()))
+        print(f"questions: {len(splits['train'].questions)}  device: {device}")
+        train_ds = TaskDataset(splits["train"], packer, shuffle_options=True)
     fn = partial(collate, packer=packer)
 
     def wrap(ds, shuffle):
@@ -217,6 +241,29 @@ def main() -> None:
         report(evaluate(model, eval_dls["test"], splits["test"], device), "== TEST (raw)")
         report(evaluate(model, eval_dls["test"], splits["test"], device, temps),
                "== TEST (temperature-scaled)")
+
+    if args.eval_heldout:
+        from openjev.heldout import load_suite
+
+        print("\n== HELD-OUT SUITE (schemas never trained on)")
+        print(f"{'task':<26}{'K':>5}{'n':>6}{'acc':>8}{'1/K':>7}{'x chance':>10}{'macroF1':>9}")
+        accs = []
+        for tname, task in load_suite().items():
+            qid = next(iter(task.questions))
+            K = len(task.questions[qid].labels)
+            dl = wrap(TaskDataset(task, packer, shuffle_options=False), False)
+            try:
+                per_q = evaluate(model, dl, task, device)
+            except Exception as e:  # noqa: BLE001
+                print(f"{tname:<26}{K:>5}  failed: {str(e)[:48]}")
+                continue
+            d = per_q.get(qid) or next(iter(per_q.values()))
+            a = accuracy(d["pred"], d["gold"])
+            accs.append(a * K)
+            print(f"{tname:<26}{K:>5}{len(d['gold']):>6}{a:>8.4f}{1 / K:>7.3f}"
+                  f"{a * K:>9.1f}x{macro_f1(d['pred'], d['gold']):>9.4f}")
+        if accs:
+            print(f"\nmean multiple of chance: {sum(accs) / len(accs):.1f}x")
 
     out_dir = Path(args.out) / name
     out_dir.mkdir(parents=True, exist_ok=True)
