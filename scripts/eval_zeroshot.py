@@ -68,19 +68,21 @@ def main() -> None:
     ap.add_argument("--max-len", type=int, default=4096)
     ap.add_argument("--limit", type=int, default=None, help="rows per task, for smoke runs")
     ap.add_argument("--decoder", action="store_true", help="use a causal LM backbone")
+    ap.add_argument("--preamble", default=None, help="instruction prepended to every state")
+    ap.add_argument("--template", default=None, help="override the per-option rendering")
     args = ap.parse_args()
 
     sys.stdout.reconfigure(line_buffering=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
     marker = tok.mask_token if not args.decoder else ":"
-    template = (
+    template = args.template or (
         "\nOption: {opt}\nIs this the correct answer to the question? answer"
         if args.decoder else None
     )
     packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2,
                     marker=marker, marker_after=args.decoder,
-                    option_template=template)
+                    option_template=template, preamble=args.preamble)
     if args.decoder:
         from openjev.decoder import OpenJevDecoder
 

@@ -95,6 +95,7 @@ class Packer:
         marker: str | None = None,
         marker_after: bool = False,
         option_template: str | None = None,
+        preamble: str | None = None,
     ):
         self.tok = tokenizer
         self.max_len = max_len
@@ -141,6 +142,11 @@ class Packer:
         # 'yes' is not a plausible next token and the readout is noise.
         # e.g. "\nOption: {opt}\nDoes this option answer the question? answer"
         self.option_template = option_template
+        # Text prepended to every state. An instruction-tuned model behaves
+        # very differently depending on whether it can tell what job it is
+        # being asked to do; a bare concatenation of state and options reads
+        # like nothing in its training distribution.
+        self.preamble = preamble
 
     def _ids(self, text: str, limit: int | None = None) -> list[int]:
         out = self.tok(text, add_special_tokens=False)["input_ids"]
@@ -150,7 +156,10 @@ class Packer:
         ids: list[int] = [self.cls_id]
         block: list[int] = [0]
 
-        state_ids = self._ids(render_state(state), self.max_state_len)
+        text = render_state(state)
+        if self.preamble:
+            text = self.preamble + text
+        state_ids = self._ids(text, self.max_state_len)
         ids += state_ids + [self.sep_id]
         block += [0] * (len(state_ids) + 1)
 
