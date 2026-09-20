@@ -40,21 +40,28 @@ either runs against the other and comparisons are like-for-like:
 
 ---
 
-## Status: no model yet
+## Status: first result in, no released checkpoint
 
-**There is no trained checkpoint in this repository.** Nothing here has been
-validated as a model, because the model has not been built.
+The architecture trains. On Banking77, fine-tuned from ModernBERT-base in
+**13.5 minutes on one H100**, it reaches **92.3% accuracy** (macro-F1 0.923,
+ECE 0.029 after calibration) on a 77-way task, against 82.0% for a zero-shot
+commercial reference on the same test split.
+
+**Read that carefully**: we trained on 9,839 Banking77 examples and the
+reference did not. It measures what having labels buys you, not which model is
+better, and it says nothing about zero-shot ability. Full numbers and caveats
+in [`docs/results.md`](docs/results.md).
 
 What exists today:
 
-- `openjev/` — the typed-decision format and a metric suite
-- `tasks/` — two evaluation suites, with baselines measured on an existing
-  commercial system so we know what we are aiming at
-- `docs/` — the architecture we intend to build, and why
+- `openjev/` — the typed-decision format, a metric suite, the packer and model
+- `tasks/` — two evaluation suites, with reference baselines measured on an
+  existing commercial system so we know what we are aiming at
+- `scripts/` — a readable training loop and dataset builders
+- `docs/` — the architecture, the evaluation, prior art, results
 
-We are publishing at this stage so the evaluation and the claims can be
-scrutinised *before* there are results to defend. If you are here for a model
-to download, come back later.
+Not done yet: held-out schema transfer (the number we expect to lose on), the
+`score` and `noul` primitives, and a released checkpoint.
 
 ---
 
@@ -81,7 +88,8 @@ to self-host, which matters when the data cannot leave your network.
 - A trainer that runs on a consumer GPU, and a converter so you can bring a CSV
   or a `tasksource` task
 
-See [`docs/architecture.md`](docs/architecture.md) for the design and the
+See [`docs/architecture.md`](docs/architecture.md) for the design, and
+[`docs/results.md`](docs/results.md) for measurements. The
 reasoning behind each choice.
 
 ## The evaluation
