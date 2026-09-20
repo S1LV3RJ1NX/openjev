@@ -94,6 +94,7 @@ class Packer:
         max_state_len: int | None = None,
         marker: str | None = None,
         marker_after: bool = False,
+        option_template: str | None = None,
     ):
         self.tok = tokenizer
         self.max_len = max_len
@@ -134,6 +135,12 @@ class Packer:
         # before the text has not seen the text it is meant to be scoring, so
         # the marker has to follow it.
         self.marker_after = marker_after
+        # How each option is rendered. An encoder reads a marker inside the
+        # block and needs no framing. A causal LM does: at the readout
+        # position it must be obvious that a yes/no question was asked, or
+        # 'yes' is not a plausible next token and the readout is noise.
+        # e.g. "\nOption: {opt}\nDoes this option answer the question? answer"
+        self.option_template = option_template
 
     def _ids(self, text: str, limit: int | None = None) -> list[int]:
         out = self.tok(text, add_special_tokens=False)["input_ids"]
@@ -161,6 +168,8 @@ class Packer:
             opts = question_options(q)
             n_options.append(len(opts))
             for opt in opts:
+                if self.option_template:
+                    opt = self.option_template.format(opt=opt)
                 opt_ids = self._ids(opt)
                 if self.marker_after:
                     ids += opt_ids

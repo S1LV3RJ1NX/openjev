@@ -74,8 +74,13 @@ def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
     marker = tok.mask_token if not args.decoder else ":"
+    template = (
+        "\nOption: {opt}\nIs this the correct answer to the question? answer"
+        if args.decoder else None
+    )
     packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2,
-                    marker=marker, marker_after=args.decoder)
+                    marker=marker, marker_after=args.decoder,
+                    option_template=template)
     if args.decoder:
         from openjev.decoder import OpenJevDecoder
 
