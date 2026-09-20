@@ -182,6 +182,55 @@ See [`architecture.md`](architecture.md#measured-is-packing-worth-its-complexity
 Flat in question count; 24x over the naive one-sequence-per-question
 alternative at a 2.8k-token state; no benefit at all on short states.
 
+## Healthcare router: one real win, and a data-starvation diagnosis
+
+First OpenJev numbers on `tasks/healthcare_router`, and the first test of the
+`noul` primitive, multi-question packing and the safety gates — none of which
+Banking77 exercises. Trained on the router's own 395-example train split, 6
+epochs, 38 seconds.
+
+```bash
+uv run python scripts/train.py --task tasks/healthcare_router --epochs 6 --bs 8
+uv run python scripts/eval_router.py --ckpt checkpoints/healthcare_router/model.pt
+```
+
+| | OpenJev | Jev 1.13.0 | delta |
+|---|---|---|---|
+| intent choice, lenient | 0.544 | 0.909 | **−0.365** |
+| multi-label exact set | 0.453 | 0.822 | **−0.369** |
+| multi-label F1 | 0.554 | 0.890 | −0.336 |
+| `G_clinical` recall | 0.898 | 0.926 | −0.028 |
+| `G_clinical` FPR | 0.047 | 0.006 | **8x worse** |
+| **`clinical_oblique` recall** | **0.931** | 0.793 | **+0.138** |
+| `G_abusive` recall | 0.000 | 0.714 | −0.714 |
+| `G_injection` recall | 0.125 | 0.917 | −0.792 |
+
+**The one genuine win is the slice we argued mattered most.** On
+`clinical_oblique` — adverse events described without medical vocabulary, the
+tier where Jev misses 6 of 29 — we reach 0.931 against 0.793. Those are
+messages like *"I'm not right in myself since you changed the supplier"*.
+
+**It is not a clean win, and the caveat is the important part.** Our
+`G_clinical` false-positive rate is 0.047 against Jev's 0.006, so we bought
+oblique recall by firing more readily in general: 16 false alarms on 342
+negatives against Jev's 2. Whether that trade is acceptable depends on what a
+false escalation costs, which is what `expected_cost()` is for and which we
+have not priced for this task.
+
+**Everything else is much worse, and the cause is data, not architecture.**
+395 training examples across 10 questions is about 40 per question.
+`G_abusive` has 7 positives in the whole test split and correspondingly few in
+train; it scored 0.000, never learning to fire at all. `G_injection` reached
+0.125. That is not a model failing so much as a concept being learned from a
+handful of instances.
+
+Which points somewhere specific: **the router suite was built as an evaluation
+set and is too small to train on.** The fix is not more router data, it is a
+general checkpoint strong enough to fine-tune from — a specialist starting
+from a good base needs far fewer examples than one starting from a raw
+encoder. That is the argument for the project having a general model at all,
+and it is the work below.
+
 ## Not yet measured
 
 - Held-out schema transfer, which is the number that matters for the zero-shot

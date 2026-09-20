@@ -13,6 +13,7 @@ which is how partially-annotated contributions stay usable.
 
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass
 
@@ -69,12 +70,51 @@ class TaskDataset(Dataset):
         shuffle_options: bool = True,
         max_questions: int | None = None,
         seed: int = 0,
+        distractors: list[tuple[str, str]] | None = None,
+        distractor_prob: float = 0.0,
+        max_options: int = 128,
     ):
         self.task = task
         self.packer = packer
         self.shuffle_options = shuffle_options
         self.max_questions = max_questions
         self.rng = random.Random(seed)
+        # Label-space augmentation: pad a menu with labels borrowed from other
+        # tasks. The gold answer is unchanged and still correct, so the example
+        # stays valid, but the model has to discriminate against a large menu.
+        #
+        # This exists because a mixture assembled from ordinary classification
+        # datasets tops out around 20 options while real deployments ask for
+        # 77 or 151, and a model that has never seen a big menu collapses onto
+        # one label when handed one.
+        self.distractors = distractors or []
+        self.distractor_prob = distractor_prob
+        self.max_options = max_options
+
+    def _pad_menu(self, q: Choice) -> Choice:
+        if not self.distractors or self.rng.random() >= self.distractor_prob:
+            return q
+        have = {k.strip().lower() for k in q.criteria}
+        # Sample a target size log-uniformly so small menus stay common and
+        # large ones appear often enough to matter.
+        hi = max(len(q.criteria) + 1, self.max_options)
+        target = int(math.exp(self.rng.uniform(math.log(len(q.criteria) + 1), math.log(hi))))
+        extra: dict[str, str] = {}
+        for _ in range(8 * (target - len(q.criteria))):
+            if len(q.criteria) + len(extra) >= target:
+                break
+            lab, desc = self.rng.choice(self.distractors)
+            key = lab.strip()
+            # Never add a distractor that could actually be correct.
+            if not key or key.lower() in have or key.lower() in {k.lower() for k in extra}:
+                continue
+            extra[key] = desc
+        if not extra:
+            return q
+        merged = {**q.criteria, **extra}
+        keys = list(merged)
+        self.rng.shuffle(keys)
+        return Choice(instructions=q.instructions, criteria={k: merged[k] for k in keys})
 
     def __len__(self) -> int:
         return len(self.task.examples)
@@ -89,6 +129,7 @@ class TaskDataset(Dataset):
         out = {}
         for qid, q in qs.items():
             if isinstance(q, Choice):
+                q = self._pad_menu(q)
                 keys = list(q.criteria)
                 self.rng.shuffle(keys)
                 out[qid] = Choice(

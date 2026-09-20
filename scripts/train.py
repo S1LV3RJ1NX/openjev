@@ -31,7 +31,7 @@ from transformers import AutoTokenizer, get_cosine_schedule_with_warmup
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from openjev import Task  # noqa: E402
+from openjev import Choice, Task  # noqa: E402
 from openjev.data import TaskDataset, collate, option_labels  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
 from openjev.metrics import accuracy, bootstrap_ci, brier, ece, macro_f1  # noqa: E402
@@ -135,6 +135,9 @@ def main() -> None:
     ap.add_argument("--head-lr", type=float, default=1e-3)
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--allow-heldout", action="store_true")
+    ap.add_argument("--distractor-prob", type=float, default=0.0,
+                    help="probability of padding a choice menu with borrowed labels")
+    ap.add_argument("--max-options", type=int, default=128)
     ap.add_argument("--out", default="checkpoints")
     args = ap.parse_args()
 
@@ -164,13 +167,38 @@ def main() -> None:
         # hand, so check again rather than trust it.
         from openjev.heldout import assert_training_mixture_clean
         assert_training_mixture_clean([t.description.replace("tasksource ", "") for t in tasks])
-        train_ds = ConcatDataset(
-            [TaskDataset(t, packer, shuffle_options=True, seed=i) for i, t in enumerate(tasks)]
-        )
         ks = [len(next(iter(t.questions.values())).labels) for t in tasks]
         print(f"mixture {name}: {len(tasks)} tasks, {sum(len(t) for t in tasks)} rows")
         print(f"option counts: min {min(ks)} median {sorted(ks)[len(ks)//2]} max {max(ks)}")
         print(f"device: {device}")
+
+        # Distractor pool for label-space augmentation, drawn from every
+        # task's label set. Without it the model never sees a menu larger
+        # than the biggest task in the mixture, and collapses onto one label
+        # when a deployment hands it 77 or 151 options.
+        pool: list[tuple[str, str]] = []
+        for t in tasks:
+            for q in t.questions.values():
+                if isinstance(q, Choice):
+                    for lab, desc in q.criteria.items():
+                        pool.append((str(lab), str(desc) if desc else str(lab)))
+        seen, uniq = set(), []
+        for lab, desc in pool:
+            if lab.strip().lower() not in seen:
+                seen.add(lab.strip().lower())
+                uniq.append((lab, desc))
+        print(f"distractor pool: {len(uniq)} distinct labels  "
+              f"(augmentation p={args.distractor_prob}, max options {args.max_options})")
+        train_ds = ConcatDataset(
+            [
+                TaskDataset(
+                    t, packer, shuffle_options=True, seed=i,
+                    distractors=uniq, distractor_prob=args.distractor_prob,
+                    max_options=args.max_options,
+                )
+                for i, t in enumerate(tasks)
+            ]
+        )
     else:
         for s in ("train", "dev", "test"):
             t = Task.load(args.task, s)
