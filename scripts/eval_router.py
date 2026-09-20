@@ -86,6 +86,7 @@ def main() -> None:
     ap.add_argument("--bs", type=int, default=8)
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--thresh", type=float, default=0.5)
+    ap.add_argument("--dump", help="write per-item predictions for paired comparison")
     args = ap.parse_args()
 
     sys.stdout.reconfigure(line_buffering=True)
@@ -103,6 +104,27 @@ def main() -> None:
     print(f"{args.ckpt}  {len(task)} items  device={device}")
     preds = predict(model, task, packer, device, args.bs)
     key = lambda e: e.state if isinstance(e.state, str) else str(e.state)  # noqa: E731
+
+    if args.dump:
+        import json
+
+        out = {}
+        for e in task.examples:
+            rec = preds[key(e)]
+            row = {"tier": e.tier}
+            if "A_intent" in rec:
+                p = rec["A_intent"]
+                row["intent_pred"] = max(p, key=p.get)
+                row["intent_ok"] = int(row["intent_pred"] in (e.meta.get("acceptable") or []))
+            row["nouls"] = {
+                q: int(v.get("true", 0.0) >= args.thresh)
+                for q, v in rec.items()
+                if set(v) == {"false", "true"}
+            }
+            out[key(e)] = row
+        with open(args.dump, "w") as f:
+            json.dump(out, f)
+        print(f"per-item predictions -> {args.dump}")
 
     by_tier = defaultdict(list)
     for e in task.examples:
