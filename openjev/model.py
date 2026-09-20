@@ -26,6 +26,27 @@ from transformers import AutoConfig, AutoModel
 from .schema import Answer
 
 
+def block_and_mask_fn(block_id: torch.Tensor):
+    """An `and_mask_function` for transformers' masking utilities.
+
+    Returns True where query token i may attend to key token j: j is in the
+    shared state prefix (block 0), or i and j are in the same question block.
+
+    This is the supported extension point. ModernBERT rebuilds its masks from
+    a 2D padding mask unless it is handed a ready-made dict, and it alternates
+    global and sliding-window layers — so ANDing our condition into each of
+    its own masks keeps that structure intact, where substituting a single 4D
+    mask would silently make every layer global.
+    """
+
+    def fn(batch_idx, head_idx, q_idx, kv_idx):
+        bi = block_id[batch_idx, q_idx]
+        bj = block_id[batch_idx, kv_idx]
+        return (bj == 0) | (bi == bj)
+
+    return fn
+
+
 def block_diagonal_mask(
     block_id: torch.Tensor, attention_mask: torch.Tensor, dtype: torch.dtype
 ) -> torch.Tensor:
@@ -111,13 +132,35 @@ class OpenJev(nn.Module):
         )
         nn.init.zeros_(self.scorer[-1].bias)
 
+    def _mask_mapping(self, ids, attn, blocks):
+        """ModernBERT's own masks, with block isolation ANDed into each."""
+        from transformers.masking_utils import (
+            create_bidirectional_mask,
+            create_bidirectional_sliding_window_mask,
+        )
+
+        cfg = self.backbone.config
+        probe = torch.empty(
+            (*ids.shape, 1), dtype=self.backbone.dtype, device=ids.device
+        )
+        kwargs = {
+            "config": cfg,
+            "inputs_embeds": probe,
+            "attention_mask": attn,
+            "and_mask_function": block_and_mask_fn(blocks),
+        }
+        return {
+            "full_attention": create_bidirectional_mask(**kwargs),
+            "sliding_attention": create_bidirectional_sliding_window_mask(**kwargs),
+        }
+
     def forward(self, batch: dict[str, torch.Tensor]) -> OpenJevOutput:
         ids = batch["input_ids"]
         attn = batch["attention_mask"]
         blocks = batch["block_id"]
 
-        mask = block_diagonal_mask(blocks, attn, self.backbone.dtype)
-        h = self.backbone(input_ids=ids, attention_mask=mask).last_hidden_state
+        mapping = self._mask_mapping(ids, attn, blocks)
+        h = self.backbone(input_ids=ids, attention_mask=mapping).last_hidden_state
 
         flat = h.reshape(-1, h.shape[-1])
         markers = flat.index_select(0, batch["marker_flat"])
