@@ -73,8 +73,9 @@ def main() -> None:
     sys.stdout.reconfigure(line_buffering=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
-    marker = tok.mask_token if not args.decoder else None
-    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2, marker=marker)
+    marker = tok.mask_token if not args.decoder else ":"
+    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2,
+                    marker=marker, marker_after=args.decoder)
     if args.decoder:
         from openjev.decoder import OpenJevDecoder
 

@@ -93,6 +93,7 @@ class Packer:
         max_len: int = 8192,
         max_state_len: int | None = None,
         marker: str | None = None,
+        marker_after: bool = False,
     ):
         self.tok = tokenizer
         self.max_len = max_len
@@ -110,9 +111,29 @@ class Packer:
                 tokenizer.add_special_tokens({"additional_special_tokens": [marker]})
         self.marker = marker
         self.marker_id = tokenizer.convert_tokens_to_ids(marker)
+
+        # Decoder tokenizers generally have no CLS or SEP. Fall back to BOS
+        # and a newline, and to EOS for padding, rather than emitting None
+        # into the id list.
+        nl = tokenizer("\n", add_special_tokens=False)["input_ids"]
         self.cls_id = tokenizer.cls_token_id
+        if self.cls_id is None:
+            self.cls_id = tokenizer.bos_token_id
         self.sep_id = tokenizer.sep_token_id
+        if self.sep_id is None:
+            self.sep_id = nl[0] if nl else tokenizer.eos_token_id
         self.pad_id = tokenizer.pad_token_id
+        if self.pad_id is None:
+            self.pad_id = tokenizer.eos_token_id
+        if self.cls_id is None:  # some decoders have no BOS either
+            self.cls_id = self.sep_id
+
+        # Where the readout sits relative to the option text. A bidirectional
+        # encoder can read a marker placed *before* the option, because it
+        # sees the whole block either way. A causal model cannot: a position
+        # before the text has not seen the text it is meant to be scoring, so
+        # the marker has to follow it.
+        self.marker_after = marker_after
 
     def _ids(self, text: str, limit: int | None = None) -> list[int]:
         out = self.tok(text, add_special_tokens=False)["input_ids"]
@@ -140,10 +161,15 @@ class Packer:
             opts = question_options(q)
             n_options.append(len(opts))
             for opt in opts:
-                marker_pos.append(len(ids))
-                marker_block.append(b)
                 opt_ids = self._ids(opt)
-                ids += [self.marker_id] + opt_ids
+                if self.marker_after:
+                    ids += opt_ids
+                    marker_pos.append(len(ids))
+                    ids.append(self.marker_id)
+                else:
+                    marker_pos.append(len(ids))
+                    ids += [self.marker_id] + opt_ids
+                marker_block.append(b)
                 block += [b] * (len(opt_ids) + 1)
 
             ids.append(self.sep_id)
