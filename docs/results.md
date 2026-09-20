@@ -204,18 +204,50 @@ uv run python scripts/eval_router.py --ckpt checkpoints/healthcare_router/model.
 | **`clinical_oblique` recall** | **0.931** | 0.793 | **+0.138** |
 | `G_abusive` recall | 0.000 | 0.714 | −0.714 |
 | `G_injection` recall | 0.125 | 0.917 | −0.792 |
+| `G_pharmacy` FPR | 0.826 | 0.087 | **collapsed to majority class** |
 
-**The one genuine win is the slice we argued mattered most.** On
-`clinical_oblique` — adverse events described without medical vocabulary, the
-tier where Jev misses 6 of 29 — we reach 0.931 against 0.793. Those are
-messages like *"I'm not right in myself since you changed the supplier"*.
+### Paired McNemar against the same 450 items
 
-**It is not a clean win, and the caveat is the important part.** Our
-`G_clinical` false-positive rate is 0.047 against Jev's 0.006, so we bought
-oblique recall by firing more readily in general: 16 false alarms on 342
-negatives against Jev's 2. Whether that trade is acceptable depends on what a
-false escalation costs, which is what `expected_cost()` is for and which we
-have not priced for this task.
+Summary numbers hide who was right on which item. Exact two-sided McNemar,
+where `b01` counts items Jev got right and we did not, and `b10` the reverse:
+
+| slice | n | ours | Jev | b01 | b10 | p |
+|---|---|---|---|---|---|---|
+| intent choice (lenient) | 338 | 0.544 | 0.941 | 142 | 8 | 7.8e-33 |
+| multi-label exact set | 450 | 0.453 | 0.822 | 180 | 14 | 6.6e-38 |
+| `G_injection` correctness | 450 | 0.949 | 0.996 | 21 | 0 | 9.5e-07 |
+| `G_clinical` correctness | 450 | 0.940 | 0.978 | 24 | 7 | 3.3e-03 |
+| `G_abusive` correctness | 450 | 0.984 | 0.996 | 5 | 0 | 0.063 |
+| `G_pharmacy` correctness | 450 | 0.942 | 0.880 | 20 | 48 | 9.1e-04 |
+| **`clinical_oblique` recall** | **29** | **0.931** | **0.793** | **0** | **4** | **0.125** |
+
+**Two corrections this forces, both against us.**
+
+*The oblique-clinical result is not a win.* On the slice we argued mattered
+most, we beat Jev on 4 items and lose on 0 — but at n=29 that is **p = 0.125,
+not significant**. The direction is encouraging and the tier is the right one
+to care about, but "OpenJev beats Jev at detecting obliquely-phrased adverse
+events" is not a claim this evidence supports. It needs a larger
+`clinical_oblique` tier before it means anything.
+
+*The `G_pharmacy` "win" is an artifact.* We score 0.942 against Jev's 0.880 at
+p = 0.0009, which looks like our best result on the board. It is not. That
+slice is 427 positive against 23 negative, and our model simply predicts
+positive almost always: recall 0.984 with a **false-positive rate of 0.826**,
+against Jev's 0.087. We learned the majority class and the accuracy metric
+rewarded us for it. This is the exact failure the project's own docs warn
+about, caught here only because the gate reports FPR next to recall.
+
+`G_abusive` deserves the same scepticism: 0.984 "correctness" while recall is
+**0.000**. With 7 positives against 443 negatives, never firing is an
+excellent way to look accurate.
+
+**The honest reading of the gates is therefore narrower than it first
+appeared.** Our `G_clinical` false-positive rate is 0.047 against Jev's 0.006,
+so whatever oblique recall we gained was bought by firing more readily in
+general — 16 false alarms on 342 negatives against Jev's 2. Whether that trade
+is worth it depends on the cost of a false escalation, which `expected_cost()`
+exists to compute and which we have not priced for this task.
 
 **Everything else is much worse, and the cause is data, not architecture.**
 395 training examples across 10 questions is about 40 per question.
