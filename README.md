@@ -22,9 +22,15 @@ result = model.predict(
 result["intent"].probabilities   # {"refill": 0.71, "store_hours": 0.24, ...}
 ```
 
-Three primitives, borrowed deliberately from the API shape TypeSafe introduced
-with Jev, so that code written against either runs against the other and
-comparisons are like-for-like:
+OpenJev is an attempt to build, in the open, the class of model TypeSafe AI
+introduced with Jev. It started by using Jev — reading its docs, calling its
+API, and measuring its behaviour on tasks we cared about — and then asking what
+it would take to build something with the same shape that anyone can train on
+their own data and run on their own hardware. The credit for the idea, and for
+the API design we deliberately follow, belongs to them.
+
+Three primitives, borrowed from that API shape so that code written against
+either runs against the other and comparisons are like-for-like:
 
 | | |
 |---|---|
