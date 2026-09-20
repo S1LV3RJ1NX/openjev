@@ -87,17 +87,28 @@ class Packed:
 class Packer:
     """Builds `Packed` sequences. Stateless apart from the tokenizer."""
 
-    def __init__(self, tokenizer, max_len: int = 8192, max_state_len: int | None = None):
+    def __init__(
+        self,
+        tokenizer,
+        max_len: int = 8192,
+        max_state_len: int | None = None,
+        marker: str | None = None,
+    ):
         self.tok = tokenizer
         self.max_len = max_len
         # The state is truncated, never the options: a truncated option is
         # silently unscoreable, whereas a truncated state merely loses context.
         self.max_state_len = max_state_len or max_len // 2
 
-        marker = MARKER if MARKER in tokenizer.get_vocab() else None
+        # With MLM-head scoring the marker must be the tokenizer's own mask
+        # token, or the pretrained head is being asked about a token it has
+        # never predicted at and the zero-shot ability evaporates. With a
+        # learned scorer any spare token will do.
         if marker is None:
-            tokenizer.add_special_tokens({"additional_special_tokens": [MARKER]})
             marker = MARKER
+            if marker not in tokenizer.get_vocab():
+                tokenizer.add_special_tokens({"additional_special_tokens": [marker]})
+        self.marker = marker
         self.marker_id = tokenizer.convert_tokens_to_ids(marker)
         self.cls_id = tokenizer.cls_token_id
         self.sep_id = tokenizer.sep_token_id

@@ -108,29 +108,59 @@ class OpenJev(nn.Module):
         backbone: str = "answerdotai/ModernBERT-base",
         dropout: float = 0.1,
         vocab_size: int | None = None,
+        scorer: str = "linear",
+        yes_token: str = " yes",
+        no_token: str = " no",
+        tokenizer=None,
     ):
+        """
+        scorer="linear"  a fresh Linear(d,1) over marker hidden states. Has to
+                         be trained; no zero-shot ability by construction.
+        scorer="mlm"     reuse the pretrained masked-LM head at the marker and
+                         read off logit(yes) - logit(no). Adds no parameters,
+                         so the model can be evaluated zero-shot. This is
+                         UniMC's mechanism (arXiv:2210.08590) and it requires
+                         the marker to be the tokenizer's own mask token.
+        """
         super().__init__()
+        self.scorer_kind = scorer
         cfg = AutoConfig.from_pretrained(backbone)
         # flash-attn cannot take an arbitrary mask; SDPA can. ModernBERT's
         # torch.compile path is also unreliable on non-CUDA backends, and it
         # is a config field rather than a from_pretrained kwarg.
         if hasattr(cfg, "reference_compile"):
             cfg.reference_compile = False
-        self.backbone = AutoModel.from_pretrained(
-            backbone, config=cfg, attn_implementation="sdpa"
-        )
-        if vocab_size is not None and vocab_size != cfg.vocab_size:
-            self.backbone.resize_token_embeddings(vocab_size)
 
         d = cfg.hidden_size
-        self.scorer = nn.Sequential(
-            nn.LayerNorm(d),
-            nn.Linear(d, d),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(d, 1),
-        )
-        nn.init.zeros_(self.scorer[-1].bias)
+        if scorer == "mlm":
+            from transformers import AutoModelForMaskedLM
+
+            lm = AutoModelForMaskedLM.from_pretrained(
+                backbone, config=cfg, attn_implementation="sdpa"
+            )
+            self.backbone = lm.model
+            self.lm_head = lm.head
+            self.lm_decoder = lm.decoder
+            if tokenizer is None:
+                raise ValueError("scorer='mlm' needs a tokenizer to resolve yes/no ids")
+            self.yes_id = _single_token_id(tokenizer, yes_token)
+            self.no_id = _single_token_id(tokenizer, no_token)
+            self.scorer = nn.Identity()
+        else:
+            self.backbone = AutoModel.from_pretrained(
+                backbone, config=cfg, attn_implementation="sdpa"
+            )
+            self.scorer = nn.Sequential(
+                nn.LayerNorm(d),
+                nn.Linear(d, d),
+                nn.GELU(),
+                nn.Dropout(dropout),
+                nn.Linear(d, 1),
+            )
+            nn.init.zeros_(self.scorer[-1].bias)
+
+        if vocab_size is not None and vocab_size != cfg.vocab_size:
+            self.backbone.resize_token_embeddings(vocab_size)
 
     def _mask_mapping(self, ids, attn, blocks):
         """ModernBERT's own masks, with block isolation ANDed into each."""
@@ -164,7 +194,13 @@ class OpenJev(nn.Module):
 
         flat = h.reshape(-1, h.shape[-1])
         markers = flat.index_select(0, batch["marker_flat"])
-        logits = self.scorer(markers).squeeze(-1)
+
+        if self.scorer_kind == "mlm":
+            # What would the pretrained LM predict at this mask: yes or no?
+            vocab = self.lm_decoder(self.lm_head(markers))
+            logits = vocab[:, self.yes_id] - vocab[:, self.no_id]
+        else:
+            logits = self.scorer(markers).squeeze(-1)
 
         lp = grouped_log_softmax(logits, batch["marker_group"], int(batch["n_groups"]))
         return OpenJevOutput(log_probs=lp, marker_group=batch["marker_group"])
@@ -215,6 +251,16 @@ class OpenJev(nn.Module):
                 g += 1
             results.append(answers)
         return results
+
+
+def _single_token_id(tokenizer, text: str) -> int:
+    ids = tokenizer(text, add_special_tokens=False)["input_ids"]
+    if len(ids) != 1:
+        alt = tokenizer(text.strip(), add_special_tokens=False)["input_ids"]
+        if len(alt) == 1:
+            return alt[0]
+        raise ValueError(f"{text!r} is not a single token ({ids}); pick another word")
+    return ids[0]
 
 
 def _labels_for(packed, qid: str, k: int) -> list[str]:
