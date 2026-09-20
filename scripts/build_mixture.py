@@ -26,6 +26,7 @@ import json
 import random
 import re
 import sys
+import time
 import traceback
 import warnings
 from pathlib import Path
@@ -153,11 +154,40 @@ def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     )
 
 
+def load_with_backoff(tasksource, tid: str, max_rows: int, retries: int):
+    """The Hub rate-limits hard when you pull hundreds of datasets in a row.
+
+    The first build lost 238 of 285 failures to HfHubHTTPError, which is not a
+    property of the datasets but of asking for them too fast. Retrying with
+    backoff recovers most of them.
+    """
+    delay = 4.0
+    for attempt in range(retries + 1):
+        try:
+            return tasksource.load_task(tid, max_rows=max_rows)
+        except Exception as e:  # noqa: BLE001
+            transient = any(
+                s in f"{type(e).__name__}{e}"
+                for s in ("HfHubHTTPError", "429", "Too Many Requests",
+                          "ConnectionError", "ReadTimeout", "504", "502")
+            )
+            if not transient or attempt == retries:
+                raise
+            time.sleep(delay)
+            delay *= 2
+    raise RuntimeError("unreachable")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-tasks", type=int, default=250)
     ap.add_argument("--max-rows", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--retries", type=int, default=4)
+    ap.add_argument("--throttle", type=float, default=0.4,
+                    help="seconds between successful loads, to stay under Hub limits")
+    ap.add_argument("--min-k", type=int, default=0,
+                    help="only keep tasks with at least this many options")
     args = ap.parse_args()
 
     import tasksource
@@ -183,12 +213,16 @@ def main() -> None:
             skipped_holdout.append((tid, hit))
             continue
         try:
-            dd = tasksource.load_task(tid, max_rows=args.max_rows)
+            dd = load_with_backoff(tasksource, tid, args.max_rows, args.retries)
             task = to_task(tid, dd, args.max_rows, rng)
         except Exception as e:  # noqa: BLE001
             failed.append((tid, f"{type(e).__name__}: {str(e)[:60]}"))
             continue
+        time.sleep(args.throttle)
         if task is None:
+            rejected += 1
+            continue
+        if args.min_k and len(next(iter(task.questions.values())).labels) < args.min_k:
             rejected += 1
             continue
         task.save(OUT.parent / "mixture_tmp", split="train")
@@ -215,6 +249,19 @@ def main() -> None:
     for t, h in skipped_holdout[:12]:
         print(f"   {t:<44} matched {h!r}")
     print(f"rejected (shape/size): {rejected}   load failures: {len(failed)}")
+
+    from collections import Counter
+
+    ks = Counter(m["K"] for m in manifest)
+    print(f"\noption-count distribution: {dict(sorted(ks.items()))}")
+    high = sum(v for k, v in ks.items() if k >= 20)
+    if high < max(1, built // 10):
+        print(
+            f"!! only {high} of {built} tasks have 20+ options. The held-out suite\n"
+            f"   runs to K=151, so high-cardinality transfer is unlikely to appear\n"
+            f"   from this mixture. Source more many-way tasks before concluding\n"
+            f"   anything about the architecture from a poor result there."
+        )
 
 
 if __name__ == "__main__":
