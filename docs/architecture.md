@@ -64,13 +64,39 @@ under a second — which is not possible if each question re-encodes the state.
 Option count behaves the same way: 2 to 100 options changed latency by nothing
 measurable.
 
-**Implementation risk, named up front.** ModernBERT's speed comes from flash
-attention, which does not accept arbitrary masks. A block-diagonal mask needs
-PyTorch FlexAttention's `BlockMask`, which is effectively CUDA-only. On Apple
-Silicon we fall back to a plain 4D additive mask with SDPA: correct, but with
-no block-sparsity speedup. If FlexAttention turns out slow here, the latency
-argument for the whole design weakens, so this gets a microbenchmark before
-anything is built on top of it.
+### Measured: is packing worth its complexity?
+
+The obvious alternative is one sequence per question, each carrying its own
+copy of the state, run as a batch — which is what any cross-encoder gives you
+for free. Packing only earns its complexity if it beats that, and the margin
+should grow with state length, since the state is what gets duplicated.
+
+ModernBERT-base, bf16, H100 NVL, median of 10 after warmup, 50 questions:
+
+| state | packed tokens | naive tokens | packed | naive | speedup |
+|---|---|---|---|---|---|
+| ~90 tok | 713 | 3,800 | 9.6 ms | 9.6 ms | **1.00x** |
+| ~700 tok | 1,133 | 24,800 | 9.7 ms | 51.7 ms | **5.33x** |
+| ~2.8k tok | 2,573 | 96,800 | 11.0 ms | 263.5 ms | **23.98x** |
+
+Two things fall out, and the second is a caveat we should not bury.
+
+**Latency is flat in question count.** With a 700-token state, 1 question and
+50 questions both take 9.6 ms. At 2.8k tokens, 50 questions costs 1.14x one
+question. That is the property the design is sold on, and it holds.
+
+**For short states, packing buys nothing.** At ~90 tokens the packed and naive
+paths are identical at 9.6 ms, because neither is compute-bound — 9.6 ms is a
+fixed-overhead floor on this hardware at this size. If your states are single
+sentences and you ask few questions, use the simpler implementation. The
+shared prefix pays off when the state is long relative to the questions, which
+is the document-and-ticket case, not the one-line-utterance case.
+
+**FlexAttention is not needed yet.** The mask is an explicit 4D additive tensor
+run through SDPA, which is O(L²) and gets no block-sparsity benefit, and at
+these sequence lengths it is already flat. FlexAttention's `BlockMask` becomes
+relevant only at much longer packed sequences. Reproduce with
+[`scripts/bench_packing.py`](../scripts/bench_packing.py).
 
 ## Backbone and warm start
 
