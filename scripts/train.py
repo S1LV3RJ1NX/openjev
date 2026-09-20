@@ -135,6 +135,10 @@ def main() -> None:
     ap.add_argument("--out", default="checkpoints")
     args = ap.parse_args()
 
+    # Redirected to a file, Python block-buffers stdout and a long run looks
+    # hung for minutes at a time. Line-buffer so `tail -f` is useful.
+    sys.stdout.reconfigure(line_buffering=True)
+
     name = Path(args.task).name
     heldout_check(name, args.allow_heldout)
 
