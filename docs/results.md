@@ -113,7 +113,70 @@ with no masked-LM head, so they cannot be scored this way at all. Comparing
 them needs the trained scorer, which means it belongs after the multi-task
 run, not before it.
 
-## Packing benchmark
+## Multi-task training: learns the tasks, transfers nothing
+
+61 tasks from `tasksource` (95,413 rows), ModernBERT-base, 2 epochs, ~12
+minutes on one H100. The held-out suite was excluded at build time.
+
+```bash
+VIRTUAL_ENV=.venv-data uv run --no-project python scripts/build_mixture.py
+uv run python scripts/train.py --mixture tasks/mixture --epochs 2 --bs 16
+uv run python scripts/eval_heldout.py --ckpt checkpoints/mixture/model.pt
+```
+
+**Held-in control** — tasks this checkpoint was trained on, 200 rows each:
+
+| task | K | accuracy | x chance |
+|---|---|---|---|
+| ethos_binary | 2 | 0.840 | 1.7x |
+| glue_mrpc | 2 | 0.760 | 1.5x |
+| glue_qnli | 2 | 0.715 | 1.4x |
+| glue_cola | 2 | 0.700 | 1.4x |
+| glue_mnli | 3 | 0.675 | 2.0x |
+
+**Held-out suite** — schemas never trained on:
+
+| task | K | accuracy | 95% CI | x chance |
+|---|---|---|---|---|
+| banking77 | 77 | **0.0000** | [0.000, 0.000] | 0.0x |
+| clinc_oos | 151 | **0.0000** | [0.000, 0.000] | 0.0x |
+| massive_intent | 60 | 0.0400 | [0.015, 0.070] | 2.4x |
+| sst5 | 5 | 0.2000 | [0.150, 0.255] | 1.0x |
+| ag_news | 4 | 0.2250 | [0.170, 0.290] | 0.9x |
+| civil_comments_toxicity | 2 | 0.5150 | [0.445, 0.585] | 1.0x |
+| helpsteer_helpfulness | 5 | 0.1650 | [0.120, 0.215] | 0.8x |
+| **mean** | | | | **0.9x** |
+
+**The control is what makes this readable.** The checkpoint clearly learned —
+0.84 on ethos, 0.675 on three-way MNLI — while scoring at chance on every
+held-out schema. So the machinery works and the transfer is genuinely absent.
+Had both been at chance, this would have been a bug report instead.
+
+Note also that training changed nothing versus no training at all: the
+untrained MLM-head baseline was 0.7x to 2.2x, and this is 0.9x.
+
+### Why, and what it does not mean
+
+This does **not** show the architecture cannot generalize. Two concrete
+deficiencies in the mixture explain it, both fixable:
+
+**It is far too small.** 61 tasks against the ~282 where the Flan Collection
+ablation says most of the held-out gain has accrued, and held-out performance
+there rises log-linearly in task count. We are at the bottom of that curve.
+The shortfall is mechanical rather than fundamental: 285 of 346 candidate
+loads failed, 238 of them `HfHubHTTPError` from pulling hundreds of datasets
+without backoff. The builder now retries and throttles.
+
+**It has no cardinality diversity.** Option counts came out min 2, median 3,
+max 20, while the held-out suite runs to 151. The model never saw a menu
+remotely that size. The literal 0.0000 on banking77 and clinc_oos is the
+signature of collapsing onto one label when handed 77 or 151 options, not of
+ranking them badly — at chance it should have got roughly 3 of 200 right.
+
+So the honest reading is that we have confirmed the architecture trains and
+have **not yet built a mixture capable of testing the generalization claim**.
+The next build needs several hundred tasks and deliberate high-K sourcing
+before a negative result here means anything about the design.
 
 See [`architecture.md`](architecture.md#measured-is-packing-worth-its-complexity).
 Flat in question count; 24x over the naive one-sequence-per-question

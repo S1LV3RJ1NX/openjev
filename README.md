@@ -60,8 +60,16 @@ What exists today:
 - `scripts/` — a readable training loop and dataset builders
 - `docs/` — the architecture, the evaluation, prior art, results
 
-Not done yet: held-out schema transfer (the number we expect to lose on), the
-`score` and `noul` primitives, and a released checkpoint.
+Multi-task training on 61 tasksource tasks learns those tasks (0.84 on ethos,
+0.675 on three-way MNLI) but transfers **nothing** to held-out schemas —
+0.9x chance, no better than no training at all. That is a mixture problem,
+not an architecture verdict: 61 tasks against the ~282 where Flan says the
+gain accrues, with option counts capped at 20 while the held-out suite runs
+to 151.
+
+Not done yet: a mixture large and diverse enough to actually test
+generalization, the `score` and `noul` primitives, and a released
+checkpoint.
 
 ---
 
