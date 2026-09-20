@@ -54,14 +54,40 @@ def option_text(label: str, description: object | None) -> str:
 
 
 def question_options(q: Question) -> list[str]:
+    """Render each option as the text the model actually scores.
+
+    For `choice` the label carries meaning ("World: international news"), so
+    both halves go in. For `score` and `noul` the label is a bare index or a
+    bare yes/no, which is noise at best: rendering a level as
+    "0: very negative: the writer condemns the film" makes the model score a
+    number, and rendering a noul option as "no: a majority would not call
+    this toxic" asks a yes/no question about a yes/no answer. Where a
+    description exists, it *is* the option.
+    """
     if isinstance(q, Choice):
         return [option_text(k, v) for k, v in q.criteria.items()]
     if isinstance(q, Score):
-        return [option_text(str(i), c) for i, c in enumerate(q.criteria)]
+        return [
+            _described(c) or option_text(str(i), c)
+            for i, c in enumerate(q.criteria)
+        ]
     if isinstance(q, Noul):
         crit = q.criteria or {}
-        return [option_text("no", crit.get("false")), option_text("yes", crit.get("true"))]
+        return [
+            _described(crit.get("false")) or option_text("no", crit.get("false")),
+            _described(crit.get("true")) or option_text("yes", crit.get("true")),
+        ]
     raise TypeError(f"unknown question type {type(q)}")
+
+
+def _described(desc: object | None) -> str | None:
+    """The description alone, when there is one worth standing on its own."""
+    if desc is None:
+        return None
+    if not isinstance(desc, str):
+        desc = json.dumps(desc, ensure_ascii=False)
+    desc = desc.strip()
+    return desc or None
 
 
 @dataclass

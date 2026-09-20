@@ -330,9 +330,38 @@ is not parity and nothing here should be read as approaching it. What changed
 is the qualitative gap: the model went from indistinguishable from chance to
 clearly better than chance on 60-, 77- and 151-way menus it has never seen.
 
-The ordinal (`score`) and binary (`noul`) primitives remain at chance, which
-is its own finding: whatever the format is teaching, it is not transferring to
-those.
+### The `score` and `noul` primitives stay at chance, and it is not a bug
+
+`sst5` (1.1x), `ag_news` (1.1x), `civil_comments_toxicity` (1.0x) and
+`helpsteer_helpfulness` (0.8x) are all at chance. The obvious suspect was
+option rendering, and it was genuinely wrong: a `score` level was being
+rendered as `"0: very negative: the writer condemns the film"`, making the
+model score a bare index, and a `noul` option as `"no: a majority would not
+call this toxic"`, which asks a yes/no question about a yes/no answer. Only
+`choice` has a label worth showing, since there the label carries meaning.
+
+Fixing it changed nothing: `sst5` 0.270 → 0.220, `civil_comments` unchanged at
+0.515, mean unchanged at 11.5x. The fix was correct and is kept, but it was
+not the cause.
+
+**The real pattern is an asymmetry in option count, and it is worth reading
+carefully.** Absolute accuracy is mediocre everywhere — 0.17 to 0.34 on the
+large menus, 0.22 to 0.52 on the small ones. What differs is what that buys
+you: 0.170 against 77 options is 13x chance and genuinely informative, while
+0.275 against 4 options is 1.1x and worth nothing. The "x chance" column
+flatters high cardinality.
+
+So the honest statement is **not** "it generalizes to large menus but not
+small ones". It is that the readout produces a weakly informative ranking, and
+a weakly informative ranking over 151 options looks impressive while the same
+signal over 4 options looks like noise. The calibration numbers say the same
+thing: ECE is 0.711 on `ag_news`, 0.811 on `helpsteer`, 0.558 on `sst5`. The
+probabilities are badly wrong even where the argmax is sometimes right.
+
+This matches what an independent implementation of the same readout reports:
+the mechanism works, and decision quality is a separate phase requiring a
+trained calibration head rather than a better prompt. Prompt format took us
+from chance to a usable signal; it will not take us further.
 
 ## Not yet measured
 
