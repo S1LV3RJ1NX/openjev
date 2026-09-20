@@ -67,16 +67,24 @@ def main() -> None:
     ap.add_argument("--bs", type=int, default=8)
     ap.add_argument("--max-len", type=int, default=4096)
     ap.add_argument("--limit", type=int, default=None, help="rows per task, for smoke runs")
+    ap.add_argument("--decoder", action="store_true", help="use a causal LM backbone")
     args = ap.parse_args()
 
     sys.stdout.reconfigure(line_buffering=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(args.backbone)
-    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2,
-                    marker=tok.mask_token)
-    model = OpenJev(backbone=args.backbone, scorer="mlm", tokenizer=tok).to(device).eval()
+    marker = tok.mask_token if not args.decoder else None
+    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2, marker=marker)
+    if args.decoder:
+        from openjev.decoder import OpenJevDecoder
 
-    print(f"{args.backbone}  scorer=mlm  marker={tok.mask_token!r}  device={device}")
+        model = OpenJevDecoder(backbone=args.backbone, tokenizer=tok).to(device).eval()
+        kind = "decoder/yes-no"
+    else:
+        model = OpenJev(backbone=args.backbone, scorer="mlm", tokenizer=tok).to(device).eval()
+        kind = "encoder/mlm"
+
+    print(f"{args.backbone}  {kind}  marker={packer.marker!r}  device={device}")
     print(f"yes/no token ids: {model.yes_id} / {model.no_id}\n")
     print(f"{'task':<26}{'prim':>6}{'K':>5}{'n':>6}{'acc':>8}{'1/K':>7}"
           f"{'x chance':>9}{'macroF1':>9}{'ECE':>7}{'Brier':>8}")

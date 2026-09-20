@@ -25,6 +25,11 @@ from .schema import Choice, Example, Noul, Question, Score, Task
 
 
 def target_index(q: Question, gold) -> int | None:
+    """Index of the winning option, against the menu actually packed.
+
+    `q` must be the resolved question — after any per-example override and
+    after shuffling — or the index will point at the wrong option.
+    """
     if gold is None:
         return None
     if isinstance(q, Choice):
@@ -121,6 +126,10 @@ class TaskDataset(Dataset):
 
     def _questions_for(self, ex: Example, shrink: int = 0) -> dict[str, Question]:
         qs = {k: v for k, v in self.task.questions.items() if k in ex.answers}
+        # A per-example menu replaces the task-level one for that question.
+        for qid, menu in (ex.criteria or {}).items():
+            if qid in qs and menu:
+                qs[qid] = Choice(instructions=qs[qid].instructions, criteria=dict(menu))
         if self.max_questions and len(qs) > self.max_questions:
             keep = self.rng.sample(list(qs), self.max_questions)
             qs = {k: qs[k] for k in keep}

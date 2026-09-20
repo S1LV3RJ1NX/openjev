@@ -26,6 +26,29 @@ from transformers import AutoConfig, AutoModel
 from .schema import Answer
 
 
+def causal_block_and_mask_fn(block_id: torch.Tensor):
+    """Block isolation for a decoder backbone.
+
+    A causal model already prevents the state prefix from seeing the question
+    blocks, because the state comes first. What causality does *not* prevent
+    is question block 2 attending to question block 1, which would make an
+    answer depend on which other questions happened to be asked. So the same
+    rule as the encoder, composed with the model's own causal mask:
+
+        attend if the key is in the state prefix, or in my own block.
+
+    Note this is strictly cheaper than the encoder case: the state is encoded
+    once as an ordinary prefix, which is exactly what a KV cache is for.
+    """
+
+    def fn(batch_idx, head_idx, q_idx, kv_idx):
+        bi = block_id[batch_idx, q_idx]
+        bj = block_id[batch_idx, kv_idx]
+        return (bj == 0) | (bi == bj)
+
+    return fn
+
+
 def block_and_mask_fn(block_id: torch.Tensor):
     """An `and_mask_function` for transformers' masking utilities.
 

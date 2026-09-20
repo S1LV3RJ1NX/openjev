@@ -100,6 +100,13 @@ class Example:
     state: str | dict
     answers: dict[str, Any] = field(default_factory=dict)
     meta: dict[str, Any] = field(default_factory=dict)
+    # Per-example option sets, for questions whose menu varies by row:
+    # {question_id: {label: description_or_None}}. Multiple-choice data works
+    # this way — "which of these four endings?" has different endings every
+    # row — and it is arguably better training signal for zero-shot, because
+    # a menu that changes every example cannot be memorised.
+    # Overrides the task-level criteria for that question on this example.
+    criteria: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     @property
     def tier(self) -> str:
@@ -204,16 +211,28 @@ class Task:
                     problems.append(f"example {i}: unknown question id {qid!r}")
                     continue
                 q = self.questions[qid]
-                if isinstance(q, Choice) and gold is not None and gold not in q.criteria:
+                menu = e.criteria.get(qid) or (q.criteria if isinstance(q, Choice) else None)
+                if isinstance(q, Choice) and gold is not None and gold not in (menu or {}):
                     problems.append(f"example {i}: {qid}={gold!r} not in criteria")
                 elif isinstance(q, Score) and gold is not None:
                     if not isinstance(gold, int) or not 0 <= gold < len(q.criteria):
                         problems.append(f"example {i}: {qid}={gold!r} out of rubric range")
                 elif isinstance(q, Noul) and gold is not None and not isinstance(gold, bool):
                     problems.append(f"example {i}: {qid}={gold!r} is not a bool")
+        per_example = {qid for e in self.examples for qid in (e.criteria or {})}
         for qid, q in self.questions.items():
-            if isinstance(q, Choice) and len(q.criteria) < 2:
+            if isinstance(q, Choice) and len(q.criteria) < 2 and qid not in per_example:
                 problems.append(f"question {qid!r}: choice needs >= 2 options")
+            if qid in per_example:
+                thin = [
+                    i for i, e in enumerate(self.examples)
+                    if qid in e.answers and len(e.criteria.get(qid, {})) < 2
+                ]
+                if thin:
+                    problems.append(
+                        f"question {qid!r}: {len(thin)} examples have fewer than 2 "
+                        f"options in their own menu (first: {thin[0]})"
+                    )
             if isinstance(q, Choice) and len(q.criteria) > 255:
                 problems.append(f"question {qid!r}: {len(q.criteria)} options exceeds 255")
         return problems

@@ -85,6 +85,62 @@ def safe_name(task_id: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", task_id.lower()).strip("_")
 
 
+def _mc_task(task_id, tr, choice_cols, cols, names, max_rows, rng) -> Task | None:
+    """Multiple choice: the menu is different on every row.
+
+    These are valuable precisely because the option set changes per example,
+    so the model cannot memorise a label space and has to read the option
+    text — which is the capability zero-shot transfer depends on.
+    """
+    ctx = next((c for c in ("sentence1", "inputs", "premise", "question") if c in cols), None)
+    if ctx is None:
+        return None
+
+    qid = "answer"
+    examples = []
+    for r in tr.select(range(min(len(tr), max_rows))):
+        lab = r["labels"]
+        if not isinstance(lab, int) or isinstance(lab, bool):
+            continue
+        opts, seen = {}, set()
+        for c in choice_cols:
+            v = r.get(c)
+            if v is None or not str(v).strip():
+                continue
+            s = str(v).strip()
+            if s.lower() in seen:  # duplicate options make the gold ambiguous
+                continue
+            seen.add(s.lower())
+            opts[s] = None
+        if len(opts) < 2 or not (0 <= lab < len(choice_cols)):
+            continue
+        gold_raw = r.get(choice_cols[lab])
+        if gold_raw is None:
+            continue
+        gold = str(gold_raw).strip()
+        if gold not in opts or not str(r[ctx]).strip():
+            continue
+        examples.append(
+            Example(
+                state=str(r[ctx]),
+                answers={qid: gold},
+                criteria={qid: opts},
+                meta={"tier": "mixture_mc", "source": task_id},
+            )
+        )
+
+    if len(examples) < 32:
+        return None
+    rng.shuffle(examples)
+    return Task(
+        name=safe_name(task_id),
+        description=f"tasksource {task_id}",
+        # Placeholder menu; every example carries its own.
+        questions={qid: Choice(instructions="Which of these fits best?", criteria={})},
+        examples=examples,
+    )
+
+
 def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     """tasksource's standardised columns -> one openjev Task."""
     if "train" not in dd:
@@ -101,13 +157,9 @@ def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     if not 2 <= len(names) <= 255:
         return None
 
-    is_mc = any(c.startswith("choice") for c in cols)
-    if is_mc:
-        # Multiple choice: the options are per-row text, so a fixed menu does
-        # not exist. Skipping keeps the schema honest; supporting it properly
-        # means per-example criteria, which the format allows but the trainer
-        # does not yet.
-        return None
+    choice_cols = sorted(c for c in cols if c.startswith("choice"))
+    if choice_cols:
+        return _mc_task(task_id, tr, choice_cols, cols, names, max_rows, rng)
 
     text_cols = [c for c in ("sentence1", "sentence2") if c in cols]
     if not text_cols:
