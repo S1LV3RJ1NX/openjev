@@ -30,6 +30,21 @@ intervals over examples; paired comparisons use exact McNemar.
 
 ---
 
+## At a glance
+
+![OpenJev against Jev on the router](plots/comparison_router.png)
+
+Accuracy on the left is the same 450 test items for all three, fine-tuned on
+395 examples. Latency on the right is the whole router asked in one call.
+
+One caveat on that right-hand panel, since it looks more flattering than it
+is: our figures are local GPU compute and Jev's is an end-to-end call to a
+hosted service, so it includes network round-trip. It is the latency a user
+experiences, not a claim about the speed of their model.
+
+Reproduce with `scripts/plot_comparison.py`, which carries the provenance of
+every number in it.
+
 ## The mixtures referred to below
 
 Several training mixtures appear in these results and they are not
