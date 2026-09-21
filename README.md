@@ -173,6 +173,26 @@ Recipe B is the project's central claim and it is measured: intent
 never fired at all under A reaches 0.857 recall under B from seven positive
 examples, and oblique-clinical recall goes to 1.000.
 
+**Where the 38 seconds comes from.** That is the cost of your fine-tune, not
+the cost of the model. Training the general checkpoint underneath it is 279
+tasks and 323,466 rows, about 55 minutes on an H100. That run happens once,
+by us; you download the result. Both numbers are real and they are not the
+same number.
+
+**For the best accuracy, adapt a decoder instead.** Rank-16 LoRA on
+Qwen3-1.7B reaches intent 0.979, beating both the encoder and Jev, for an
+87 MB adapter and 258 seconds:
+
+```bash
+uv run python scripts/train.py --task tasks/my_task --decoder --lora-r 16 \
+    --backbone Qwen/Qwen3-1.7B --epochs 6 --bs 4 --lr 2e-4 --max-len 3072
+```
+
+Use the encoder when tail latency matters: p95 20 ms against the decoder's
+55 ms. Use the LoRA decoder when accuracy matters. Opening all 1.7B
+parameters instead of adapting 17M of them is **worse** on both, 0.929 and
+a 3.4 GB artifact, and is not recommended.
+
 **4. Evaluate, then use.** Training fits calibration temperatures on `dev`
 automatically and saves them with the checkpoint.
 
