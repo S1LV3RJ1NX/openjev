@@ -101,15 +101,15 @@ while descriptions that merely restated the label name were worth nothing
 # A — straight fine-tune. 395 examples, 38 seconds, one GPU.
 uv run python scripts/train.py --task tasks/my_task --epochs 6 --bs 8
 
-# B — start from the general checkpoint. Same data, same time, +27 points.
+# B — start from the general checkpoint. Same data, same time, +36 points.
 uv run python scripts/train.py --task tasks/my_task \
-    --init-from checkpoints/mixture_big/model.pt --epochs 6 --bs 8
+    --init-from checkpoints/mixture_ord2/model.pt --epochs 6 --bs 8
 ```
 
 Recipe B is the project's central claim and it is measured: intent
-0.544 → 0.817, multi-label 0.453 → 0.718, **p = 6e-18**. Two safety gates that
-never learned to fire at all under A reached 0.429 and 0.750 under B from the
-same handful of positive examples.
+0.544 → 0.899, multi-label 0.453 → 0.789, **p = 6e-18**. A safety gate that
+never fired at all under A reaches 0.857 recall under B from seven positive
+examples, and oblique-clinical recall goes to 1.000.
 
 **4. Evaluate, then use.** Training fits calibration temperatures on `dev`
 automatically and saves them with the checkpoint.
@@ -129,15 +129,23 @@ We measured TypeSafe's Jev against our own suite and it is ahead on the things
 that matter most, so use it if those matter more than self-hosting:
 
 - **Zero-shot accuracy.** 0.820 on Banking77 having never seen it; our best
-  untrained number is 0.205.
-- **Routing quality.** Router intent 0.941 against our 0.817 (p = 1e-07).
-- **Gate precision.** `G_clinical` false-positive rate 0.006 against our 0.035.
+  never-trained-on-it number is 0.355.
+- **Routing quality.** Router intent 0.941 against our 0.899 (p = 0.04), and
+  the injection gate 0.996 against our 0.978 (p = 0.008).
+- **Gate precision.** `G_clinical` false-positive rate 0.006 against our 0.026.
 - **Scale.** 255 options and a 32k context, out of the box.
 
-Where we are level or ahead: `G_clinical` correctness (p = 0.63, no detectable
-difference), full-precision probabilities (Jev quantizes to 0.01, putting
-71.9% of values at a hard zero), determinism (Jev has none and no seed), and
-cost — this runs on your own hardware with no data leaving it.
+Where we are level or ahead, once fine-tuned on the task: obliquely-worded
+clinical risk, where Jev misses one in five and we catch all 29 (1.000 against
+0.793, p = 0.03); the `G_pharmacy` scope gate (0.947 against 0.880, p = 3e-04);
+the multi-label compound set, now a statistical tie (0.789 against 0.822,
+p = 0.14); `G_clinical` correctness (p = 1.00); full-precision probabilities,
+where Jev quantizes to 0.01 and puts 71.9% of values at a hard zero;
+determinism, which Jev has none of and offers no seed for; and cost, since
+this runs on your own hardware with no data leaving it.
+
+All paired on the same 450 items with exact McNemar, reproducible via
+`scripts/compare_to_jev.py`.
 
 ## Where this architecture fits
 

@@ -159,16 +159,18 @@ relevant only at much longer packed sequences. Reproduce with
 ```mermaid
 flowchart TB
     RAW["raw ModernBERT"] -->|"fine-tune on 395 examples"| A["intent 0.544<br/>multi-label 0.453"]
-    RAW -->|"train on 141-task mixture<br/>+ label-space augmentation"| GEN["general checkpoint<br/><i>above chance on 6/7 held-out</i>"]
-    GEN -->|"same 395 examples, same 38s"| B["intent <b>0.817</b><br/>multi-label <b>0.718</b>"]
-    A -.->|"+27 points, p = 6e-18"| B
+    RAW -->|"train on 143-task mixture<br/>+ label-space and noul augmentation"| GEN["general checkpoint<br/><i>above chance on 5/7 held-out, 17.6x</i>"]
+    GEN -->|"same 395 examples, same 38s"| B["intent <b>0.899</b><br/>multi-label <b>0.789</b>"]
+    A -.->|"+36 points, p = 6e-18"| B
 ```
 
 **Recipe A**, straight fine-tune, is one command and works. **Recipe B**,
 via the general checkpoint, costs nothing extra at specialist-training time
-and is worth 27 points. The two gates that never learned to fire at all under
-recipe A — `G_abusive` at 0.000, `G_injection` at 0.125 — reach 0.429 and
-0.750 under recipe B from the same handful of positive examples.
+and is worth 36 points. The two gates that never learned to fire at all under
+recipe A — `G_abusive` at 0.000, `G_injection` at 0.125 — reach 0.857 and
+0.583 under recipe B from the same handful of positive examples. The
+injection gate is the one place recipe B currently gives ground: an earlier,
+weaker general checkpoint reached 0.750 on it.
 
 That difference *is* the argument for the project shipping a general model
 rather than only a trainer.
