@@ -170,7 +170,7 @@ Everything measured below, published or explicitly marked as not yet.
 |---|---|---|
 | held-out suite | Study G evaluation | [`openjev-heldout`](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) |
 | healthcare router | Study S, both ends | [`openjev-healthcare-router`](https://huggingface.co/datasets/s1lv3rj1nx/openjev-healthcare-router) |
-| 279-task training mixture | Study G training | *not yet published, ~200 MB* |
+| 279-task training mixture | Study G training | [`openjev-mixture`](https://huggingface.co/datasets/s1lv3rj1nx/openjev-mixture) |
 
 Sources the mixture is assembled from are listed per task in its
 `description`, and every held-out task names its aliases in `holdout_of`.
