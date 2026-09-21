@@ -14,6 +14,52 @@ Both halves matter. The first says the capability is not gated behind
 scale or a vendor. The second says the vendor's actual product, working
 on a schema you have never labelled, is a real and unsolved thing.
 
+\subsection{When this fits a real problem}
+\label{sec:when}
+
+Published walkthroughs of the reference API give a useful external check
+on whether our primitive set matches real demand. Three that circulated
+widely: filtering 38{,}000 LinkedIn connections against an ideal-customer
+profile, cleaning 4{,}710 auto-collected Gmail contacts, and triaging six
+months of arXiv abstracts for relevance to non-technical readers.
+
+All three use only \choice{}, \score{} and \noul{}; all three ask several
+questions per record in one call; all three threshold on the returned
+confidence. Menu sizes run from 4 to 15, well inside what we handle. So
+the abstraction transfers, which is worth stating because we did not
+design it and it could have turned out narrower than the real demand.
+
+Whether \emph{our} implementation fits depends on one thing:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & no labels & a few hundred labels \\
+\midrule
+schema you have never seen & reference API & \openjev{} \\
+cost per record at scale & comparable & \openjev{} (local) \\
+need a real probability & \openjev{} & \openjev{} \\
+need reproducibility & \openjev{} & \openjev{} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The probability and reproducibility rows are ours regardless of labels:
+the reference quantises to a $0.01$ grid with $71.9\%$ of values at a hard
+zero, which matters directly for the confidence thresholds all three of
+those applications expose to the user, and it offers no seed.
+
+Two practical observations. First, on our own evidence a task dominated by
+\score{} questions is the worst case for \openjev{}, since the ordinal
+primitive is where we only match a majority baseline; two of the three
+walkthroughs contain such questions. Second, and more usefully: each of
+those three workflows \emph{already} contains a labelling step, a
+40-row corrected evaluation file in one and a 50-item checkpoint in
+another, used for validation rather than training. The labels a
+fine-tune needs are already being produced. Raising 40 to 300 converts a
+validation artifact into a training set, and on our measurements that is
+the difference between trailing the reference API and passing it.
+
 \subsection{Why the data mattered more than the model}
 
 The most useful finding here is negative: a strong encoder with a clever
