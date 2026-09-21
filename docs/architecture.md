@@ -159,7 +159,7 @@ relevant only at much longer packed sequences. Reproduce with
 ```mermaid
 flowchart TB
     RAW["raw ModernBERT"] -->|"fine-tune on 395 examples"| A["intent 0.544<br/>multi-label 0.453"]
-    RAW -->|"train on 143-task mixture<br/>+ label-space and noul augmentation"| GEN["general checkpoint<br/><i>above chance on 5/7 held-out, 17.6x</i>"]
+    RAW -->|"train on 279-task audited mixture<br/>+ label-space and noul augmentation"| GEN["general checkpoint<br/><i>all 7 held-out clear chance, 21.9x</i>"]
     GEN -->|"same 395 examples, same 38s"| B["intent <b>0.899</b><br/>multi-label <b>0.789</b>"]
     A -.->|"+36 points, p = 6e-18"| B
 ```

@@ -32,7 +32,7 @@ and level on the rest. Three wins, four ties, no losses, from 395 examples,
 258 seconds and an 87 MB adapter.
 
 **It is not a zero-shot replacement.** On a schema it has never seen,
-Banking77, it scores 0.355 against roughly 0.820. That gap is real and this
+Banking77, it scores 0.343 against roughly 0.820. That gap is real and this
 README will say so until a measurement says otherwise.
 
 ### Why, and where you come in
@@ -207,27 +207,36 @@ lists the other traps we hit.
 
 ## Where Jev wins
 
-We measured TypeSafe's Jev against our own suite and it is ahead on the things
-that matter most, so use it if those matter more than self-hosting:
+The split is clean, and it is about labels. **Without labels for your task,
+Jev wins. With them, we do.**
 
-- **Zero-shot accuracy.** 0.820 on Banking77 having never seen it; our best
-  never-trained-on-it number is 0.355.
-- **Routing quality.** Router intent 0.941 against our 0.899 (p = 0.04), and
-  the injection gate 0.996 against our 0.978 (p = 0.008).
-- **Gate precision.** `G_clinical` false-positive rate 0.006 against our 0.026.
-- **Scale.** 255 options and a 32k context, out of the box.
+**Jev wins on schemas you have not trained on:**
 
-Where we are level or ahead, once fine-tuned on the task: obliquely-worded
-clinical risk, where Jev misses one in five and we catch all 29 (1.000 against
-0.793, p = 0.03); the `G_pharmacy` scope gate (0.947 against 0.880, p = 3e-04);
-the multi-label compound set, now a statistical tie (0.789 against 0.822,
-p = 0.14); `G_clinical` correctness (p = 1.00); full-precision probabilities,
-where Jev quantizes to 0.01 and puts 71.9% of values at a hard zero;
-determinism, which Jev has none of and offers no seed for; and cost, since
-this runs on your own hardware with no data leaving it.
+- **Zero-shot accuracy.** 0.820 on Banking77 having never seen it. Our best
+  never-trained-on-it number is 0.343, and the published checkpoint is
+  0.290. That gap is large and it is the reason to pay them.
+- **Scale out of the box.** 255 options and a 32k context, no setup.
 
-All paired on the same 450 items with exact McNemar, reproducible via
-`scripts/compare_to_jev.py`.
+**We win once fine-tuned on the task**, paired on the same 450 router items
+with exact McNemar:
+
+| | OpenJev | Jev | p |
+|---|---|---|---|
+| intent | **0.979** | 0.941 | 1e-03 |
+| multi-label exact set | **0.909** | 0.822 | 7e-06 |
+| `compound_3`, three intents at once | **0.903** | 0.645 | — |
+| scope gate | **0.978** | 0.880 | 4e-10 |
+| oblique clinical risk | **0.966** | 0.793 | 0.06, n=29 |
+| clinical / abusive / injection gates | — | — | level |
+
+Three wins, four ties, no losses, from 395 examples and an 87 MB adapter.
+
+Also ours regardless of accuracy: full-precision probabilities, where Jev
+quantizes to 0.01 and puts 71.9% of values at a hard zero; determinism,
+which Jev does not offer and has no seed for; and cost, since this runs on
+your own hardware with nothing leaving it.
+
+Reproduce with `scripts/compare_to_jev.py`.
 
 ## Where this architecture fits
 
@@ -244,7 +253,7 @@ buys nothing and a plain classifier is simpler.
 | | |
 |---|---|
 | [LoRA router adapter](https://huggingface.co/s1lv3rj1nx/openjev-router-lora) | **87 MB, beats the reference API on the router** |
-| [General checkpoint](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | What `--init-from` consumes, 17.6x chance on held-out schemas |
+| [General checkpoint](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | What `--init-from` consumes, 21.9x chance on held-out schemas |
 | [Fine-tuned router](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) | A worked example you can run in three lines |
 | [Held-out suite](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) | 7 tasks and the contamination manifest |
 | [Training mixture](https://huggingface.co/datasets/s1lv3rj1nx/openjev-mixture) | 279 tasks, 323,466 rows, audited clean |
