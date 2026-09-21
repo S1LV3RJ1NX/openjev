@@ -1,0 +1,57 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue]{hyperref}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+\definecolor{linkblue}{RGB}{0,80,160}
+
+\newcommand{\choice}{\texttt{choice}}
+\newcommand{\score}{\texttt{score}}
+\newcommand{\noul}{\texttt{noul}}
+\newcommand{\openjev}{OpenJev}
+
+\title{\textbf{\openjev{}: Typed Decisions from Small Models}\\[0.35em]
+\large What it takes to make a 150M encoder, or a 1.7B decoder,\\
+answer many typed questions about one input in a single forward pass}
+
+\author{%
+  Prathamesh Saraf \\
+  \texttt{\href{https://github.com/S1LV3RJ1NX/openjev}{github.com/S1LV3RJ1NX/openjev}}
+}
+
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/method}
+\input{sections/data}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/ablations}
+\input{sections/discussion}
+
+
+\input{sections/references}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

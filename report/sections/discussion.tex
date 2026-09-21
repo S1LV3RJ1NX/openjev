@@ -1,0 +1,83 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What the evidence supports}
+
+The split is clean and it is about labels. \textbf{Given roughly 400
+labelled examples for your task, a 1.7B model with an 87\,MB adapter beats
+a commercial typed-decision API} on a hardened routing benchmark, runs on
+your own hardware, returns full-precision probabilities, and is
+deterministic. \textbf{Without labels, it does not come close}: $0.290$ on
+Banking77 against roughly $0.820$.
+
+Both halves matter. The first says the capability is not gated behind
+scale or a vendor. The second says the vendor's actual product --- working
+on a schema you have never labelled --- is a real and unsolved thing.
+
+\subsection{Why the data mattered more than the model}
+
+The most useful finding here is negative: a strong encoder with a clever
+output format scores below chance untrained. Nothing about scoring options
+at marker positions confers generalization. What produced it was the
+composition of the training mixture, and in particular a property we could
+manufacture --- menu-size diversity --- rather than one we had to find.
+
+This has a practical consequence. Our mixture is 234 \choice{} tasks
+against 34 \noul{} and 11 \score{}, and the result pattern follows exactly:
+\choice{} transfers, the other two barely do. That is a statement about
+279 tasks scraped from one source, not about the architecture. The
+fastest route to a better general model is a more balanced typed-decision
+corpus, and assembling one is beyond what a single project can do.
+
+\subsection{Limitations}
+
+\paragraph{The ordinal primitive is weak.} \texttt{helpsteer} beats chance
+but only draws level with predicting the most common label. The mixture
+has 11 \score{} tasks, mostly three-level sentiment. We searched twice for
+more; ordinal scales with five or more levels, in domains that are not
+response quality, are scarce in accessible form. We deliberately excluded
+LLM-response-rating corpora because they are the held-out task in all but
+name, and training on a near-twin would move the number without moving the
+ability.
+
+\paragraph{No ordinal or rejection head.} \score{} is a softmax over
+levels; we use the ordering only in rendering and in an expectation-based
+readout. Rank-consistent objectives~\cite{corn} and adaptive rejection
+boundaries~\cite{adb} are the obvious next step and are not implemented.
+
+\paragraph{Zero-shot on a real task is much worse than on benchmarks.}
+$21.9\times$ chance on the held-out suite coexists with intent $0.601$ and
+a clinical-gate recall of $0.111$ on the routing task. Safety gates in
+particular appear to need task supervision, and we would not deploy any
+zero-shot gate on this evidence.
+
+\paragraph{Synthetic evaluation.} The routing task is handwritten and
+systematically composed, not real traffic. It is evidence a method works,
+not a claim about any production distribution.
+
+\paragraph{One-day black-box baseline.} All reference figures are
+measurements of a hosted endpoint on a single day from one network
+location.
+
+\paragraph{Untuned comparisons.} The LoRA-versus-full-fine-tune result
+compares one hyperparameter setting each. We believe the direction and
+not the magnitude.
+
+\subsection{Future work}
+
+The experiment that would most change these conclusions is a balanced
+typed-decision corpus with real \score{} and \noul{} diversity at the
+scale Flan suggests. Beyond that: adapter composition, where a task
+adapter is initialised from a general adapter, which is the
+parameter-efficient analogue of the $+36$-point intermediate-task result;
+rank-consistent ordinal heads; and calibrated rejection for out-of-scope
+inputs.
+
+\subsection{Conclusion}
+
+Typed decisions do not need a large model, and they do not need
+generation. They need the right output format, an attention mask that
+keeps questions independent, and --- overwhelmingly --- training data
+whose \emph{shape} matches deployment. Of those three, only the last was
+hard, and it is the one that transfers least from the literature to
+practice.

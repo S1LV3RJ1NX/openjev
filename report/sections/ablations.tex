@@ -1,0 +1,118 @@
+\section{Ablations, negative results, and one retraction}
+\label{sec:ablations}
+
+Reporting only what worked would misrepresent both the difficulty and the
+method. Three interventions that sounded right did nothing or actively
+hurt, and one conclusion we published internally was wrong.
+
+\subsection{Interventions that failed}
+
+\paragraph{Ordinal scale augmentation: null.}
+The mixture's \score{} tasks are mostly three-level sentiment scales,
+against a held-out task wanting a five-level judgement. We synthesized the
+missing diversity the way label-space augmentation synthesized menu size:
+merging adjacent levels and remapping the gold, and restating a scale in
+another vocabulary of the same length within its semantic family. Ablated
+at $\pi_{\text{scale}} \in \{0, 0.5\}$ with everything else fixed:
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+ & $\pi_{\text{scale}}{=}0$ & $\pi_{\text{scale}}{=}0.5$ \\
+\midrule
+\texttt{helpsteer} & 0.110 (0.6$\times$) & 0.128 (0.6$\times$) \\
+\texttt{sst5}      & 0.342 (1.7$\times$) & 0.348 (1.7$\times$) \\
+suite mean         & \textbf{16.5$\times$} & 15.7$\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both ordinal tasks land on the same multiple of chance either way, and the
+mean is slightly \emph{worse} with it. The mechanism is correct and tested
+--- golds stay on the right level, merges stay contiguous and monotone ---
+it simply is not the bottleneck.
+
+\paragraph{Adding a primitive by removing another: negative, twice.}
+The mixture was poor in \noul{} (13 tasks) and \score{}. We recovered 21
+real yes/no tasks by recognising negation pairs (\texttt{not\_paraphrase}
+vs \texttt{paraphrase}) that the builder had been emitting as two-option
+menus, and separately added two real ordinal datasets. Both made things
+worse:
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+mixture & \choice{} tasks & \texttt{banking77} & suite mean \\
+\midrule
+143 tasks, baseline          & 121 & 0.278 & \textbf{17.6$\times$} \\
+143 tasks, 21 retyped to \noul{} & 100 & 0.187 & 15.3$\times$ \\
+145 tasks, + 2 ordinal       & 100 & 0.138 & 13.4$\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\texttt{banking77} tracks the \choice{} task count exactly. Five of seven
+held-out tasks are \choice{}, so converting or diluting \choice{} tasks is
+a trade rather than an improvement. This is textbook negative
+transfer~\cite{stilts}, and we caused it twice before measuring it. The
+fix was scale: the audited 279-task mixture restored \choice{} to 234 and
+added tasks on top, reaching $21.9\times$.
+
+\subsection{A conclusion we retracted}
+
+For several runs we reported that the \noul{} primitive does not transfer,
+on the evidence that the held-out binary task sat at exactly $0.500$
+accuracy with macro-F1 $0.333$ --- a model answering the same way every
+time. We spent two separate interventions on it.
+
+Both were aimed at the wrong thing. The model ranks that task at AUROC
+$0.714$ and reaches $0.680$ accuracy at a fitted threshold; it puts 98\% of
+its probability mass above $0.5$, so argmax calls everything positive and
+accuracy lands on the class balance. \textbf{That is a calibration result,
+not a transfer result.} Reporting argmax accuracy alone on an uncalibrated
+binary measures the threshold as much as the model, and our evaluation now
+reports AUROC alongside it.
+
+Two measurement errors of our own contributed, and both are worth stating
+because they are easy to repeat:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=0.3em]
+  \item \textbf{A label inversion in the inference helper.} Option names
+    were derived in \emph{dictionary} order, so a \noul{} whose criteria
+    were written \texttt{\{true: \ldots, false: \ldots\}} had its two
+    probabilities swapped. This turned AUROC $0.712$ into $0.288$ ---
+    exactly $1 - 0.712$ --- and looked like a model ranking toxic comments
+    as cleaner than clean ones. The giveaway was the arithmetic.
+  \item \textbf{A partially loaded model that produced a full results
+    table.} A decoder was built without its trained head, so
+    \texttt{load\_state\_dict(strict=False)} silently dropped six tensors
+    and scored the untrained readout, reporting $5.8\times$ chance where
+    the truth was $16.2\times$. A warning printed; a complete results table
+    printed under it. Loaders now raise.
+\end{itemize}
+
+We also credited the held-in control with catching the second bug, and
+that was wrong too: the decoder reads $1.0$--$1.3\times$ on held-in tasks
+even when it loads perfectly, because a 4.2M head on a frozen backbone
+barely fits its own training mixture. Only the harness sanity task caught
+it.
+
+\subsection{Interventions that worked}
+
+For completeness, the positive results, ordered by effect size: label-space
+augmentation (\S\ref{sec:res-data}); mixture scale and auditing
+($17.6\times \to 21.9\times$); prompt format on a decoder backbone
+($0.8\times \to 11.5\times$); intermediate-task transfer ($+36$ points at
+395 target examples); LoRA over full fine-tuning ($0.979$ vs $0.929$ at
+$1/39$ the size); and adapter merging ($1.96\times \to 1.07\times$
+latency).
+
+\subsection{Methodological caveat}
+
+One choice in this paper was made badly. The \noul{} rendering rule
+(\S\ref{sec:method}) was selected by comparing variants on the held-out
+task itself, which is the wrong place to choose anything. The change is
+principled and small, and the three-way spread we observed across
+connective phrasings ($0.25$ to $0.75$ AUROC) is large enough that it
+should be re-settled on held-in data before the held-out number is quoted
+as clean.

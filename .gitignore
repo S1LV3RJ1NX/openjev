@@ -8,3 +8,12 @@ __pycache__/
 # Rebuild with: uv run python scripts/build_heldout.py --fetch
 tasks/heldout/sst5/*.jsonl
 tasks/heldout/ag_news/*.jsonl
+
+# LaTeX build artifacts
+report/*.aux
+report/*.log
+report/*.out
+report/*.fls
+report/*.fdb_latexmk
+report/*.toc
+report/*.synctex.gz

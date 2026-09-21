@@ -1,0 +1,93 @@
+\section{Introduction}
+\label{sec:intro}
+
+Consider a pharmacy support queue. A message arrives: \emph{``I need a
+refill on my thyroid tablets, and are you open on Sunday? Also I've been
+getting dizzy since starting them.''} A system routing this must decide,
+simultaneously, which topics it concerns (two), whether it mentions
+clinical risk that a human should see (it does), and how urgent it is.
+Each of these is a decision over a \emph{known, closed} set of answers.
+
+The dominant approach is to ask a language model and parse what comes back.
+This works, and it is expensive in three distinct ways. Each question costs
+its own generation. The output is unconstrained, so it must be coerced onto
+the menu by grammar-constrained decoding or by retrying. And the resulting
+token probabilities are a poor basis for the thresholding that operational
+systems need, because they describe a sampling distribution over strings
+rather than a calibrated belief over options.
+
+\subsection{Typed decisions}
+
+We use \emph{typed decision} for a question whose answer set is fixed in
+advance and known to the system. Three types cover most of what production
+routing and guardrail systems need:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=0.25em]
+  \item \choice{} --- exactly one of $K$ options. Intent, category, routing
+    target. $K$ reaches 151 in our evaluation.
+  \item \score{} --- one level on an \emph{ordered} scale. Severity,
+    urgency, quality. The ordering is information a \choice{} discards.
+  \item \noul{} --- yes or no. Flags and safety gates. Several asked
+    together express multi-label structure, which a single \choice{}
+    cannot: a softmax over intents has no way to say ``both''.
+\end{itemize}
+
+\subsection{What this paper is about}
+
+\openjev{} is an open implementation of an architecture for answering many
+such questions about one input at once, and an empirical account of what
+makes it work. We set out to reproduce the behaviour of a commercial
+typed-decision API, and the interesting result is not the architecture,
+which is a recombination of published ideas (\S\ref{sec:background}). It is
+which parts of the recipe actually carry the performance.
+
+Three findings organise the paper.
+
+\paragraph{The architecture does not generalize on its own.} A pretrained
+bidirectional encoder, given the option-scoring output format and no task
+training, scores $0.7\times$ chance on held-out schemas --- worse than
+guessing. Its larger sibling reaches $2.2\times$. The output format makes
+zero-shot scoring \emph{possible}; it does not make it \emph{present}
+(\S\ref{sec:res-architecture}).
+
+\paragraph{Generalization is a property of the training mixture, and some
+of it is synthesizable.} Our first mixture left held-out transfer at
+$0.9\times$ chance. The single largest fix was not more data but a
+different \emph{shape} of data: padding training menus with distractor
+labels borrowed from other tasks, which moved a 77-way held-out menu from a
+literal $0.000$ to $0.205$. A model that has never seen a large menu
+collapses onto one label when handed one, and you can manufacture large
+menus without finding datasets that have them (\S\ref{sec:res-data}).
+
+\paragraph{With labels, small models win; without them, they do not.} A
+rank-16 adapter on a 1.7B backbone, trained on 395 examples, beats the
+commercial API on three of seven router measures and ties the rest. The
+same architecture without task labels remains far behind it. That split is
+the honest summary of where this technology stands
+(\S\ref{sec:res-router}, \S\ref{sec:discussion}).
+
+\subsection{Contributions}
+
+\begin{enumerate}[leftmargin=1.5em,itemsep=0.25em]
+  \item An architecture and open implementation for multi-question typed
+    decisions in a single forward pass, with latency flat in the number of
+    questions (10 questions cost 6\% more than 1) and full-precision
+    calibrated probabilities.
+  \item \emph{Label-space augmentation}, a training-time intervention that
+    manufactures the menu-size diversity a mixture lacks, and which is the
+    difference between no transfer and useful transfer at high cardinality.
+  \item A measured account of parameter-efficient fine-tuning for this task
+    shape, including the result that a 17M-parameter adapter outperforms
+    opening all 1{,}725M parameters, at $1/39$ the artifact size.
+  \item A reproducible benchmark suite with an enforced contamination
+    guard, a held-in control that distinguishes ``no transfer'' from ``a
+    bug'', and a hardened routing task built to retain headroom where the
+    reference system saturated.
+  \item A set of negative and retracted results reported at the same
+    prominence as the positive ones (\S\ref{sec:ablations}), including two
+    interventions that made things worse and one conclusion we withdrew
+    after finding the bug that produced it.
+\end{enumerate}
+
+Everything is reproducible from a public repository, with released
+checkpoints, adapters, and datasets listed in Appendix~\ref{app:artifacts}.

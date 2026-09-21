@@ -1,0 +1,81 @@
+\section{Experimental setup}
+\label{sec:experiments}
+
+\subsection{Two studies}
+
+The experiments answer two different questions, and they disagree. Keeping
+them separate is what makes the disagreement legible rather than
+contradictory.
+
+\begin{description}[leftmargin=0em,itemsep=0.35em]
+  \item[Study G (general capability).] Train on the 279-task mixture,
+    evaluate on seven tasks never trained on. \emph{Does it work on a
+    schema you have no labels for?} This is the harder claim and the
+    reference system's main advantage.
+  \item[Study S (specific use case).] Train on 395 examples of the
+    healthcare router, evaluate on its 450-item test split. \emph{Given
+    labels for your actual problem, how good does it get?}
+\end{description}
+
+\subsection{Backbones}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & encoder & decoder \\
+\midrule
+model & \texttt{ModernBERT-base} & \texttt{Qwen3-1.7B} \\
+parameters & 150M & 1{,}725M \\
+attention & bidirectional & causal + block-diagonal \\
+readout & linear at marker & $\text{logit}(\texttt{yes}) - \text{logit}(\texttt{no})$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+``Decoder'' names the attention pattern, not the usage: nothing is
+generated token by token, and inference is a single forward pass with a
+parallel read at marker positions.
+
+\subsection{Training configurations}
+
+Study G uses one epoch over the mixture, batch 16 (encoder) or 8
+(decoder), context 2048, label-space augmentation at $\pi{=}0.5$ with cap
+$M{=}120$. Study S uses six epochs over 395 examples. Four adaptation
+regimes are compared in \S\ref{sec:res-router}: encoder full fine-tune,
+decoder full fine-tune, decoder head-only, and decoder LoRA ($r{=}16$,
+$\alpha{=}32$, on all attention and MLP projections, $\text{lr}=2\times
+10^{-4}$).
+
+\subsection{Metrics}
+
+Accuracy, macro-F1, and multi-label exact-set match, with bootstrap
+confidence intervals over examples. For comparability across tasks with
+very different $K$ we report \emph{multiple of chance}, $\text{acc} \cdot
+K$, since raw accuracy is not comparable: $0.28$ on a 77-way menu is
+strong and on a 4-way menu is worse than guessing.
+
+Two metric choices are load-bearing.
+
+\paragraph{AUROC on binary tasks.} Argmax accuracy on a \noul{} describes
+the $0.5$ threshold as much as the model. A task can rank almost perfectly
+and still score exactly the class balance by putting all probability mass
+on one side. We report both, and the gap between them is a calibration
+result rather than a transfer result.
+
+\paragraph{Chance is not always the right floor.} A skewed task can be
+beaten by always predicting its most common label. Where that baseline
+exceeds $1/K$ we test against it explicitly, which changes one of our
+conclusions (\S\ref{sec:res-heldout}).
+
+\paragraph{Paired comparison.} Against the reference system we use exact
+McNemar on the same items, reporting $b_{10}$ (we are right, they are not)
+and $b_{01}$. An aggregate delta cannot distinguish a real difference from
+two systems disagreeing equally in both directions.
+
+\subsection{Reproducibility}
+
+All runs are on one H100. The contamination guard runs and logs on every
+training run. Checkpoints record their backbone, adapter rank, prompt
+preamble, option template, and fitted temperatures, because the same
+weights scored under a different prompt are a different system. Artifacts
+are listed in Appendix~\ref{app:artifacts}.

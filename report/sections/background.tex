@@ -1,0 +1,65 @@
+\section{Background and related work}
+\label{sec:background}
+
+Every structural idea in \openjev{} exists in the literature. We state the
+provenance plainly, because the paper's contribution is empirical rather
+than architectural.
+
+\paragraph{Scoring options instead of generating them.}
+UniMC~\cite{unimc} recasts multiple-choice NLU by inserting an
+option-marker token before each candidate and reading a decision from the
+encoder's state at that position, avoiding generation entirely. Our readout
+is the same idea. The consequence people usually reach for --- that such a
+model ``cannot hallucinate'' --- is narrower than it sounds: the model
+cannot emit a string outside the menu, which says nothing about whether the
+option it picks is right.
+
+\paragraph{Encoding a shared prefix once.}
+Parallel Context Windows~\cite{pcw} and related work formalise attention
+masks in which several segments each attend to a common prefix and to
+themselves, but not to one another. We use exactly this to isolate
+questions, so that an answer does not depend on which other questions were
+asked in the same call. On a causal backbone the prefix is ordinary
+left-context, which is what a KV cache is for.
+
+\paragraph{Multi-task training for zero-shot transfer.}
+T0~\cite{t0} and the Flan collection~\cite{flan} establish that training
+across many tasks produces zero-shot ability on unseen ones, and that the
+gain continues accruing with task count into the high hundreds. Our mixture
+is assembled from \texttt{tasksource}~\cite{tasksource}, which normalises a
+large number of classification and multiple-choice datasets into a common
+interface. Flan's task-count finding is the reason we treat 279 tasks as a
+floor rather than a target.
+
+\paragraph{Intermediate-task transfer.}
+Training on an intermediate task before the target is
+STILTs~\cite{stilts}; the domain-adaptive variant is
+Gururangan et al.~\cite{dontstoppretraining}. Both report that the gain is largest when the
+target dataset is small, and that it is inconsistent across task pairs and
+can be negative. We observe both effects: a large gain at 395 target
+examples (\S\ref{sec:res-router}), and two mixture changes that made
+held-out transfer \emph{worse} (\S\ref{sec:ablations}).
+
+\paragraph{Parameter-efficient adaptation.}
+LoRA~\cite{lora} trains low-rank updates beside frozen weights. Our use is
+conventional; the finding that it \emph{outperforms} full fine-tuning here,
+rather than merely approximating it cheaply, is reported in
+\S\ref{sec:res-router} together with the most likely explanation.
+
+\paragraph{Ordinal and rejection heads.}
+CORN/CORAL~\cite{corn} give rank-consistent ordinal objectives, and
+adaptive decision boundaries~\cite{adb} detect out-of-scope inputs without
+negative samples. We implement neither; \score{} is currently a softmax
+over levels whose order is used only in rendering and in the
+expectation-based readout. This is a limitation and we mark it as such
+(\S\ref{sec:discussion}).
+
+\paragraph{The system we compare against.}
+Our reference is a commercial typed-decision API, \texttt{jev-1.13.0} from
+TypeSafe, measured by black-box probing on 20 September 2026 at the sample
+sizes stated. We inferred its design from behaviour: latency is flat from 2
+to 255 options and an eight-question call costs the same wall time as a
+one-question call, which is the signature of a shared prefix with parallel
+readout. All figures attributed to it are one-day measurements of a hosted
+endpoint from one network location, and should be reproduced before being
+relied on.

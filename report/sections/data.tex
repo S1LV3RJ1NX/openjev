@@ -1,0 +1,156 @@
+\section{Data}
+\label{sec:data}
+
+Since our central claim is that generalization lives in the training data
+rather than the architecture, the data deserves the same scrutiny usually
+reserved for the model.
+
+\subsection{Training mixture}
+
+We assemble 279 tasks and 323{,}466 rows from
+\texttt{tasksource}~\cite{tasksource}, normalised into the typed-decision
+format. Composition after cleaning:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+primitive & tasks & notes \\
+\midrule
+\choice{} & 234 & option counts 2 to 174; 80 tasks have per-example menus \\
+\noul{}   & 34  & \\
+\score{}  & 11  & mostly three-level sentiment; see \S\ref{sec:discussion} \\
+\midrule
+total & 279 & 323{,}466 rows \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The lopsidedness is a limitation, not a design choice, and it predicts the
+result pattern: \choice{} transfers best and \score{} worst.
+
+\paragraph{Per-example option menus.} 80 tasks come from the
+multiple-choice family, where each row carries its own answer set rather
+than sharing a fixed menu. Supporting this in the trainer is what unlocked
+that family, which is 261 of the 668 tasks \texttt{tasksource} exposes.
+
+\subsection{Contamination guard}
+
+A held-out suite is worthless if the training mixture contains the same
+data under a different name, and aliasing is the normal case:
+\texttt{tasksource} calls one dataset \texttt{banking77}, while the Hub
+also carries \texttt{PolyAI/banking77} and \texttt{mteb/banking77}.
+
+Each evaluation task therefore declares every alias of its source, a
+manifest holds the union, and a matcher checks full names, owner-stripped
+basenames, and glob patterns rather than performing a set intersection.
+The check runs before every training run and refuses to proceed on a hit;
+it excluded 23 tasks when building this mixture, and caught a real leak
+during development. We verify it with a positive control --- injecting
+\texttt{banking77} into a clean mixture and confirming rejection --- since
+a guard that has never fired is indistinguishable from a guard that
+cannot.
+
+\subsection{Auditing, and what it found}
+\label{sec:data-audit}
+
+Training is the expensive step, so faults that survive it and surface
+hours later as a bad number are worth catching first. We audit for gold
+answers outside their own menu, \score{} golds stored as booleans (in
+Python \texttt{True == 1}, which silently rewrites levels 0 and 1), class
+imbalance too severe to learn, near-duplicate \noul{} descriptions, split
+leakage, and contradictory labels.
+
+Three findings changed the data materially.
+
+\paragraph{The gold answer was always first.} \texttt{tasksource} ships
+multiple-choice tasks correct-answer-first. Measured after ingestion, the
+gold sat at index $0$ in \textbf{100\% of rows across all 83 ingested
+tasks}. Stored that way, the data teaches ``pick the first option'' to
+anything reading the menu as written. We shuffle at ingestion so the
+stored data is honest, and drop tasks whose gold remains at a fixed index
+or is a single constant string.
+
+\paragraph{Contradictory labels.} 1{,}994 rows carried the same state under
+the same menu with different answers; whichever the model predicts, some
+are wrong, so the gradient is noise. One task contributed 195.
+
+\paragraph{Menus too long to pack.} 1{,}787 rows had option sets exceeding
+the context budget on their own, some options being multi-paragraph
+passages.
+
+Finally, we sweep every example through the same dataset object the
+trainer uses, including augmentation, before training starts: 323{,}466
+examples verified in 227 seconds of CPU. Two earlier runs died on packing
+errors after twenty minutes and ten thousand steps respectively, and both
+faults were findable in advance.
+
+\subsection{Label-space augmentation}
+\label{sec:data-aug}
+
+Our mixture's option counts topped out near 20 while the evaluation suite
+reaches 151. A model that has never seen a large menu collapses onto one
+label when handed one, which is what an exact $0.000$ looks like: chance
+alone would have produced roughly three correct in 200.
+
+The intervention is to manufacture the missing shape. With probability
+$\pi$, a training menu is padded with labels borrowed from other tasks in
+the mixture, sampling a target size log-uniformly so small menus stay
+common and large ones appear often enough to matter. The gold answer is
+unchanged and still correct, so the example remains valid, but the model
+must now discriminate against a large menu.
+
+\begin{algorithm}[t]
+\caption{Label-space augmentation for one \choice{} question}
+\label{alg:aug}
+\begin{algorithmic}[1]
+\Require menu $O$ with gold $y$, distractor pool $D$, probability $\pi$,
+  cap $M$
+\If{$\textproc{Uniform}(0,1) \ge \pi$} \Return $O$ \EndIf
+\State $n \gets \big\lfloor \exp\big(\textproc{Uniform}(\ln(|O|{+}1),\,
+  \ln M)\big) \big\rfloor$ \Comment{log-uniform target size}
+\State $E \gets \emptyset$
+\While{$|O| + |E| < n$ and attempts remain}
+  \State $d \sim D$
+  \If{$d \notin O$ and $d \notin E$} \Comment{never add a plausibly correct label}
+    \State $E \gets E \cup \{d\}$
+  \EndIf
+\EndWhile
+\State \Return $\textproc{Shuffle}(O \cup E)$ \Comment{$y$ still present and correct}
+\end{algorithmic}
+\end{algorithm}
+
+Option order is shuffled every epoch for a second reason: on the reference
+system we measured the argmax flipping across option orderings on 7.5\% of
+confusable items, at 2.8$\times$ the resampling floor. That is per-item
+instability rather than a positional prior, so it cannot be corrected post
+hoc and must be trained out.
+
+\subsection{Evaluation suites}
+
+\paragraph{Held-out suite (Study G).} Seven public tasks, 600 rows each,
+never trained on: \texttt{clinc\_oos} ($K{=}151$), \texttt{banking77}
+($K{=}77$), \texttt{massive\_intent} ($K{=}60$), \texttt{sst5} and
+\texttt{helpsteer} (\score{}, $K{=}5$), \texttt{ag\_news} ($K{=}4$), and
+\texttt{civil\_comments} (\noul{}). The high-cardinality end is the point:
+a 151-way menu is where models that look fine on four-way classification
+fail.
+
+Every evaluation reports a \emph{held-in control}: accuracy on tasks the
+model was trained on. If held-out is at chance and held-in is high, the
+model genuinely fails to transfer; if both are at chance, it is a bug. We
+also run a trivial three-way sanity task that any working harness must
+pass. This is not ceremony --- the sanity check caught a real
+partially-loaded-model bug that had produced a plausible, and wrong,
+results table.
+
+\paragraph{Healthcare router (Study S).} A synthetic pharmacy routing task:
+988 items across 18 tiers, 395 train and 450 test, with ten questions per
+item (one intent \choice{}, five topic \noul{}s, four safety gates).
+
+Its first version was useless: the reference API scored a clean $1.000$ on
+four of its tiers, which cannot distinguish any two systems. We rebuilt it
+targeting where that system actually failed --- obliquely-worded clinical
+risk, three-intent compounds, negation and conditionals, near-miss
+out-of-scope, subtle prompt injection, and degraded voice-transcript text.
+Splits are disjoint by content rather than by row, so paraphrases and
+noisy variants of an item all stay in one split.

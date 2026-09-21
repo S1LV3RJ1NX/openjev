@@ -1,0 +1,104 @@
+\section{Released artifacts}
+\label{app:artifacts}
+
+All public and Apache 2.0 unless the underlying data says otherwise.
+
+\paragraph{Code.} \url{https://github.com/S1LV3RJ1NX/openjev}
+
+\paragraph{Models.}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+artifact & size & identifier \\
+\midrule
+General encoder checkpoint & 0.6 GB & \texttt{s1lv3rj1nx/openjev-encoder-general} \\
+Router LoRA adapter & 87 MB & \texttt{s1lv3rj1nx/openjev-router-lora} \\
+Router encoder specialist & 0.6 GB & \texttt{s1lv3rj1nx/openjev-router-healthcare} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Datasets.}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+artifact & size & identifier \\
+\midrule
+Training mixture & 279 tasks / 323{,}466 rows & \texttt{s1lv3rj1nx/openjev-mixture} \\
+Held-out suite & 7 tasks / 4{,}200 rows & \texttt{s1lv3rj1nx/openjev-heldout} \\
+Healthcare router & 988 items / 18 tiers & \texttt{s1lv3rj1nx/openjev-healthcare-router} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Base models: \texttt{answerdotai/ModernBERT-base}~\cite{modernbert} and
+\texttt{Qwen/Qwen3-1.7B}~\cite{qwen3}.
+
+\section{Reproducing the main results}
+\label{app:repro}
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+result & command \\
+\midrule
+Held-out transfer & \texttt{scripts/eval\_heldout.py --ckpt <ckpt>} \\
+Router against reference & \texttt{scripts/eval\_router.py --ckpt <ckpt> --dump o.json} \\
+Paired McNemar & \texttt{scripts/compare\_to\_jev.py --ours o.json --jev j.json} \\
+Latency & \texttt{scripts/bench\_latency.py --ckpt <ckpt>} \\
+Data audit & \texttt{scripts/audit\_data.py <task dir> --deep} \\
+Packing check & \texttt{scripts/check\_packing.py <mixture>} \\
+Binary diagnosis & \texttt{scripts/diagnose\_binary.py --ckpt <ckpt>} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Hyperparameters}
+\label{app:hparams}
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+ & Study G (mixture) & Study S (router) \\
+\midrule
+epochs & 1 & 6 \\
+batch size & 16 enc / 8 dec & 8 enc / 4 dec \\
+context & 2048 & 2048 enc / 3072 dec \\
+learning rate & $3\times10^{-5}$ enc & $3\times10^{-5}$ enc, $2\times10^{-4}$ LoRA \\
+label-space aug. $\pi$ & 0.5, cap 120 & off \\
+\noul{} recast $\pi$ & 0.15 & off \\
+LoRA & $r{=}16$, $\alpha{=}32$, dropout 0.05 & same \\
+LoRA targets & \multicolumn{2}{l}{\texttt{q,k,v,o,gate,up,down} projections} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Temperature scaling is fitted on a dev split after training and stored
+with the checkpoint.
+
+\section{Held-out suite composition}
+\label{app:suite}
+
+\begin{center}
+\small
+\begin{tabular}{llrl}
+\toprule
+task & primitive & $K$ & source \\
+\midrule
+\texttt{clinc\_oos} & \choice{} & 151 & \texttt{clinc/clinc\_oos} \\
+\texttt{banking77} & \choice{} & 77 & \texttt{PolyAI/banking77} \\
+\texttt{massive\_intent} & \choice{} & 60 & \texttt{AmazonScience/massive} \\
+\texttt{ag\_news} & \choice{} & 4 & \texttt{fancyzhx/ag\_news} \\
+\texttt{sst5} & \score{} & 5 & \texttt{SetFit/sst5} \\
+\texttt{helpsteer\_helpfulness} & \score{} & 5 & \texttt{nvidia/HelpSteer} \\
+\texttt{civil\_comments\_toxicity} & \noul{} & 2 & \texttt{google/civil\_comments} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each task declares every alias of its source; the union is the
+contamination manifest checked before every training run.
