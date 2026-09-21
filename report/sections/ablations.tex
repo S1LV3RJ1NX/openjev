@@ -29,7 +29,7 @@ suite mean         & \textbf{16.5$\times$} & 15.7$\times$ \\
 
 Both ordinal tasks land on the same multiple of chance either way, and the
 mean is slightly \emph{worse} with it. The mechanism is correct and tested
---- golds stay on the right level, merges stay contiguous and monotone ---
+(golds stay on the right level, merges stay contiguous and monotone)
 it simply is not the bottleneck.
 
 \paragraph{Adding a primitive by removing another: negative, twice.}
@@ -62,7 +62,7 @@ added tasks on top, reaching $21.9\times$.
 
 For several runs we reported that the \noul{} primitive does not transfer,
 on the evidence that the held-out binary task sat at exactly $0.500$
-accuracy with macro-F1 $0.333$ --- a model answering the same way every
+accuracy with macro-F1 $0.333$, which is a model answering the same way every
 time. We spent two separate interventions on it.
 
 Both were aimed at the wrong thing. The model ranks that task at AUROC
@@ -80,8 +80,8 @@ because they are easy to repeat:
   \item \textbf{A label inversion in the inference helper.} Option names
     were derived in \emph{dictionary} order, so a \noul{} whose criteria
     were written \texttt{\{true: \ldots, false: \ldots\}} had its two
-    probabilities swapped. This turned AUROC $0.712$ into $0.288$ ---
-    exactly $1 - 0.712$ --- and looked like a model ranking toxic comments
+    probabilities swapped. This turned AUROC $0.712$ into $0.288$,
+    exactly $1 - 0.712$, and looked like a model ranking toxic comments
     as cleaner than clean ones. The giveaway was the arithmetic.
   \item \textbf{A partially loaded model that produced a full results
     table.} A decoder was built without its trained head, so

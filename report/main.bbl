@@ -1,0 +1,75 @@
+\begin{thebibliography}{10}
+
+\bibitem{dontstoppretraining}
+Suchin Gururangan, Ana Marasovi{\'c}, Swabha Swayamdipta, Kyle Lo, Iz~Beltagy,
+  Doug Downey, and Noah~A. Smith.
+\newblock Don't stop pretraining: Adapt language models to domains and tasks.
+\newblock In {\em ACL}, 2020.
+
+\bibitem{lora}
+Edward~J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA}: Low-rank adaptation of large language models.
+\newblock In {\em ICLR}, 2022.
+
+\bibitem{flan}
+Shayne Longpre, Le~Hou, Tu~Vu, Albert Webson, Hyung~Won Chung, Yi~Tay, Denny
+  Zhou, Quoc~V. Le, Barret Zoph, Jason Wei, and Adam Roberts.
+\newblock The flan collection: Designing data and methods for effective
+  instruction tuning.
+\newblock In {\em ICML}, 2023.
+
+\bibitem{stilts}
+Jason Phang, Thibault F{\'e}vry, and Samuel~R. Bowman.
+\newblock Sentence encoders on {STILTs}: Supplementary training on intermediate
+  labeled-data tasks.
+\newblock {\em arXiv preprint arXiv:1811.01088}, 2018.
+
+\bibitem{pcw}
+Nir Ratner, Yoav Levine, Yonatan Belinkov, Ori Ram, Inbal Magar, Omri Abend,
+  Ehud Karpas, Amnon Shashua, Kevin Leyton-Brown, and Yoav Shoham.
+\newblock Parallel context windows for large language models.
+\newblock In {\em ACL}, 2023.
+
+\bibitem{t0}
+Victor Sanh, Albert Webson, Colin Raffel, Stephen~H. Bach, et~al.
+\newblock Multitask prompted training enables zero-shot task generalization.
+\newblock In {\em ICLR}, 2022.
+
+\bibitem{corn}
+Xintong Shi, Wenzhi Cao, and Sebastian Raschka.
+\newblock Deep neural networks for rank-consistent ordinal regression based on
+  conditional probabilities.
+\newblock {\em arXiv preprint arXiv:2111.08851}, 2021.
+
+\bibitem{tasksource}
+Damien Sileo.
+\newblock tasksource: A dataset harmonization framework for streamlined nlp
+  multi-task learning and evaluation.
+\newblock In {\em LREC-COLING}, 2024.
+
+\bibitem{modernbert}
+Benjamin Warner, Antoine Chaffin, Benjamin Clavi{\'e}, Orion Roberts, Ramesh
+  Nallapati, et~al.
+\newblock Smarter, better, faster, longer: A modern bidirectional encoder for
+  fast, memory efficient, and long context finetuning and inference.
+\newblock {\em arXiv preprint arXiv:2412.13663}, 2024.
+
+\bibitem{qwen3}
+An~Yang, Anfeng Li, Baosong Yang, et~al.
+\newblock Qwen3 technical report.
+\newblock {\em arXiv preprint arXiv:2505.09388}, 2025.
+
+\bibitem{unimc}
+Ping Yang, Junjie Wang, Ruyi Gan, Xinyu Zhu, Lin Zhang, Ziwei Wu, Xinyu Gao,
+  Jiaxing Zhang, and Tetsuya Sakai.
+\newblock Zero-shot learners for natural language understanding via a unified
+  multiple choice perspective.
+\newblock In {\em Findings of EMNLP}, 2022.
+
+\bibitem{adb}
+Hanlei Zhang, Hua Xu, and Ting-En Lin.
+\newblock Deep open intent classification with adaptive decision boundary.
+\newblock In {\em AAAI}, 2021.
+
+\end{thebibliography}

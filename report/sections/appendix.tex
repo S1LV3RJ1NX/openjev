@@ -5,16 +5,19 @@ All public and Apache 2.0 unless the underlying data says otherwise.
 
 \paragraph{Code.} \url{https://github.com/S1LV3RJ1NX/openjev}
 
-\paragraph{Models.}
+\paragraph{Models.} All on the Hugging Face Hub.
 \begin{center}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{llp{6.6cm}}
 \toprule
-artifact & size & identifier \\
+artifact & size & link \\
 \midrule
-General encoder checkpoint & 0.6 GB & \texttt{s1lv3rj1nx/openjev-encoder-general} \\
-Router LoRA adapter & 87 MB & \texttt{s1lv3rj1nx/openjev-router-lora} \\
-Router encoder specialist & 0.6 GB & \texttt{s1lv3rj1nx/openjev-router-healthcare} \\
+General encoder checkpoint & 0.6 GB &
+  \href{https://huggingface.co/s1lv3rj1nx/openjev-encoder-general}{\texttt{s1lv3rj1nx/openjev-encoder-general}} \\
+Router LoRA adapter & 87 MB &
+  \href{https://huggingface.co/s1lv3rj1nx/openjev-router-lora}{\texttt{s1lv3rj1nx/openjev-router-lora}} \\
+Router encoder specialist & 0.6 GB &
+  \href{https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare}{\texttt{s1lv3rj1nx/openjev-router-healthcare}} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -22,19 +25,36 @@ Router encoder specialist & 0.6 GB & \texttt{s1lv3rj1nx/openjev-router-healthcar
 \paragraph{Datasets.}
 \begin{center}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{llp{6.2cm}}
 \toprule
-artifact & size & identifier \\
+artifact & size & link \\
 \midrule
-Training mixture & 279 tasks / 323{,}466 rows & \texttt{s1lv3rj1nx/openjev-mixture} \\
-Held-out suite & 7 tasks / 4{,}200 rows & \texttt{s1lv3rj1nx/openjev-heldout} \\
-Healthcare router & 988 items / 18 tiers & \texttt{s1lv3rj1nx/openjev-healthcare-router} \\
+Training mixture & 279 tasks, 323{,}466 rows &
+  \href{https://huggingface.co/datasets/s1lv3rj1nx/openjev-mixture}{\texttt{s1lv3rj1nx/openjev-mixture}} \\
+Held-out suite & 7 tasks, 4{,}200 rows &
+  \href{https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout}{\texttt{s1lv3rj1nx/openjev-heldout}} \\
+Healthcare router & 988 items, 18 tiers &
+  \href{https://huggingface.co/datasets/s1lv3rj1nx/openjev-healthcare-router}{\texttt{s1lv3rj1nx/openjev-healthcare-router}} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Base models: \texttt{answerdotai/ModernBERT-base}~\cite{modernbert} and
-\texttt{Qwen/Qwen3-1.7B}~\cite{qwen3}.
+\paragraph{Base models} (not ours):
+\href{https://huggingface.co/answerdotai/ModernBERT-base}{\texttt{answerdotai/ModernBERT-base}}~\cite{modernbert}
+and
+\href{https://huggingface.co/Qwen/Qwen3-1.7B}{\texttt{Qwen/Qwen3-1.7B}}~\cite{qwen3}.
+The mixture is assembled from
+\href{https://huggingface.co/tasksource}{\texttt{tasksource}}~\cite{tasksource}.
+
+\paragraph{Loading a model.} The adapter is merged into the base weights
+on load, so no extra inference cost is paid by accident.
+
+\begin{verbatim}
+from openjev import DecisionModel, Choice, Noul
+model = DecisionModel.from_pretrained("s1lv3rj1nx/openjev-router-lora")
+out = model.answer(state, {"intent": Choice(...), "clinical": Noul(...)})
+out["intent"].label, out["intent"].probabilities
+\end{verbatim}
 
 \section{Reproducing the main results}
 \label{app:repro}

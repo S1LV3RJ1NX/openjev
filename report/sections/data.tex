@@ -45,8 +45,8 @@ manifest holds the union, and a matcher checks full names, owner-stripped
 basenames, and glob patterns rather than performing a set intersection.
 The check runs before every training run and refuses to proceed on a hit;
 it excluded 23 tasks when building this mixture, and caught a real leak
-during development. We verify it with a positive control --- injecting
-\texttt{banking77} into a clean mixture and confirming rejection --- since
+during development. We verify it with a positive control, injecting
+\texttt{banking77} into a clean mixture and confirming rejection, since
 a guard that has never fired is indistinguishable from a guard that
 cannot.
 
@@ -139,7 +139,7 @@ Every evaluation reports a \emph{held-in control}: accuracy on tasks the
 model was trained on. If held-out is at chance and held-in is high, the
 model genuinely fails to transfer; if both are at chance, it is a bug. We
 also run a trivial three-way sanity task that any working harness must
-pass. This is not ceremony --- the sanity check caught a real
+pass. This is not ceremony. The sanity check caught a real
 partially-loaded-model bug that had produced a plausible, and wrong,
 results table.
 
@@ -149,7 +149,7 @@ item (one intent \choice{}, five topic \noul{}s, four safety gates).
 
 Its first version was useless: the reference API scored a clean $1.000$ on
 four of its tiers, which cannot distinguish any two systems. We rebuilt it
-targeting where that system actually failed --- obliquely-worded clinical
+targeting where that system actually failed: obliquely-worded clinical
 risk, three-intent compounds, negation and conditionals, near-miss
 out-of-scope, subtle prompt injection, and degraded voice-transcript text.
 Splits are disjoint by content rather than by row, so paraphrases and

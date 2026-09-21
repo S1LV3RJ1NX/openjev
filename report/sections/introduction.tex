@@ -23,29 +23,75 @@ advance and known to the system. Three types cover most of what production
 routing and guardrail systems need:
 
 \begin{itemize}[leftmargin=1.4em,itemsep=0.25em]
-  \item \choice{} --- exactly one of $K$ options. Intent, category, routing
+  \item \choice{}: exactly one of $K$ options. Intent, category, routing
     target. $K$ reaches 151 in our evaluation.
-  \item \score{} --- one level on an \emph{ordered} scale. Severity,
+  \item \score{}: one level on an \emph{ordered} scale. Severity,
     urgency, quality. The ordering is information a \choice{} discards.
-  \item \noul{} --- yes or no. Flags and safety gates. Several asked
+  \item \noul{}: yes or no. Flags and safety gates. Several asked
     together express multi-label structure, which a single \choice{}
     cannot: a softmax over intents has no way to say ``both''.
 \end{itemize}
 
+\subsection{Jev, and why it is the right thing to measure against}
+\label{sec:intro-jev}
+
+The system that made this concrete for us is \textbf{Jev}, a commercial
+typed-decision API from TypeSafe. It is closed, and it is good. Rather
+than treat it as a competitor to be beaten on a leaderboard, we treat it
+as an existence proof and a measuring stick, and it deserves credit on
+both counts.
+
+Three things Jev gets right, which we verified by measurement rather than
+taking on faith:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=0.3em]
+  \item \textbf{It asks the right question.} Most of the industry responds
+    to structured-output needs by constraining a generative decoder. Jev
+    instead makes the typed decision the primitive. The API accepts a
+    state and a set of typed questions and returns probabilities over
+    fixed menus. Having used it, we find this to be the correct
+    abstraction for routing and guardrail work, and the framing of this
+    paper is borrowed from it.
+  \item \textbf{The shared-prefix design pays off, and we can see it in
+    the timings.} Latency is flat from 2 to 255 options, and an
+    eight-question call costs the same wall time as a one-question call
+    ($392$\,ms against $407$\,ms). Adding 253 options costs roughly 8{,}200
+    input tokens and approximately zero milliseconds. That is a real
+    engineering result and it is what convinced us the architecture in
+    \S\ref{sec:method} was worth building.
+  \item \textbf{Its zero-shot ability is the genuinely hard part, and it
+    is far ahead of ours.} On Banking77, a 77-way intent task it has never
+    been trained on by us, it scores roughly $0.820$. Our best equivalent
+    is $0.290$. After considerable effort we did not close this gap, and
+    \S\ref{sec:res-deployment} shows the gap is wider still on a realistic
+    deployment task. If you need typed decisions on a schema you have no
+    labels for, Jev is the better tool and this paper does not argue
+    otherwise.
+\end{itemize}
+
+We also record where we found its limits, because a measuring stick should
+be described accurately in both directions: probabilities are quantised to
+a $0.01$ grid with $71.9\%$ of returned values at a hard zero, which
+removes log-odds and tail-risk reasoning; there is no seed, so results are
+not reproducible run to run; and on our hardened routing benchmark it
+misses roughly one in five obliquely-worded clinical risks.
+
 \subsection{What this paper is about}
 
 \openjev{} is an open implementation of an architecture for answering many
-such questions about one input at once, and an empirical account of what
-makes it work. We set out to reproduce the behaviour of a commercial
-typed-decision API, and the interesting result is not the architecture,
-which is a recombination of published ideas (\S\ref{sec:background}). It is
-which parts of the recipe actually carry the performance.
+typed questions about one input at once, and an empirical account of what
+makes it work. We reverse-engineered the observable behaviour of Jev, built
+an architecture consistent with it, and then measured which parts of the
+recipe actually carry the performance. The interesting result is not the
+architecture, which is a recombination of published ideas
+(\S\ref{sec:background}). It is that almost none of the performance comes
+from it.
 
 Three findings organise the paper.
 
 \paragraph{The architecture does not generalize on its own.} A pretrained
 bidirectional encoder, given the option-scoring output format and no task
-training, scores $0.7\times$ chance on held-out schemas --- worse than
+training, scores $0.7\times$ chance on held-out schemas, worse than
 guessing. Its larger sibling reaches $2.2\times$. The output format makes
 zero-shot scoring \emph{possible}; it does not make it \emph{present}
 (\S\ref{sec:res-architecture}).

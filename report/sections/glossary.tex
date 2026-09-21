@@ -1,0 +1,202 @@
+\section{Terminology for readers new to the area}
+\label{app:glossary}
+
+This appendix defines every term the paper uses, assuming no background.
+Nothing here is needed by a reader who already works on language models;
+it exists so the main text can stay short.
+
+\subsection{The problem}
+
+\begin{description}[leftmargin=0em,style=nextline,itemsep=0.3em]
+
+\item[State] The input being judged: a customer message, a product review,
+a comment. One state can have many questions asked about it.
+
+\item[Question] One decision to make about the state, with instructions
+and a set of candidate answers.
+
+\item[Option, menu, criteria] Used interchangeably for the candidate
+answers of a question. A \emph{fixed menu} is shared by every row of a
+task; a \emph{per-example menu} differs row by row, as in reading
+comprehension where each question has its own answers.
+
+\item[$K$] The number of options. $K{=}151$ means a 151-way choice.
+
+\item[Primitive] The type of a question: \choice{} (pick one of $K$),
+\score{} (pick one level on an ordered scale), \noul{} (yes or no).
+
+\item[Multi-label] When more than one label can be true at once. A single
+\choice{} cannot express this, because its probabilities sum to one across
+options. Several \noul{} questions can.
+
+\end{description}
+
+\subsection{How models process text}
+
+\begin{description}[leftmargin=0em,style=nextline,itemsep=0.3em]
+
+\item[Token] A chunk of text, roughly a word piece. Models read and write
+sequences of tokens, not characters.
+
+\item[Embedding, hidden state] The vector a model holds for each token
+position after processing. The hidden state at a position is what we read
+a decision from.
+
+\item[Attention] The mechanism by which a token's representation is built
+from other tokens. An \emph{attention mask} says which positions may look
+at which.
+
+\item[Encoder vs decoder] Two attention patterns. An \textbf{encoder} is
+bidirectional: every token sees every other. A \textbf{decoder} is causal:
+a token sees only what came before it, which is what makes text generation
+possible. \textbf{In this paper ``decoder'' names the attention pattern
+only.} We never generate text; we run one forward pass and read scores.
+
+\item[Forward pass] One run of the model over an input. Our central
+efficiency claim is that $m$ questions cost one forward pass, not $m$.
+
+\item[Logit] A raw, unnormalised score. Logits become probabilities
+through a softmax.
+
+\item[Softmax] Turns a vector of logits into probabilities that sum to
+one. Our \emph{grouped} softmax does this separately within each
+question's options, because questions in one packed sequence have
+different $K$.
+
+\item[Backbone] The pretrained model we build on, before any of our
+training.
+
+\end{description}
+
+\subsection{Training}
+
+\begin{description}[leftmargin=0em,style=nextline,itemsep=0.3em]
+
+\item[Pretraining] The expensive first stage, done by others, where a
+model learns language from large text corpora. We never do this.
+
+\item[Fine-tuning] Further training of a pretrained model on a specific
+task. Cheap by comparison: 38 seconds in one of our settings.
+
+\item[Epoch] One pass over the training data.
+
+\item[Learning rate] How large a step training takes per update. It
+matters more than it sounds: our LoRA-beats-full-fine-tuning result is
+most likely a learning-rate effect (\S\ref{sec:res-router}).
+
+\item[Frozen] A parameter that is not updated during training.
+
+\item[LoRA (Low-Rank Adaptation)] Instead of updating a large weight
+matrix, train two small matrices alongside it and add their product. The
+large matrix stays frozen. The \textbf{rank} $r$ sets how small; $r{=}16$
+here. The result is an \textbf{adapter} of tens of megabytes rather than
+gigabytes, so one backbone can serve many tasks.
+
+\item[Merging] Folding a trained adapter back into the frozen weights, so
+inference costs no extra work. An unmerged adapter is roughly twice as
+slow for no benefit (\S\ref{sec:res-latency}).
+
+\item[Multi-task mixture] Training on many tasks at once, so the model
+learns the general shape of the problem rather than one instance of it.
+
+\item[Intermediate-task transfer] Train on task A, then on target task B.
+Helps most when B is small. Known in the literature as
+STILTs~\cite{stilts}.
+
+\item[Negative transfer] When adding training data makes the target
+\emph{worse}. We caused this twice (\S\ref{sec:ablations}).
+
+\end{description}
+
+\subsection{Evaluation}
+
+\begin{description}[leftmargin=0em,style=nextline,itemsep=0.3em]
+
+\item[Zero-shot] Evaluating on a task the model was never trained on. The
+hard claim, and the thing Jev is good at.
+
+\item[Held-out] Data deliberately excluded from training, used to measure
+zero-shot ability. Worthless if it leaks into training, hence the
+contamination guard.
+
+\item[Held-in control] Accuracy on tasks the model \emph{was} trained on,
+reported next to held-out. If held-out is at chance and held-in is high,
+the model truly fails to transfer; if both are at chance, something is
+broken. Without this, a bug and a finding look identical.
+
+\item[Chance] What random guessing scores: $1/K$. On a 151-way menu that
+is $0.007$, so an accuracy of $0.29$ is strong; on a 4-way menu chance is
+$0.25$ and $0.29$ is nearly worthless.
+
+\item[Multiple of chance] Accuracy divided by chance, so tasks with very
+different $K$ can be compared on one axis.
+
+\item[Majority-class baseline] Always predicting the most common label.
+On skewed data this beats chance, so it is the stricter floor. One of our
+results passes the chance test and only ties this one
+(\S\ref{sec:res-heldout}).
+
+\item[Accuracy, precision, recall] Accuracy is the fraction correct.
+\emph{Recall} is the fraction of true positives found, which is what
+matters for a safety gate. \emph{Precision} is the fraction of positive
+predictions that were right.
+
+\item[Macro-F1] The harmonic mean of precision and recall, averaged over
+classes so rare classes count as much as common ones. A binary task
+scoring macro-F1 $0.333$ is predicting one class for everything.
+
+\item[AUROC] Ranking quality, independent of any threshold: the
+probability a random positive is scored above a random negative. $0.5$ is
+chance. It matters because a model can rank well and still score badly at
+a fixed threshold, which is a calibration problem and not a capability
+one.
+
+\item[Calibration] Whether a stated probability matches reality. If
+everything a model calls $0.7$ is right $70\%$ of the time, it is
+calibrated. \textbf{ECE} measures the gap; \textbf{temperature scaling} is
+the standard post-hoc fix.
+
+\item[Bootstrap confidence interval] Resample the test set with
+replacement many times and report the middle 95\% of the resulting scores.
+An interval that excludes chance means the result is unlikely to be luck.
+
+\item[McNemar test] For comparing two systems on the \emph{same} items.
+Counts only the disagreements: $b_{10}$ where we are right and they are
+not, $b_{01}$ the reverse, and asks whether the split is lopsided enough
+to be real. Necessary because two systems can have equal accuracy while
+disagreeing on a third of the set.
+
+\item[$p$-value] Informally, the probability of seeing a difference this
+large if there were no real difference. Below $0.05$ is conventionally
+called significant. With small samples, significance can be unreachable
+no matter how good the model: one of our tiers has 29 items, so even a
+perfect score floors at $p = 0.0625$.
+
+\end{description}
+
+\subsection{Terms specific to this work}
+
+\begin{description}[leftmargin=0em,style=nextline,itemsep=0.3em]
+
+\item[Packing] Writing the state once, then all questions and options
+after it, as one sequence for one forward pass.
+
+\item[Shared prefix] The state portion of a packed sequence, attended to
+by every question. The reason $m$ questions are nearly free.
+
+\item[Marker] A token after each option where its score is read.
+
+\item[Block-diagonal attention] The mask that lets each question see the
+shared prefix and itself, but not other questions, so an answer does not
+depend on what else was asked.
+
+\item[Label-space augmentation] Padding a training menu with labels
+borrowed from other tasks. The gold stays correct, but the model must
+discriminate against a larger menu. Our largest single effect.
+
+\item[Distractor] One of those borrowed labels.
+
+\item[Contamination guard] A check that no evaluation dataset appears in
+the training mixture under any of its names.
+
+\end{description}

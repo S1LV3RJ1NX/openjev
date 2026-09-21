@@ -9,8 +9,8 @@ than architectural.
 UniMC~\cite{unimc} recasts multiple-choice NLU by inserting an
 option-marker token before each candidate and reading a decision from the
 encoder's state at that position, avoiding generation entirely. Our readout
-is the same idea. The consequence people usually reach for --- that such a
-model ``cannot hallucinate'' --- is narrower than it sounds: the model
+is the same idea. The consequence people usually reach for, that such a
+model ``cannot hallucinate'', is narrower than it sounds: the model
 cannot emit a string outside the menu, which says nothing about whether the
 option it picks is right.
 
