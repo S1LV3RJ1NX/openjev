@@ -9,6 +9,7 @@ keywords = ["classification", "calibration", "encoder", "routing", "typed-decisi
 dependencies = [
     "accelerate>=1.15.0",
     "hf-transfer>=0.1.9",
+    "matplotlib>=3.10.9",
     "pandas>=2.3.3",
     "pyarrow>=25.0.1",
     "safetensors>=0.8.0",
