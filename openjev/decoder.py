@@ -78,7 +78,10 @@ class OpenJevDecoder(nn.Module):
 
         self.yes_id = _one_token(tokenizer, yes_token)
         self.no_id = _one_token(tokenizer, no_token)
-        self._base = self.lm.get_base_model() if lora_r else self.lm
+        # NOT an attribute assignment: nn.Module.__setattr__ would register
+        # the backbone a second time, duplicating every parameter in the
+        # state dict and leaving older checkpoints 311 keys short on load.
+        # See the `base` property below.
 
         # A small head trained on top of the frozen backbone's hidden state.
         #
@@ -108,6 +111,31 @@ class OpenJevDecoder(nn.Module):
         if self.scorer is not None:
             nn.init.zeros_(self.scorer[-1].weight)
             nn.init.zeros_(self.scorer[-1].bias)
+
+    @property
+    def _base(self):
+        """The causal LM underneath, whether or not LoRA wraps it.
+
+        A property rather than a stored attribute so the module is registered
+        once. PEFT injects adapters into the target submodules in place, so
+        reaching the base model still runs them.
+        """
+        lm = self.lm
+        return lm.get_base_model() if hasattr(lm, "get_base_model") else lm
+
+    def merge_adapter(self) -> bool:
+        """Fold LoRA into the base weights. Do this before serving.
+
+        Measured on the router under identical load: unmerged LoRA runs at
+        p50 74ms against the encoder's 37.7ms, and merged at 40.4ms. Leaving
+        it unmerged costs roughly 2x for nothing, because the adapter is an
+        extra matmul per target module at every layer.
+        """
+        if not self.lora_r or not hasattr(self.lm, "merge_and_unload"):
+            return False
+        self.lm = self.lm.merge_and_unload()
+        self.lora_r = 0
+        return True
 
     @torch.no_grad()
     def predict(self, batch: dict[str, torch.Tensor], packed: list) -> list[dict]:

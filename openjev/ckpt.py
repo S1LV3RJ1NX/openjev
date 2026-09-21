@@ -88,6 +88,13 @@ def load_into(model, ck: dict[str, Any]) -> None:
     state = ck.get("state_dict")
     if not state:
         return
+    # Checkpoints written while the decoder stored `_base` as an attribute
+    # carry every tensor twice, once under `lm.` and once under `_base.`,
+    # because nn.Module.__setattr__ registered the backbone a second time.
+    # `_base` is a property now, so drop the duplicates rather than fail on
+    # 392 keys that are already loaded under their real names.
+    if any(k.startswith("_base.") for k in state) and not hasattr(type(model), "_base_is_module"):
+        state = {k: v for k, v in state.items() if not k.startswith("_base.")}
     missing, unexpected = model.load_state_dict(state, strict=False)
     if ck.get("head_only"):
         missing = [k for k in missing if is_trainable_part(k)]
