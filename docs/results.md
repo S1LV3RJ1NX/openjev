@@ -18,9 +18,11 @@ intervals over examples; paired comparisons use exact McNemar.
 | Banking77, never seen it | 0.355 | **0.820** | Jev, clearly |
 | CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
 | Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score`/`noul` still at chance |
-| Router intent | 0.817 | **0.941** | Jev, p = 1e-07 |
-| Router multi-label exact set | 0.718 | **0.822** | Jev, p = 3e-05 |
-| `G_clinical` correctness | 0.971 | 0.978 | **level**, p = 0.63 |
+| Router intent | 0.899 | **0.941** | Jev, p = 0.04 |
+| Router multi-label exact set | 0.789 | 0.822 | **level**, p = 0.14 |
+| Oblique-clinical recall | **1.000** | 0.793 | **OpenJev**, p = 0.03 |
+| `G_pharmacy` correctness | **0.947** | 0.880 | **OpenJev**, p = 3e-04 |
+| `G_clinical` correctness | 0.980 | 0.978 | level, p = 1.00 |
 | Probability precision | full | 0.01 grid, 71.9% hard zeros | **OpenJev** |
 | Deterministic | yes | no, no seed | **OpenJev** |
 
@@ -36,21 +38,49 @@ starting weights differ.
 
 ```bash
 uv run python scripts/train.py --task tasks/healthcare_router \
-    --init-from checkpoints/mixture_big/model.pt --epochs 6 --bs 8
+    --init-from checkpoints_noul/mixture_ord2/model.pt --epochs 6 --bs 8
 ```
 
-| | from raw ModernBERT | from general checkpoint | Jev |
-|---|---|---|---|
-| intent (lenient / strict) | 0.544 | **0.817** | 0.909 / 0.941 |
-| multi-label exact set | 0.453 | **0.718** | 0.822 |
-| multi-label F1 | 0.554 | **0.816** | 0.890 |
-| `G_clinical` recall | 0.898 | **0.991** | 0.926 |
-| `clinical_oblique` recall | 0.931 | **0.966** | 0.793 |
-| `G_abusive` recall | 0.000 | **0.429** | 0.714 |
-| `G_injection` recall | 0.125 | **0.750** | 0.917 |
+| | from raw ModernBERT | from the first general ckpt | from the best general ckpt | Jev |
+|---|---|---|---|---|
+| intent | 0.544 | 0.817 | **0.899** | 0.941 |
+| multi-label exact set | 0.453 | 0.718 | **0.789** | 0.822 |
+| multi-label F1 | 0.554 | 0.816 | **0.855** | 0.890 |
+| `G_clinical` recall | 0.898 | 0.991 | **1.000** | 0.926 |
+| `clinical_oblique` recall | 0.931 | 0.966 | **1.000** | 0.793 |
+| `G_abusive` recall | 0.000 | 0.429 | **0.857** | 0.714 |
+| `G_injection` recall | 0.125 | **0.750** | 0.583 | 0.917 |
+| `G_pharmacy` FPR (lower better) | 0.826 | 0.783 | **0.652** | — |
 
 Paired McNemar against from-scratch: intent **b10=108, b01=16, p = 6.0e-18**;
-multi-label **b10=144, b01=25, p = 1.6e-21**.
+multi-label **b10=144, b01=25, p = 1.6e-21**. The third column tracks the
+general checkpoint improving underneath it: the same 38-second fine-tune now
+starts from a model scoring 17.6x chance on held-out schemas instead of 9.7x.
+
+Paired against Jev on the same 450 items, `scripts/compare_to_jev.py`:
+
+| | OpenJev | Jev | b10 | b01 | p | winner |
+|---|---|---|---|---|---|---|
+| intent | 0.899 | 0.941 | 13 | 27 | 0.039 | Jev |
+| multi-label exact set | 0.789 | 0.822 | 38 | 53 | 0.142 | **level** |
+| `G_clinical` | 0.980 | 0.978 | 8 | 7 | 1.000 | level |
+| `G_abusive` | 0.998 | 0.996 | 2 | 1 | 1.000 | level |
+| `G_injection` | 0.978 | 0.996 | 0 | 8 | 0.008 | Jev |
+| `G_pharmacy` | 0.947 | 0.880 | 48 | 18 | 3e-04 | **OpenJev** |
+| `clinical_oblique` recall | **1.000** | 0.793 | 6 | 0 | 0.031 | **OpenJev** |
+
+So Jev still wins single-label intent and the injection gate, the multi-label
+set is now a statistical tie, and OpenJev wins the pharmacy gate and the
+oblique-clinical tier the objective singled out.
+
+**A comparison we were getting wrong.** Jev's two intent figures use
+different denominators: 0.909 covers all 450 items including the 112 whose
+gold is an acceptable *set*, and 0.941 covers the 338 with a single gold.
+Our harness only asks the intent question when the example carries a gold,
+so it scores the 338 and must be compared against 0.941. `eval_router.py`
+was printing ours against 0.909, which understated the gap by about three
+points in our favour. Fixed, and the constants are now named for their
+denominators so they cannot be swapped again.
 
 **Why it works.** 395 examples across 10 questions is ~40 per question, and
 two gates had so few positives (`G_abusive`: 7) that from scratch they never

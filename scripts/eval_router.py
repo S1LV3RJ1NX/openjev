@@ -35,8 +35,15 @@ INTENT_NOULS = [
 GATES = ["G_clinical", "G_abusive", "G_injection", "G_pharmacy"]
 
 # Measured on jev-1.13.0, 20 Sep 2026, same 450 test items.
+#
+# The two intent figures use different denominators and are not
+# interchangeable. 0.909 is over all 450 items, including the 112 whose gold
+# is an acceptable *set* rather than one label. 0.941 is over the 338 with a
+# single gold, where lenient and strict coincide. Our harness only asks the
+# intent question when the example carries a gold for it, so it scores the
+# 338 — compare against 0.941, not 0.909.
 JEV = {
-    "intent_lenient": 0.909, "intent_strict": 0.941,
+    "intent_gold338": 0.941, "intent_all450": 0.909,
     "ml_exact": 0.822, "ml_f1": 0.890,
     "compound_3_intent": 0.581, "compound_3_exact": 0.645,
     "ambiguous_exact": 0.250,
@@ -188,11 +195,16 @@ def main() -> None:
         print(f"{tier:<22}{len(lenient):>5}{a:>8.3f}{f'[{lo:.2f},{hi:.2f}]':>16}"
               f"{(f'{ref:.3f}' if ref else '-'):>8}{(delta(a, ref) if ref else '-'):>8}")
     ov, lo, hi = bootstrap_ci(lambda v: sum(v) / len(v), all_len, n_boot=2000)
-    print(f"\n  OVERALL lenient {ov:.3f} [{lo:.3f},{hi:.3f}]  vs Jev {JEV['intent_lenient']:.3f}"
-          f"  ({delta(ov, JEV['intent_lenient'])})")
+    print(f"\n  OVERALL lenient {ov:.3f} [{lo:.3f},{hi:.3f}]  vs Jev "
+          f"{JEV['intent_gold338']:.3f}  ({delta(ov, JEV['intent_gold338'])})"
+          f"   on the {len(all_len)} items carrying a gold intent")
     if all_str:
         s = sum(all_str) / len(all_str)
-        print(f"  OVERALL strict  {s:.3f}  vs Jev {JEV['intent_strict']:.3f} ({delta(s, JEV['intent_strict'])})")
+        print(f"  OVERALL strict  {s:.3f}  vs Jev {JEV['intent_gold338']:.3f} "
+              f"({delta(s, JEV['intent_gold338'])})")
+    print(f"  Jev scores {JEV['intent_all450']:.3f} over all 450 including the "
+          f"ambiguous tier, which this harness does not ask. Not comparable to "
+          f"the line above.")
 
     # ---------------- multi-label nouls ----------------
     print("\n== MULTI-LABEL INTENT NOULS @ %.2f" % args.thresh)
