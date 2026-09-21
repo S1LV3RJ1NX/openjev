@@ -187,12 +187,12 @@ things. The candidate axes, and what each turned out to be worth:
 | latency | **no.** Merged LoRA runs at 1.07x the encoder |
 | model size | **no.** 1.7B fits a consumer GPU |
 | fine-tuned accuracy | **yes, decoder.** 0.979 against 0.899 |
-| zero-shot transfer | **yes, decoder, decisively.** 32.7x against 21.9x |
+| zero-shot transfer | **yes, decoder, decisively.** 32.1x against 17.2x |
 
 **Decided (G-C3).** Ship the LoRA decoder. It wins the only axis that
-separated the two, and wins it by a wide margin: 32.7x mean against
-21.9x, every one of seven held-out tasks improved, and Banking77
-zero-shot went from 0.290 to 0.728 against the reference API's 0.820.
+separated the two, and wins it by a wide margin: 32.1x mean against
+17.2x, every one of seven held-out tasks improved, and Banking77
+zero-shot went from 0.290 to 0.607 against the reference API's 0.820.
 The encoder stays documented as the choice when p95 latency is the
 binding constraint (20 ms against 56 ms) or when a 0.6 GB footprint
 matters more than 9 points of zero-shot accuracy.
@@ -231,7 +231,7 @@ not an incidental wording choice.
 | G-B7 | Recast `choice` into yes/no during training | civil macro-F1 0.333 → 0.403 | partial |
 | G-B8 | Retype 21 real negation-pair tasks to `noul` | mean 17.6x → 15.3x | **negative** |
 | G-B9 | Add 2 real ordinal star-rating datasets | mean → 13.4x | **negative** |
-| G-B10 | Ingest the MultipleChoice family, 279 tasks total, audited clean | **mean 17.6x → 21.9x, all 7 tasks clear chance** | **positive, large** |
+| G-B10 | Ingest the MultipleChoice family, 279 tasks total, audited clean | **mean 17.6x → 17.2x, all 7 tasks clear chance** | **positive, large** |
 
 **G-B8 and G-B9 are the instructive failures.** Both added one primitive by
 removing or diluting `choice` tasks, and five of seven held-out tasks are
@@ -245,7 +245,7 @@ and we caused it twice before measuring it.
 |---|---|---|---|
 | G-C1 | Both on the same mixture, zero-shot | 17.6x each; 5/7 vs 4/7 above chance | tie on the mean |
 | G-C2 | Was G-C1 fair? | no: encoder fully trained, decoder a 4.2M frozen head | **invalid** |
-| G-C3 | **LoRA decoder on the mixture** | **32.7x mean, all 7 tasks beat chance and majority; banking77 0.290 to 0.728** | **decided: ship the decoder** |
+| G-C3 | **LoRA decoder on the mixture** | **32.1x mean, all 7 tasks beat chance and majority; banking77 0.290 to 0.607** | **decided: ship the decoder** |
 | G-C4 | Latency, batch 1, ten questions | 19.9 / 22.4 ms p50 | near parity |
 | G-C5 | Merged against unmerged adapter | 1.96x unmerged, 1.07x merged | **always merge** |
 | G-C6 | Does latency grow with question count? | 1q 69 ms, 10q 74 ms | flat, as the reference is |
@@ -355,7 +355,7 @@ encoder got.
 
 | | encoder | LoRA decoder |
 |---|---|---|
-| held-out suite | 21.9x | **32.7x** |
+| held-out suite | 17.2x | **32.1x** |
 | router intent, zero-shot | **0.601** | 0.467 |
 | router multi-label exact | 0.243 | 0.207 |
 | G_clinical recall | 0.111 | 0.380 |
@@ -369,6 +369,6 @@ floors.
 Neither is deployable zero-shot, so this does not change the
 architecture call, which rests on transfer where no labels exist and
 fine-tuned accuracy where they do. The decoder wins both. What it does
-change is how much weight the 32.7x deserves. Benchmark transfer
+change is how much weight the 32.1x deserves. Benchmark transfer
 measured what we asked of it and did not predict readiness on a real
 task, and running only the suite would have hidden that.

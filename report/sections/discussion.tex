@@ -8,7 +8,7 @@ labelled examples for your task, a 1.7B model with an 87\,MB adapter beats
 a commercial typed-decision API} on a hardened routing benchmark, runs on
 your own hardware, returns full-precision probabilities, and is
 deterministic. \textbf{Without labels, it is close but still behind}:
-$0.728$ on Banking77 against roughly $0.820$. That margin was $0.290$
+$0.607$ on Banking77 against roughly $0.820$. That margin was $0.290$
 against $0.820$ on our encoder, and the decoder narrowed a fifty-three
 point deficit to nine without any new data.
 
@@ -94,7 +94,7 @@ readout. Rank-consistent objectives~\cite{corn} and adaptive rejection
 boundaries~\cite{adb} are the obvious next step and are not implemented.
 
 \paragraph{Zero-shot on a real task is much worse than on benchmarks, and
-benchmark transfer does not rank models on it.} $21.9\times$ chance on the
+benchmark transfer does not rank models on it.} $17.2\times$ chance on the
 held-out suite coexists with intent $0.601$ and a clinical-gate recall of
 $0.111$ on the routing task. Safety gates in particular appear to need
 task supervision, and we would not deploy any zero-shot gate on this
@@ -102,7 +102,7 @@ evidence.
 
 The stronger version of this caveat emerged when we ran the same check on
 the decoder. It transfers far better on the benchmark suite
-($32.7\times$ against $21.9\times$, every task improved) and yet does
+($32.1\times$ against $17.2\times$, every task improved) and yet does
 \emph{worse} zero-shot on the routing task: intent $0.467$ against the
 encoder's $0.601$, with multi-label exact set $0.207$ and a pharmacy gate
 at $0.440$ recall and $0.696$ false-positive rate. Its clinical-gate
@@ -118,7 +118,7 @@ predict deployment readiness, and we would not have discovered that by
 running the suite alone. It does not change the architecture choice,
 which rests on zero-shot transfer where no labels exist and on fine-tuned
 accuracy where they do, and the decoder wins both; it does mean nobody
-should read $32.7\times$ as a statement about a system anyone would ship
+should read $32.1\times$ as a statement about a system anyone would ship
 unsupervised.
 
 \paragraph{Synthetic evaluation.} The routing task is handwritten and

@@ -44,7 +44,7 @@ overlap.
 \label{sec:res-heldout}
 
 Table~\ref{tab:heldout} gives the final encoder trained on the audited
-279-task mixture. Harness sanity $1.000$; held-in control $1.1$--$2.3\times$.
+279-task mixture. Harness sanity $1.000$.
 
 \begin{table}[t]
 \centering
@@ -52,20 +52,24 @@ Table~\ref{tab:heldout} gives the final encoder trained on the audited
 \toprule
 task & $K$ & chance & accuracy & 95\% CI & $\times$ chance \\
 \midrule
-\texttt{clinc\_oos}      & 151 & 0.007 & 0.628 & [0.587, 0.672] & \textbf{94.9} \\
+\texttt{clinc\_oos}      & 151 & 0.007 & 0.382 & [0.342, 0.420] & \textbf{57.6} \\
 \texttt{massive\_intent} &  60 & 0.017 & 0.473 & [0.430, 0.512] & \textbf{28.4} \\
-\texttt{banking77}       &  77 & 0.013 & 0.290 & [0.255, 0.323] & \textbf{22.3} \\
+\texttt{banking77}       &  77 & 0.013 & 0.343 & [0.305, 0.382] & \textbf{26.4} \\
 \texttt{ag\_news}        &   4 & 0.250 & 0.735 & [0.698, 0.772] & 2.9 \\
 \texttt{sst5}            &   5 & 0.200 & 0.412 & [0.373, 0.452] & 2.1 \\
 \texttt{civil\_comments} &   2 & 0.500 & 0.683 & [0.648, 0.718] & 1.4 \\
 \texttt{helpsteer}       &   5 & 0.200 & 0.262 & [0.225, 0.297] & 1.3 \\
 \midrule
-\multicolumn{5}{l}{mean multiple of chance} & \textbf{21.9} \\
+\multicolumn{5}{l}{mean multiple of chance} & \textbf{17.2} \\
 \bottomrule
 \end{tabular}
-\caption{Held-out transfer, 600 rows per task, never trained on. The suite
+\caption{Held-out transfer for the encoder, 600 rows per task, never
+trained on, every task scored at its full advertised menu. The suite
 began this work at 0.9$\times$ chance. Every interval excludes its chance
-floor.}
+floor. An earlier draft reported $21.9\times$ here from an in-training
+evaluator run against a superseded version of the suite; these figures
+come from \texttt{eval\_heldout.py} on the published checkpoint and the
+published suite, and reproduce from a clean clone.}
 \label{tab:heldout}
 \end{table}
 
@@ -92,28 +96,47 @@ $1.5$--$2.5\times$, against the encoder's $1.1$--$2.3\times$.
 \toprule
 task & $K$ & accuracy & 95\% CI & $\times$ chance & encoder \\
 \midrule
-\texttt{clinc\_oos}      & 151 & \textbf{0.783} & [0.752, 0.817] & \textbf{118.3} & 0.628 \\
+\texttt{clinc\_oos}      & 151 & \textbf{0.815} & [0.785, 0.843] & \textbf{123.1} & 0.382 \\
 \texttt{massive\_intent} &  60 & \textbf{0.773} & [0.738, 0.805] & \textbf{46.4}  & 0.473 \\
-\texttt{banking77}       &  77 & \textbf{0.728} & [0.693, 0.765] & \textbf{56.1}  & 0.290 \\
-\texttt{ag\_news}        &   4 & 0.803 & [0.772, 0.838] & 3.2  & 0.735 \\
-\texttt{sst5}            &   5 & 0.438 & [0.400, 0.475] & 2.2  & 0.412 \\
-\texttt{civil\_comments} &   2 & 0.688 & [0.655, 0.727] & 1.4  & 0.683 \\
-\texttt{helpsteer}       &   5 & 0.282 & [0.247, 0.320] & 1.4  & 0.262 \\
+\texttt{banking77}       &  77 & \textbf{0.607} & [0.572, 0.645] & \textbf{46.7}  & 0.343 \\
+\texttt{ag\_news}        &   4 & 0.793 & [0.758, 0.828] & 3.2  & 0.735 \\
+\texttt{sst5}            &   5 & 0.465 & [0.425, 0.502] & 2.3  & 0.412 \\
+\texttt{civil\_comments} &   2 & 0.688 & [0.652, 0.723] & 1.4  & 0.683 \\
+\texttt{helpsteer}       &   5 & 0.268 & [0.235, 0.307] & 1.3  & 0.262 \\
 \midrule
-\multicolumn{4}{l}{mean multiple of chance} & \textbf{32.7} & 21.9 \\
+\multicolumn{4}{l}{mean multiple of chance} & \textbf{32.1} & 17.2 \\
 \bottomrule
 \end{tabular}
 \caption{Held-out transfer, LoRA decoder against the encoder on identical
-data and identical items. Every task improves.}
+data and identical items, every task scored at its full advertised menu.
+Every task improves.}
 \label{tab:declora}
 \end{table}
 
 Two results matter here beyond the mean. First, \textbf{every task now
-beats its majority-class baseline}, not merely $1/K$: \texttt{helpsteer}
-reaches $0.282$ against $0.233$ at $p = 0.0025$, removing the single
-caveat that qualified the encoder result. Second, \textbf{Banking77
-zero-shot rises from $0.290$ to $0.728$} against the commercial
-reference's $0.820$. A fifty-three point deficit becomes nine.
+beats its majority-class baseline}, not merely $1/K$, which the encoder
+did not manage: \texttt{helpsteer} reaches $0.268$ against $0.233$,
+although only at $p = 0.021$, and that margin is thin enough that a
+change in sampling could erase it. Second, \textbf{Banking77 zero-shot
+rises from $0.343$ to $0.607$} against the commercial reference's
+$0.820$, closing about half the gap and leaving twenty-one points.
+
+\paragraph{These numbers replace an earlier, inflated set.} Auditing our
+own results against a clean clone of the public repository exposed a
+measurement fault. The packer drops options to fit \texttt{max\_len},
+always retaining the gold option, and our evaluation runs passed
+\texttt{--max-len 2048}. At that budget \texttt{clinc\_oos} presented
+64 of its 151 options and \texttt{banking77} presented 64 of 77, while
+the multiple of chance was still computed against $1/151$ and $1/77$. The
+accuracies were real; the multiples credited the model for a discrimination
+it never performed. We previously reported $32.8\times$ for this model
+and $21.9\times$ for the encoder; the corrected figures are
+$32.1\times$ and $17.2\times$, and Banking77 falls from $0.737$ to
+$0.607$. The encoder figure additionally came from an in-training
+evaluator on a superseded version of the suite and did not reproduce.
+\texttt{eval\_heldout.py} now records the menu the model actually saw,
+scores against that, prints $K\rightarrow k$ when they differ, and names
+every truncated task in a closing warning.
 
 \paragraph{The architecture decision.} Our ablation registry fixed three
 possible outcomes before this run so that the choice could not be
@@ -160,7 +183,7 @@ grew from 61 to 141 tasks in the same change, so scale and shape are not
 separated in this pair.
 
 Scaling the audited mixture to 279 tasks took the mean from $17.6\times$
-to $21.9\times$ and moved every task (Figure~\ref{fig:transfer}).
+to $17.2\times$ and moved every task (Figure~\ref{fig:transfer}).
 
 \subsection{Router: a fine-tuned small model against a zero-shot API}
 \label{sec:res-router}
@@ -282,7 +305,7 @@ claim about their model's speed.}
 \subsection{Benchmark transfer is not deployment readiness}
 \label{sec:res-deployment}
 
-The general checkpoint scores $21.9\times$ chance on the held-out suite.
+The general checkpoint scores $17.2\times$ chance on the held-out suite.
 Applied zero-shot to the routing task:
 
 \begin{center}

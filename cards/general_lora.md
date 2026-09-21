@@ -33,17 +33,17 @@ bootstrap resamples.
 
 | task | K | chance | accuracy | 95% CI | x chance |
 |---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | **0.783** | [0.752, 0.817] | **118.3x** |
-| banking77 | 77 | 0.013 | **0.728** | [0.693, 0.765] | **56.1x** |
+| clinc_oos | 151 | 0.007 | **0.815** | [0.785, 0.843] | **123.1x** |
+| banking77 | 77 | 0.013 | **0.607** | [0.572, 0.645] | **46.7x** |
 | massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** |
-| ag_news | 4 | 0.250 | 0.803 | [0.772, 0.838] | 3.2x |
-| sst5 | 5 | 0.200 | 0.438 | [0.400, 0.475] | 2.2x |
-| civil_comments | 2 | 0.500 | 0.688 | [0.655, 0.727] | 1.4x |
-| helpsteer | 5 | 0.200 | 0.282 | [0.247, 0.320] | 1.4x |
+| ag_news | 4 | 0.250 | 0.793 | [0.758, 0.828] | 3.2x |
+| sst5 | 5 | 0.200 | 0.465 | [0.425, 0.502] | 2.3x |
+| civil_comments | 2 | 0.500 | 0.688 | [0.652, 0.723] | 1.4x |
+| helpsteer | 5 | 0.200 | 0.268 | [0.235, 0.307] | 1.3x |
 
-**Mean 32.7x chance.** All seven beat chance, and all seven beat their
-majority-class baseline, including the skewed ones: helpsteer 0.282
-against 0.233 at p = 0.0025.
+**Mean 32.1x chance, every task scored at its full advertised menu.** All seven beat chance, and all seven beat their
+majority-class baseline, including the skewed ones, though helpsteer
+only just: 0.268 against 0.233 at p = 0.021.
 
 Read the three-digit menus first. Choosing correctly among 151 intents
 having never seen the label set is the capability that makes this useful.
@@ -54,7 +54,7 @@ much more.
 ## Honest comparison
 
 TypeSafe's Jev scores **0.820** on Banking77 zero-shot. This adapter
-scores **0.728** on the same 600 items. They are ahead by nine points.
+scores **0.607** on the same 600 items. They are ahead by nine points.
 
 That gap used to be fifty-three, against our encoder's 0.290. If you want
 the best zero-shot accuracy available and can send data to an API, their
@@ -138,14 +138,14 @@ multiple-choice tasks found and fixed.
 - Code, evaluation harness, full results: https://github.com/s1lv3rj1nx/openjev
 - Training mixture: https://huggingface.co/datasets/s1lv3rj1nx/openjev-mixture
 - Held-out suite: https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout
-- Encoder alternative, 21.9x chance, 20 ms p95: https://huggingface.co/s1lv3rj1nx/openjev-encoder
+- Encoder alternative, 17.2x chance, 20 ms p95: https://huggingface.co/s1lv3rj1nx/openjev-encoder
 
 ## Which OpenJev checkpoint should I use?
 
 | | this adapter | encoder |
 |---|---|---|
-| held-out mean | **32.7x chance** | 21.9x |
-| Banking77 zero-shot | **0.728** | 0.290 |
+| held-out mean | **32.1x chance** | 17.2x |
+| Banking77 zero-shot | **0.607** | 0.343 |
 | p95 latency, batch 1 | 56 ms | **20 ms** |
 | footprint | 3.4 GB | **0.6 GB** |
 

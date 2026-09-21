@@ -25,15 +25,19 @@ mixture rebuild in the same change, moves a 77-way held-out menu from a
 literal $0.000$ to $0.205$; a model that has never seen a large menu
 collapses onto one label when handed one, though we did not separate the
 two interventions and so cannot attribute the gain cleanly. Scaling and
-auditing the mixture to 279 tasks reaches \textbf{21.9$\times$ chance}
+auditing the mixture to 279 tasks reaches \textbf{17.2$\times$ chance}
 on an encoder, with all seven held-out tasks clearing their floor and a
-151-way menu at 94.9$\times$. Swapping the encoder for rank-16 LoRA
+151-way menu at 57.6$\times$. Swapping the encoder for rank-16 LoRA
 adapters on a 1.7B decoder, holding the data fixed, reaches
-\textbf{32.7$\times$}: every task improves, every task also clears its
-majority-class baseline, and a 151-way menu reaches 118$\times$. This
+\textbf{32.1$\times$}: every task improves, every task also clears its
+majority-class baseline, and a 151-way menu reaches 123$\times$. This
 settles our architecture choice in favour of the decoder, since merging
 the adapter removes the latency argument for the encoder
-($1.07\times$).
+($1.07\times$). Both figures are corrections: auditing our own results
+against a clean clone found that at the context budget we had been
+using, the packer silently dropped a 151-option menu to 64 while the
+multiple of chance was still computed against $1/151$, and we report the
+withdrawn numbers alongside the corrected ones.
 
 \paragraph{Against Jev, the result splits cleanly on one axis: labels.}
 Given 395 labelled examples and 258 seconds, a rank-16 LoRA adapter on
@@ -50,7 +54,7 @@ adapter from our general checkpoint rather than from base weights makes
 it \emph{worse} ($0.953$, $p=0.012$), reversing a $+36$ point gain from
 the same intervention on the encoder: staged fine-tuning pays only when
 the base model cannot perform the task form at all. Without labels the
-picture inverts: $0.728$ on Banking77 against Jev's $0.820$, and applied
+picture inverts: $0.607$ on Banking77 against Jev's $0.820$, and applied
 zero-shot to the routing task our general encoder reaches intent $0.601$
 with a clinical-gate recall of $0.111$, which is not a usable gate.
 

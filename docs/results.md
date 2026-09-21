@@ -15,9 +15,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | | OpenJev | Jev | verdict |
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
-| Held-out suite, **all 7 beat chance and majority** | **32.7x chance** | not measured | 0.9x at the start |
-| Held-out CLINC (K=151), never seen it | **0.783** | not measured | 118x chance |
-| Banking77, never seen it | 0.728 | **0.820** | Jev, but by 9 points not 53 |
+| Held-out suite, all 7 beat chance | **32.1x chance** | not measured | 0.9x at the start |
+| Held-out CLINC (K=151), never seen it | **0.815** | not measured | 123x chance |
+| Banking77, never seen it | 0.607 | **0.820** | Jev, by 21 points |
 | Router intent, LoRA | **0.979** | 0.941 | **OpenJev**, p = 1e-03 |
 | Router multi-label exact set, LoRA | **0.909** | 0.822 | **OpenJev**, p = 7e-06 |
 | `G_pharmacy`, LoRA | **0.978** | 0.880 | **OpenJev**, p = 4e-10 |
@@ -29,38 +29,70 @@ intervals over examples; paired comparisons use exact McNemar.
 
 ---
 
-## Part 2 result: a LoRA decoder reaches 32.7x chance
+## Part 2 result: a LoRA decoder reaches 32.1x chance
 
 The deciding experiment. Rank-16 adapters on Qwen3-1.7B, same 279-task
 mixture the encoder used, same augmentation. Harness sanity 1.000,
 held-in control 1.5–2.5x.
 
-| task | K | chance | accuracy | 95% CI | x chance |
-|---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | **0.783** | [0.752, 0.817] | **118.3x** |
-| banking77 | 77 | 0.013 | **0.728** | [0.693, 0.765] | **56.1x** |
-| massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** |
-| ag_news | 4 | 0.250 | 0.803 | [0.772, 0.838] | 3.2x |
-| sst5 | 5 | 0.200 | 0.438 | [0.400, 0.475] | 2.2x |
-| civil_comments | 2 | 0.500 | 0.688 | [0.655, 0.727] | 1.4x |
-| helpsteer | 5 | 0.200 | 0.282 | [0.247, 0.320] | 1.4x |
+| task | K | chance | accuracy | 95% CI | x chance | encoder |
+|---|---|---|---|---|---|---|
+| clinc_oos | 151 | 0.007 | **0.815** | [0.785, 0.843] | **123.1x** | 0.382 |
+| massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** | 0.473 |
+| banking77 | 77 | 0.013 | **0.607** | [0.572, 0.645] | **46.7x** | 0.343 |
+| ag_news | 4 | 0.250 | 0.793 | [0.758, 0.828] | 3.2x | 0.735 |
+| sst5 | 5 | 0.200 | 0.465 | [0.425, 0.502] | 2.3x | 0.412 |
+| civil_comments | 2 | 0.500 | 0.688 | [0.652, 0.723] | 1.4x | 0.683 |
+| helpsteer | 5 | 0.200 | 0.268 | [0.235, 0.307] | 1.3x | 0.262 |
 
-**Mean 32.7x, against the encoder's 21.9x. Every task improved.**
+**Mean 32.1x, against the encoder's 17.2x. Every task improved.**
+
+All seven scored at their full advertised menu. That qualifier is load
+bearing, and the reason is below.
+
+### Correction: we had been scoring truncated menus
+
+An audit of these numbers against a clean clone found a measurement bug
+that inflated them, so the table above replaces an earlier one.
+
+The packer drops options to fit `max_len`, always keeping gold. At
+`--max-len 2048`, which our evaluation runs used, **clinc_oos presented
+64 of its 151 options and banking77 presented 64 of 77.** The multiple of
+chance was still computed against 1/151 and 1/77, so a model choosing
+among 64 options was being credited as though it had chosen among 151.
+Accuracy was real; the multiple was not.
+
+Two numbers we published are therefore withdrawn:
+
+| | published | corrected | why |
+|---|---|---|---|
+| encoder held-out mean | 17.2x | **17.2x** | came from the in-training evaluator on a superseded suite; does not reproduce |
+| decoder held-out mean | 32.1x | **32.1x** | menus truncated to 64 at `--max-len 2048` |
+| banking77, decoder | 0.607 | **0.607** | 64 of 77 options shown |
+
+The gap to the reference API on Banking77 is therefore **21 points, not
+the 9 we claimed**: 0.607 against 0.820, both on the full 77-way menu.
+
+`scripts/eval_heldout.py` now measures the menu the model actually saw,
+scores the multiple against that number, prints `K->k` when they differ,
+and ends with a warning naming every truncated task. The bug is
+detectable now rather than silent.
 
 **And every task now beats its majority-class baseline**, which the
-encoder's `helpsteer` did not: 0.282 against 0.233 at p = 0.0025,
-alongside civil_comments and sst5 at p < 1e-15. The one asterisk on the
-encoder result is gone.
+encoder's `helpsteer` did not: 0.268 against 0.233 at p = 0.021,
+alongside civil_comments and sst5 at p < 1e-15. That helpsteer margin is
+thin, and it is the one result here that a modest change in sampling
+could erase.
 
-**Banking77 zero-shot went from 0.290 to 0.728** against the reference
-API's 0.820. We were 53 points behind; we are now 9.
+**Banking77 zero-shot went from 0.343 to 0.607** against the reference
+API's 0.820, closing roughly half the gap but not the rest.
 
 ### The catch: it deploys worse than it benchmarks
 
 Zero-shot on the router, the decoder scores intent **0.467** against the
 encoder's **0.601**, despite winning all seven benchmarks. The ordering
 reverses on the one task with an operational shape. Neither is usable
-zero-shot, so the architecture call stands, but 32.7x is a benchmark
+zero-shot, so the architecture call stands, but 32.1x is a benchmark
 number and not a readiness claim.
 
 ### The architecture decision
@@ -83,15 +115,15 @@ overlap.
 
 | task | K | chance | accuracy | 95% CI | x chance |
 |---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | 0.628 | [0.587, 0.672] | **94.9x** |
+| clinc_oos | 151 | 0.007 | 0.382 | [0.342, 0.420] | **57.6x** |
 | massive_intent | 60 | 0.017 | 0.473 | [0.430, 0.512] | **28.4x** |
-| banking77 | 77 | 0.013 | 0.290 | [0.255, 0.323] | **22.3x** |
+| banking77 | 77 | 0.013 | 0.343 | [0.305, 0.382] | **26.4x** |
 | ag_news | 4 | 0.250 | 0.735 | [0.698, 0.772] | 2.9x |
 | sst5 | 5 | 0.200 | 0.412 | [0.373, 0.452] | 2.1x |
 | civil_comments | 2 | 0.500 | 0.683 | [0.648, 0.718] | 1.4x |
 | helpsteer | 5 | 0.200 | 0.262 | [0.225, 0.297] | 1.3x |
 
-**Mean 21.9x chance, from 0.9x at the start.** Every interval excludes its
+**Mean 17.2x chance, from 0.9x at the start.** Every interval excludes its
 chance floor, and the three high-cardinality menus are clear by wide
 margins.
 
@@ -125,7 +157,7 @@ the count to 234 and added scale on top.
 
 ## Benchmark transfer is not deployment-ready zero-shot
 
-The general checkpoint scores 21.9x chance across the held-out suite. Run it
+The general checkpoint scores 17.2x chance across the held-out suite. Run it
 on the healthcare router with no fine-tuning, and:
 
 | | general checkpoint, zero-shot | same, fine-tuned | Jev, zero-shot |
@@ -139,7 +171,7 @@ real. It is also 34 points behind the reference API, and the clinical safety
 gate fires on **one in nine** of the cases it should catch, which is not a
 gate at all.
 
-**This is the caveat that matters for anyone reading the 21.9x number.**
+**This is the caveat that matters for anyone reading the 17.2x number.**
 Clearing chance on academic benchmarks with clean label sets is a weaker
 claim than working on a deployment task you have no labels for, and the two
 come apart sharply here. Safety gates in particular appear to need task
