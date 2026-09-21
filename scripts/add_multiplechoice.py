@@ -41,6 +41,32 @@ def safe_name(task_id: str) -> str:
 RETRY_AFTER = re.compile(r"Retry after (\d+) seconds")
 
 
+def _load(tasksource, tid: str, max_rows: int):
+    """`tasksource.load_task`, with its NaN-config bug worked around.
+
+    access.py copies `config_name` off the listing row whenever the
+    preprocessing does not define one, and for a dataset with no config that
+    value is a pandas NaN. It then passes that float to `load_dataset`, which
+    tries to iterate it: "argument of type 'float' is not iterable". That was
+    13 of our first 26 ingestion failures, half of them, and it hits exactly
+    the tasks whose id ends `/nan/nan`.
+
+    Calling the same two steps ourselves with the NaN turned into None loses
+    nothing and costs no extra requests.
+    """
+    try:
+        return tasksource.load_task(tid, max_rows=max_rows)
+    except TypeError as e:
+        if "float" not in str(e):
+            raise
+    from datasets import load_dataset
+
+    pre = tasksource.load_preprocessing(tasksource.tasks, id=tid)
+    cfg = pre.config_name if isinstance(pre.config_name, str) else None
+    ds = load_dataset(pre.dataset_name, cfg, trust_remote_code=True)
+    return pre(ds, max_rows, max_rows)
+
+
 def load_with_backoff(tasksource, tid: str, max_rows: int, retries: int):
     """The Hub rate-limits hard when pulling hundreds of datasets in a row.
 
@@ -55,7 +81,7 @@ def load_with_backoff(tasksource, tid: str, max_rows: int, retries: int):
     delay = 4.0
     for attempt in range(retries + 1):
         try:
-            return tasksource.load_task(tid, max_rows=max_rows)
+            return _load(tasksource, tid, max_rows)
         except Exception as e:  # noqa: BLE001
             text = f"{type(e).__name__}{e}"
             transient = any(

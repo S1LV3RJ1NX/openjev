@@ -19,8 +19,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
 | Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score` still at chance |
 | Held-out binary, ranking | AUROC 0.714 | not measured | transfers; miscalibrated |
-| Router intent | 0.899 | **0.941** | Jev, p = 0.04 |
-| Router multi-label exact set | 0.789 | 0.822 | **level**, p = 0.14 |
+| Router intent, decoder | 0.929 | 0.941 | **level**, p = 0.54 |
+| Router multi-label exact set, decoder | **0.838** | 0.822 | level, p = 0.52 |
+| Router intent, encoder | 0.899 | **0.941** | Jev, p = 0.04 |
 | Oblique-clinical recall | **1.000** | 0.793 | **OpenJev**, p = 0.03 |
 | `G_pharmacy` correctness | **0.947** | 0.880 | **OpenJev**, p = 3e-04 |
 | `G_clinical` correctness | 0.980 | 0.978 | level, p = 1.00 |
@@ -245,7 +246,50 @@ floor, so the accuracy gain is not significant; only the collapse is fixed.
 `helpsteer` doubles, 0.110 to 0.222, but lands exactly on its 0.233
 majority-class baseline, which is not skill either.
 
-## 8. Encoder and decoder tie on the mean and disagree on everything else
+## 8. Fine-tuned on the decoder, OpenJev draws level with Jev
+
+Paired on the same 450 items, exact McNemar. The encoder loses intent and
+the injection gate; the decoder loses nothing.
+
+| | encoder | decoder | Jev | decoder vs Jev |
+|---|---|---|---|---|
+| intent | 0.899 | **0.929** | 0.941 | level, p = 0.54 |
+| multi-label exact set | 0.789 | **0.838** | 0.822 | level, p = 0.52 |
+| `G_clinical` | 0.980 | 0.969 | 0.978 | level, p = 0.48 |
+| `G_abusive` | 0.998 | 0.998 | 0.996 | level, p = 1.00 |
+| `G_injection` | 0.978 | **0.984** | 0.996 | level, p = 0.13 |
+| `G_pharmacy` | 0.947 | **0.956** | 0.880 | **OpenJev**, p = 4e-05 |
+| `clinical_oblique` recall | **1.000** | 0.966 | 0.793 | level, p = 0.06 |
+
+**Level on everything, ahead on one.** Under the encoder, intent was a Jev
+win at p = 0.039 and the injection gate a Jev win at p = 0.008; both are
+ties here. This is the closest OpenJev gets to the reference API, and it
+needs 395 labelled examples and 134 seconds to get there.
+
+And it is nearly free at inference. ModernBERT-base against Qwen3-1.7B,
+batch size 1, ten questions and twenty-four options per state, H100:
+
+| | encoder, 150M | decoder, 1,725M |
+|---|---|---|
+| p50 per state | **19.9 ms** | 22.4 ms |
+| p95 per state | **20.3 ms** | 55.3 ms |
+| throughput | **50.3/s** | 44.6/s |
+| checkpoint | **0.6 GB** | 3.4 GB |
+
+**11.5x the parameters for 13% more median latency.** The shared prefix is
+why: everything happens in one forward pass over a short packed sequence, so
+at this size the cost is dominated by launch overhead rather than by matrix
+multiplies. The tail is the real price, p95 2.7x worse, which matters for a
+router under a latency budget.
+
+**We had this wrong.** An earlier version of this file called the decoder
+not worth using, on the strength of zero-shot held-out transfer alone: same
+suite mean as the encoder, one fewer task above chance, 11x the parameters.
+That was the wrong evidence for the recommendation, because the path this
+project recommends is fine-tuning, and no fine-tuned comparison had been run.
+Latency had never been measured at all.
+
+## 9. Encoder and decoder tie zero-shot and disagree on everything else
 
 Both backbones trained on the same `mixture_ord2` with the same
 augmentations, both landing at **17.6x chance**. The average hides the
@@ -274,7 +318,7 @@ than anything the head learned. The encoder, training end to end, actually
 fits its mixture. Neither is wrong, but only the encoder's held-in number
 does the job a control is there to do.
 
-## 9. The contamination guard caught a real leak
+## 10. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:

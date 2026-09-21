@@ -83,6 +83,28 @@ class OpenJevDecoder(nn.Module):
             nn.init.zeros_(self.scorer[-1].weight)
             nn.init.zeros_(self.scorer[-1].bias)
 
+    @torch.no_grad()
+    def predict(self, batch: dict[str, torch.Tensor], packed: list) -> list[dict]:
+        """Same contract as the encoder's, so callers need not know which is which.
+
+        Its absence meant `DecisionModel` raised on any decoder checkpoint:
+        the inference path worked only for encoders, which is not something a
+        published model can have.
+        """
+        from .model import Answer, _labels_for
+
+        out = self(batch)
+        probs = out.log_probs.exp().cpu()
+        results, cursor = [], 0
+        for p in packed:
+            answers: dict[str, Answer] = {}
+            for qid, k in zip(p.question_ids, p.n_options):
+                vals = probs[cursor : cursor + k].tolist()
+                answers[qid] = Answer(dict(zip(_labels_for(p, qid, k), vals)))
+                cursor += k
+            results.append(answers)
+        return results
+
     def freeze_backbone(self) -> int:
         """Freeze everything but the head. Returns the trainable count."""
         for p in self.lm.parameters():
