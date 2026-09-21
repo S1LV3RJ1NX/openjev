@@ -132,17 +132,39 @@ def coarsen(levels: list[str], m: int, gold: int | None) -> tuple[list[str], int
     return merged, new_gold
 
 
-def _clip_options(q: Question, limit: int) -> Question:
-    """Shorten option text, keeping option identity and menu order intact."""
-    if isinstance(q, Choice):
-        return Choice(
-            instructions=q.instructions,
-            criteria={k: (str(v)[:limit] if v else v) for k, v in q.criteria.items()},
-        )
+def _clip_options(q: Question, limit: int, gold=None):
+    """Shorten option text, returning the question and the relocated gold.
+
+    Both halves have to be clipped together. A MultipleChoice menu is
+    {option: option}, and clipping only the value makes the two differ, which
+    defeats the duplicate-collapsing in `option_text` and renders the option
+    *longer* than before. That is what it did, and it killed a run twenty
+    minutes in.
+
+    Clipping the key moves the gold, so the caller is handed its new value
+    rather than left to look up a string that no longer exists.
+    """
     if isinstance(q, Score):
         return Score(instructions=q.instructions,
-                     criteria=[str(c)[:limit] for c in q.criteria])
-    return q
+                     criteria=[str(c)[:limit] for c in q.criteria]), gold
+    if not isinstance(q, Choice):
+        return q, gold
+
+    criteria, new_gold, seen = {}, gold, set()
+    for k, v in q.criteria.items():
+        ck = str(k)[:limit]
+        # Clipping can collide two long options onto one key; keep them
+        # distinct so the menu does not silently shrink.
+        while ck in seen:
+            ck += "."
+        seen.add(ck)
+        cv = str(v)[:limit] if v else v
+        if str(k) == str(v):
+            cv = ck
+        criteria[ck] = cv
+        if gold is not None and str(k) == str(gold):
+            new_gold = ck
+    return Choice(instructions=q.instructions, criteria=criteria), new_gold
 
 
 def target_index(q: Question, gold) -> int | None:
@@ -389,15 +411,27 @@ class TaskDataset(Dataset):
                 # option text rather than raising, since a run that dies
                 # thousands of steps in costs far more than a clipped
                 # distractor.
-                try:
-                    clipped = {qid: _clip_options(q, 400) for qid, q in trimmed.items()}
-                    packed = self.packer.pack(ex.state, clipped)
-                    qs = clipped
+                # Shorten the option text itself, at decreasing limits. A
+                # clipped distractor costs far less than a dead run.
+                packed = None
+                for limit in (400, 160, 60):
+                    clipped, cg = {}, {}
+                    for qid, q in trimmed.items():
+                        cq, g = _clip_options(q, limit, ex.answers.get(qid))
+                        clipped[qid] = cq
+                        if g is not None:
+                            cg[qid] = g
+                    try:
+                        packed = self.packer.pack(ex.state, clipped)
+                        qs, golds = clipped, cg
+                        break
+                    except ValueError:
+                        continue
+                if packed is not None:
                     break
-                except ValueError:
-                    cap //= 2
-                    if cap < 2:
-                        raise
+                cap //= 2
+                if cap < 2:
+                    raise
         packed.labels = {qid: option_labels(q) for qid, q in qs.items()}  # type: ignore[attr-defined]
         targets = {}
         for qid, q in qs.items():
