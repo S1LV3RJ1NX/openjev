@@ -20,7 +20,7 @@ from typing import Any
 
 import torch
 
-from .ckpt import load_into, wants_head
+from .ckpt import load_into, lora_rank, wants_head
 from .encode import Packer
 from .schema import Answer, Question
 
@@ -72,6 +72,7 @@ class DecisionModel:
 
             model = OpenJevDecoder(
                 backbone=backbone, tokenizer=tok, learned_head=wants_head(ck),
+                lora_r=lora_rank(ck),
             ).to(device)
         else:
             from .model import OpenJev

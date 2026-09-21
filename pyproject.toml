@@ -11,6 +11,7 @@ dependencies = [
     "hf-transfer>=0.1.9",
     "matplotlib>=3.10.9",
     "pandas>=2.3.3",
+    "peft>=0.21.0",
     "pyarrow>=25.0.1",
     "safetensors>=0.8.0",
     "scikit-learn>=1.7.2",

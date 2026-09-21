@@ -43,6 +43,9 @@ class OpenJevDecoder(nn.Module):
         no_token: str = " no",
         dtype: torch.dtype = torch.bfloat16,
         learned_head: bool = False,
+        lora_r: int = 0,
+        lora_alpha: int = 32,
+        lora_dropout: float = 0.05,
     ):
         super().__init__()
         if tokenizer is None:
@@ -51,8 +54,31 @@ class OpenJevDecoder(nn.Module):
         self.lm = AutoModelForCausalLM.from_pretrained(
             backbone, config=cfg, dtype=dtype, attn_implementation="sdpa"
         )
+        # LoRA sits between the two extremes we measured on the router: a
+        # 4.2M head on a frozen backbone reaches intent 0.666, and opening
+        # all 1.7B reaches 0.929 but writes a 3.4GB artifact per use case.
+        # Adapters keep most of the capacity at a fraction of the size, which
+        # is what makes "one backbone, many tasks" possible.
+        self.lora_r = lora_r
+        if lora_r:
+            from peft import LoraConfig, get_peft_model
+
+            self.lm = get_peft_model(
+                self.lm,
+                LoraConfig(
+                    r=lora_r, lora_alpha=lora_alpha, lora_dropout=lora_dropout,
+                    bias="none", task_type="CAUSAL_LM",
+                    # Attention and MLP projections both matter here: the
+                    # readout is a single position, so the model has to route
+                    # option content into it rather than just re-weight it.
+                    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                                    "gate_proj", "up_proj", "down_proj"],
+                ),
+            )
+
         self.yes_id = _one_token(tokenizer, yes_token)
         self.no_id = _one_token(tokenizer, no_token)
+        self._base = self.lm.get_base_model() if lora_r else self.lm
 
         # A small head trained on top of the frozen backbone's hidden state.
         #
@@ -107,8 +133,11 @@ class OpenJevDecoder(nn.Module):
 
     def freeze_backbone(self) -> int:
         """Freeze everything but the head. Returns the trainable count."""
-        for p in self.lm.parameters():
-            p.requires_grad_(False)
+        for n, p in self.lm.named_parameters():
+            # Adapters are the trainable part, so freezing "the backbone"
+            # must leave them alone or LoRA silently trains nothing and the
+            # run looks like an untrained readout.
+            p.requires_grad_("lora_" in n)
         if self.scorer is not None:
             for p in self.scorer.parameters():
                 p.requires_grad_(True)
@@ -117,9 +146,9 @@ class OpenJevDecoder(nn.Module):
     def _mask_mapping(self, ids, attn, blocks):
         from transformers.masking_utils import create_causal_mask
 
-        probe = torch.empty((*ids.shape, 1), dtype=self.lm.dtype, device=ids.device)
+        probe = torch.empty((*ids.shape, 1), dtype=self._base.dtype, device=ids.device)
         return create_causal_mask(
-            config=self.lm.config,
+            config=self._base.config,
             input_embeds=probe,
             attention_mask=attn,
             cache_position=torch.arange(ids.shape[1], device=ids.device),
@@ -135,18 +164,18 @@ class OpenJevDecoder(nn.Module):
 
         try:
             mask = self._mask_mapping(ids, attn, blocks)
-            out = self.lm.model(input_ids=ids, attention_mask=mask)
+            out = self._base.model(input_ids=ids, attention_mask=mask)
         except Exception:
             # Fall back to the plain causal mask. Question blocks then see
             # each other, which is wrong but still runs; the isolation test
             # will catch it rather than it passing silently.
-            out = self.lm.model(input_ids=ids, attention_mask=attn)
+            out = self._base.model(input_ids=ids, attention_mask=attn)
 
         h = out.last_hidden_state
         flat = h.reshape(-1, h.shape[-1])
         markers = flat.index_select(0, batch["marker_flat"])
 
-        vocab = self.lm.lm_head(markers)
+        vocab = self._base.lm_head(markers)
         logits = (vocab[:, self.yes_id] - vocab[:, self.no_id]).float()
         if self.scorer is not None:
             # Residual: zero at initialisation, so this starts as the exact

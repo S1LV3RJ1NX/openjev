@@ -25,6 +25,12 @@ clinical risk (1.000 against 0.793) and on scope gating, behind on
 single-label intent (0.899 against 0.941). Training takes 38 seconds on one
 GPU and the data never leaves your machine.
 
+With rank-16 LoRA adapters on a 1.7B backbone it goes further and **wins**:
+intent 0.979 against 0.941 (p = 1e-03), multi-label compound routing 0.909
+against 0.822 (p = 7e-06), scope gating 0.978 against 0.880 (p = 4e-10),
+and level on the rest. Three wins, four ties, no losses, from 395 examples,
+258 seconds and an 87 MB adapter.
+
 **It is not a zero-shot replacement.** On a schema it has never seen,
 Banking77, it scores 0.355 against roughly 0.820. That gap is real and this
 README will say so until a measurement says otherwise.

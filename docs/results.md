@@ -19,9 +19,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
 | Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score` still at chance |
 | Held-out binary, ranking | AUROC 0.714 | not measured | transfers; miscalibrated |
-| Router intent, decoder | 0.929 | 0.941 | **level**, p = 0.54 |
-| Router multi-label exact set, decoder | **0.838** | 0.822 | level, p = 0.52 |
-| Router intent, encoder | 0.899 | **0.941** | Jev, p = 0.04 |
+| Router intent, LoRA | **0.979** | 0.941 | **OpenJev**, p = 1e-03 |
+| Router multi-label exact set, LoRA | **0.909** | 0.822 | **OpenJev**, p = 7e-06 |
+| `G_pharmacy`, LoRA | **0.978** | 0.880 | **OpenJev**, p = 4e-10 |
 | Oblique-clinical recall | **1.000** | 0.793 | **OpenJev**, p = 0.03 |
 | `G_pharmacy` correctness | **0.947** | 0.880 | **OpenJev**, p = 3e-04 |
 | `G_clinical` correctness | 0.980 | 0.978 | level, p = 1.00 |
@@ -261,7 +261,44 @@ floor, so the accuracy gain is not significant; only the collapse is fixed.
 `helpsteer` doubles, 0.110 to 0.222, but lands exactly on its 0.233
 majority-class baseline, which is not skill either.
 
-## 8. Fine-tuned on the decoder, OpenJev draws level with Jev
+## 8. With LoRA, OpenJev beats Jev on the router
+
+Rank-16 adapters on Qwen3-1.7B, 395 training examples, 258 seconds. Paired
+on the same 450 items, exact McNemar.
+
+| | OpenJev | Jev | b10 | b01 | p | winner |
+|---|---|---|---|---|---|---|
+| intent | **0.979** | 0.941 | 14 | 1 | 9.8e-04 | **OpenJev** |
+| multi-label exact set | **0.909** | 0.822 | 57 | 18 | 7.2e-06 | **OpenJev** |
+| `G_pharmacy` | **0.978** | 0.880 | 49 | 5 | 3.9e-10 | **OpenJev** |
+| `G_clinical` | 0.987 | 0.978 | 7 | 3 | 0.34 | level |
+| `G_abusive` | 0.993 | 0.996 | 2 | 3 | 1.00 | level |
+| `G_injection` | 0.993 | 0.996 | 1 | 2 | 1.00 | level |
+| `clinical_oblique` recall | 0.966 | 0.793 | 5 | 0 | 0.06 | level |
+
+**Three wins, four ties, no losses.**
+
+What makes this more than a scaling result is that the adapter is the
+*smallest* configuration that works, not the largest:
+
+| | intent | trainable | artifact |
+|---|---|---|---|
+| encoder, everything open | 0.899 | 150M | 0.6 GB |
+| decoder, head only | 0.666 | 4.2M | 17 MB |
+| decoder, everything open | 0.929 | 1,725M | 3.4 GB |
+| **decoder, LoRA r=16** | **0.979** | **17M** | **87 MB** |
+
+Opening all 1.7B parameters is *worse* than adapting 17M of them, and 39x
+the artifact. The likely reason is the learning rate a full fine-tune can
+tolerate: 1e-5 for six epochs over 395 examples barely moves a 1.7B model,
+while LoRA at 2e-4 adapts quickly without disturbing the pretrained weights
+it is riding on. We did not tune either beyond one setting, so read this as
+"adapters are the right default here", not as a tuned optimum.
+
+It also makes the deployment story work. 87 MB per use case means one
+backbone can serve many routers; 3.4 GB per use case means it cannot.
+
+## 9. Fine-tuned end-to-end, the decoder draws level with Jev
 
 Paired on the same 450 items, exact McNemar. The encoder loses intent and
 the injection gate; the decoder loses nothing.
@@ -304,7 +341,7 @@ That was the wrong evidence for the recommendation, because the path this
 project recommends is fine-tuning, and no fine-tuned comparison had been run.
 Latency had never been measured at all.
 
-## 9. Encoder and decoder tie zero-shot and disagree on everything else
+## 10. Encoder and decoder tie zero-shot and disagree on everything else
 
 Both backbones trained on the same `mixture_ord2` with the same
 augmentations, both landing at **17.6x chance**. The average hides the
@@ -333,7 +370,7 @@ than anything the head learned. The encoder, training end to end, actually
 fits its mixture. Neither is wrong, but only the encoder's held-in number
 does the job a control is there to do.
 
-## 10. The contamination guard caught a real leak
+## 11. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:

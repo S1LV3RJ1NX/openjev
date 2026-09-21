@@ -16,14 +16,14 @@ from pathlib import Path
 # Paired significance from scripts/compare_to_jev.py (exact McNemar).
 # Jev is jev-1.13.0, measured 20 September 2026.
 METRICS = [
-    #  label,                     encoder, decoder,   jev
-    ("intent",                      0.899,   0.929, 0.941),
-    ("multi-label\nexact set",      0.789,   0.838, 0.822),
-    ("G_clinical",                  0.980,   0.969, 0.978),
-    ("G_abusive",                   0.998,   0.998, 0.996),
-    ("G_injection",                 0.978,   0.984, 0.996),
-    ("G_pharmacy",                  0.947,   0.956, 0.880),
-    ("oblique clinical\nrecall",    1.000,   0.966, 0.793),
+    #  label,                     encoder, decoder LoRA,  jev
+    ("intent",                      0.899,        0.979, 0.941),
+    ("multi-label\nexact set",      0.789,        0.909, 0.822),
+    ("G_clinical",                  0.980,        0.987, 0.978),
+    ("G_abusive",                   0.998,        0.993, 0.996),
+    ("G_injection",                 0.978,        0.993, 0.996),
+    ("G_pharmacy",                  0.947,        0.978, 0.880),
+    ("oblique clinical\nrecall",    1.000,        0.966, 0.793),
 ]
 
 # Latency per state with the full router asked in one call.
@@ -40,7 +40,7 @@ METRICS = [
 # speed of their model.
 LATENCY = [
     ("encoder\n150M, local",  19.9, 20.3),
-    ("decoder\n1.7B, local",  22.4, 55.3),
+    ("decoder LoRA\n1.7B+16r, local",  22.4, 55.3),
     ("Jev\nhosted API",      407.0, None),
 ]
 
@@ -68,11 +68,11 @@ def main() -> None:
     xs = range(len(METRICS))
     w = 0.27
     for off, idx, colour, name in ((-w, 1, enc, "OpenJev encoder"),
-                                   (0.0, 2, dec, "OpenJev decoder"),
+                                   (0.0, 2, dec, "OpenJev decoder, LoRA r=16"),
                                    (w, 3, jev, "Jev 1.13.0")):
         ax1.bar([x + off for x in xs], [m[idx] for m in METRICS],
                 width=w, color=colour, label=name)
-    ax1.set_ylim(0.70, 1.02)
+    ax1.set_ylim(0.75, 1.02)
     ax1.set_ylabel("accuracy on 450 held-out test items")
     ax1.set_xticks(list(xs))
     ax1.set_xticklabels(labels, fontsize=8)

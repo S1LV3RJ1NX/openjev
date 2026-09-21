@@ -145,6 +145,8 @@ def main() -> None:
                     help="probability of recasting a choice question as a yes/no one")
     ap.add_argument("--decoder", action="store_true",
                     help="causal LM backbone with yes/no readout")
+    ap.add_argument("--lora-r", type=int, default=0,
+                    help="LoRA rank on the decoder backbone; 0 disables it")
     ap.add_argument("--freeze-backbone", action="store_true",
                     help="train only the calibration head (use with --decoder)")
     ap.add_argument("--preamble", default=None)
@@ -257,6 +259,7 @@ def main() -> None:
 
         model = OpenJevDecoder(
             backbone=args.backbone, tokenizer=tok, learned_head=True,
+            lora_r=args.lora_r,
             dtype=torch.bfloat16 if device == "cuda" else torch.float32,
         ).to(device)
         if args.freeze_backbone:
@@ -365,7 +368,10 @@ def main() -> None:
         out_dir / "model.pt", model,
         backbone=args.backbone,
         decoder=bool(args.decoder),
-        head_only=bool(args.decoder and args.freeze_backbone),
+        # LoRA and head-only both train a small part of a frozen backbone,
+        # so both should write the adapter rather than a 3.4GB copy of Qwen.
+        head_only=bool(args.decoder and (args.freeze_backbone or args.lora_r)),
+        lora_r=int(args.lora_r),
         overwrite=args.overwrite,
         # The prompt format is part of the model: the same weights scored with
         # a different preamble are a different system. Store it so evaluation

@@ -26,8 +26,13 @@ import torch
 HEAD_PREFIXES = ("scorer.",)
 
 
+def is_trainable_part(key: str) -> bool:
+    """Whether a parameter belongs to the adapter rather than the backbone."""
+    return key.startswith(HEAD_PREFIXES) or "lora_" in key
+
+
 def head_only_state(state: dict[str, Any]) -> dict[str, Any]:
-    return {k: v for k, v in state.items() if k.startswith(HEAD_PREFIXES)}
+    return {k: v for k, v in state.items() if is_trainable_part(k)}
 
 
 def save(
@@ -85,7 +90,7 @@ def load_into(model, ck: dict[str, Any]) -> None:
         return
     missing, unexpected = model.load_state_dict(state, strict=False)
     if ck.get("head_only"):
-        missing = [k for k in missing if k.startswith(HEAD_PREFIXES)]
+        missing = [k for k in missing if is_trainable_part(k)]
     if missing or unexpected:
         raise SystemExit(
             f"state_dict mismatch: {len(missing)} missing, {len(unexpected)} "
@@ -101,3 +106,14 @@ def wants_head(ck: dict[str, Any]) -> bool:
     if "learned_head" in ck:
         return bool(ck["learned_head"])
     return any(k.startswith(HEAD_PREFIXES) for k in (ck.get("state_dict") or {}))
+
+
+def lora_rank(ck: dict[str, Any]) -> int:
+    """The adapter rank a checkpoint needs, or 0. Rebuilding the model
+    without it would drop every adapter tensor on load."""
+    if ck.get("lora_r"):
+        return int(ck["lora_r"])
+    for k, v in (ck.get("state_dict") or {}).items():
+        if "lora_A" in k and hasattr(v, "shape"):
+            return int(v.shape[0])
+    return 0

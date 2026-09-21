@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from openjev import Task  # noqa: E402
 from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
-from openjev.ckpt import load_into, wants_head  # noqa: E402
+from openjev.ckpt import load_into, lora_rank, wants_head  # noqa: E402
 from openjev.metrics import bootstrap_ci, multilabel  # noqa: E402
 from openjev.model import OpenJev  # noqa: E402
 
@@ -124,7 +124,7 @@ def main() -> None:
         from openjev.decoder import OpenJevDecoder
 
         model = OpenJevDecoder(
-            backbone=backbone, tokenizer=tok, learned_head=wants_head(ck),
+            backbone=backbone, tokenizer=tok, learned_head=wants_head(ck), lora_r=lora_rank(ck),
         ).to(device)
     else:
         model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
