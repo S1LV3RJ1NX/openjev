@@ -11,7 +11,7 @@
   <img alt="Status" src="https://img.shields.io/badge/status-research%20preview-orange">
   <img alt="Backbone" src="https://img.shields.io/badge/backbone-ModernBERT%20%7C%20Qwen3-green">
   <a href="docs/results.md"><img alt="Results" src="https://img.shields.io/badge/results-measured%2C%20with%20CIs-brightgreen"></a>
-  <a href="https://www.buymeacoffee.com/"><img alt="Buy Me A Coffee" src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-FFDD00?logo=buy-me-a-coffee&logoColor=black"></a>
+  <a href="https://buymeacoffee.com/prathams"><img alt="Buy Me A Coffee" src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-prathams-FFDD00?logo=buy-me-a-coffee&logoColor=black"></a>
 </p>
 
 ---
@@ -129,6 +129,11 @@ numbers. Negative results are documented as prominently as positive ones, and
 [docs/results.md](docs/results.md) contains a list of claims we retracted after
 better measurement. No claim of parity with Jev is made anywhere, because the
 numbers do not show it.
+
+## Support
+
+Everything here stays free. If it saved you time,
+[buy me a coffee](https://buymeacoffee.com/prathams).
 
 ## Licence
 
