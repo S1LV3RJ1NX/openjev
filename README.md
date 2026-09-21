@@ -247,6 +247,7 @@ buys nothing and a plain classifier is simpler.
 | [Fine-tuned router](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) | A worked example you can run in three lines |
 | [Held-out suite](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) | 7 tasks and the contamination manifest |
 | [Router dataset](https://huggingface.co/datasets/s1lv3rj1nx/openjev-healthcare-router) | 988 items across 18 tiers, built to have headroom |
+| [Ablations](docs/ablations.md) | Every experiment, what it isolated, and what it decided |
 | [Dataset format](docs/dataset-format.md) | The spec, a template, and the mistakes we made |
 | [Results](docs/results.md) | Every measurement, what worked and what did not |
 | [Architecture](docs/architecture.md) | The design, with diagrams, and why each choice |
