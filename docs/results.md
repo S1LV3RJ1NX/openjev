@@ -15,10 +15,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | | OpenJev | Jev | verdict |
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
-| Banking77, never seen it | 0.355 | **0.820** | Jev, clearly |
-| CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
-| Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score` still at chance |
-| Held-out binary, ranking | AUROC 0.714 | not measured | transfers; miscalibrated |
+| Held-out suite, **all 7 tasks clear chance** | **21.9x chance** | not measured | 0.9x at the start |
+| Held-out CLINC (K=151) | **0.628** | not measured | 94.9x chance |
+| Banking77, never seen it | 0.290 | **0.820** | Jev, clearly |
 | Router intent, LoRA | **0.979** | 0.941 | **OpenJev**, p = 1e-03 |
 | Router multi-label exact set, LoRA | **0.909** | 0.822 | **OpenJev**, p = 7e-06 |
 | `G_pharmacy`, LoRA | **0.978** | 0.880 | **OpenJev**, p = 4e-10 |
@@ -29,6 +28,48 @@ intervals over examples; paired comparisons use exact McNemar.
 | Deterministic | yes | no, no seed | **OpenJev** |
 
 ---
+
+## Part 2 result: all seven held-out tasks clear chance
+
+Encoder trained on the audited 279-task mixture. `scripts/eval_heldout.py`,
+n=600 per task, bootstrap CI over examples. Harness sanity 1.000, held-in
+control 1.1–2.3x, contamination guard checked 279 sources and found no
+overlap.
+
+| task | K | chance | accuracy | 95% CI | x chance |
+|---|---|---|---|---|---|
+| clinc_oos | 151 | 0.007 | 0.628 | [0.587, 0.672] | **94.9x** |
+| massive_intent | 60 | 0.017 | 0.473 | [0.430, 0.512] | **28.4x** |
+| banking77 | 77 | 0.013 | 0.290 | [0.255, 0.323] | **22.3x** |
+| ag_news | 4 | 0.250 | 0.735 | [0.698, 0.772] | 2.9x |
+| sst5 | 5 | 0.200 | 0.412 | [0.373, 0.452] | 2.1x |
+| civil_comments | 2 | 0.500 | 0.683 | [0.648, 0.718] | 1.4x |
+| helpsteer | 5 | 0.200 | 0.262 | [0.225, 0.297] | 1.3x |
+
+**Mean 21.9x chance, from 0.9x at the start.** Every interval excludes its
+chance floor, and the three high-cardinality menus are clear by wide
+margins.
+
+**One task is weaker than that table implies.** Chance is not always the
+right floor: a task with skewed labels can be beaten by always predicting
+the most common one. Against *that* baseline:
+
+| task | majority baseline | accuracy | verdict |
+|---|---|---|---|
+| civil_comments | 0.500 | 0.683 | **beats it**, p < 1e-15 |
+| helpsteer | 0.233 | 0.262 | **borderline**, p = 0.050 |
+
+So six of seven are unambiguous and `helpsteer` sits exactly on the line:
+above chance, level with the trivial baseline. Reporting it as a clean
+seventh win would be overstating it.
+
+**What produced this.** Not a new idea — the audit. The mixture went from
+143 tasks to 279 by ingesting the MultipleChoice family, and the data was
+cleaned of 1,994 contradictory rows, 1,787 unpackable ones, and the
+correct-answer-first ordering that put the gold at index 0 in 100% of rows
+across all 83 ingested tasks. The three runs before this one got *worse*
+(17.6x → 15.3x → 13.4x) by trading away `choice` tasks; this one restored
+the count to 234 and added scale on top.
 
 ## At a glance
 

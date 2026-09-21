@@ -159,7 +159,7 @@ Everything measured below, published or explicitly marked as not yet.
 | encoder general checkpoint | G-B2/G-B3 | 0.6 GB | [`openjev-encoder-general`](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) |
 | encoder router specialist | S-D1 | 0.6 GB | [`openjev-router-healthcare`](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) |
 | **LoRA router adapter** | **S-D4** | **87 MB** | [`openjev-router-lora`](https://huggingface.co/s1lv3rj1nx/openjev-router-lora) |
-| encoder on the 279-task mixture | G-B10 | 0.6 GB | *running, will link* |
+| encoder on the 279-task mixture | G-B10 | 0.6 GB | *trained, publishing* |
 | LoRA general adapter | G-C3 | ~90 MB | *queued, will link* |
 | decoder full fine-tune | S-D2 | 3.4 GB | *not published: dominated by S-D4* |
 | decoder head-only | S-D3 | 17 MB | *not published: negative result* |
@@ -223,7 +223,7 @@ not an incidental wording choice.
 | G-B7 | Recast `choice` into yes/no during training | civil macro-F1 0.333 → 0.403 | partial |
 | G-B8 | Retype 21 real negation-pair tasks to `noul` | mean 17.6x → 15.3x | **negative** |
 | G-B9 | Add 2 real ordinal star-rating datasets | mean → 13.4x | **negative** |
-| G-B10 | Ingest the MultipleChoice family, 279 tasks total | running | **running** |
+| G-B10 | Ingest the MultipleChoice family, 279 tasks total, audited clean | **mean 17.6x → 21.9x, all 7 tasks clear chance** | **positive, large** |
 
 **G-B8 and G-B9 are the instructive failures.** Both added one primitive by
 removing or diluting `choice` tasks, and five of seven held-out tasks are
