@@ -5,8 +5,8 @@
   "toxic": {
    "instructions": "This is a reader comment posted under a news article. Would the majority of human moderators rate this comment as toxic, meaning rude, disrespectful, hateful or aggressive enough that a reasonable person would be likely to leave the discussion rather than reply to it?",
    "criteria": {
-    "true": "A majority of raters would call this toxic: it insults, demeans, threatens or attacks a person or a group, uses obscenity or slurs aggressively, or is contemptuous enough to drive people out of the conversation. Strength of opinion alone does not make a comment toxic; the hostility has to be directed at people.",
-    "false": "A majority of raters would not call this toxic. This includes blunt, sarcastic, partisan, angry and strongly worded comments, and criticism of policies, institutions or public figures' actions, as long as the comment is not demeaning or abusive towards people."
+    "true": "A majority of raters called this toxic: rude, disrespectful, hateful or aggressive towards a person or a group. Insults, contempt, obscenity and slurs qualify, and so does hostility aimed at people through a political or social position.",
+    "false": "A majority of raters did not call this toxic. Disagreement, criticism and strong feeling on their own are not toxicity; what raters reacted to was hostility directed at people."
    },
    "type": "noul"
   }

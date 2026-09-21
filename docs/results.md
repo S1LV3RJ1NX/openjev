@@ -17,7 +17,8 @@ intervals over examples; paired comparisons use exact McNemar.
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
 | Banking77, never seen it | 0.355 | **0.820** | Jev, clearly |
 | CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
-| Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score`/`noul` still at chance |
+| Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score` still at chance |
+| Held-out binary, ranking | AUROC 0.714 | not measured | transfers; miscalibrated |
 | Router intent | 0.899 | **0.941** | Jev, p = 0.04 |
 | Router multi-label exact set | 0.789 | 0.822 | **level**, p = 0.14 |
 | Oblique-clinical recall | **1.000** | 0.793 | **OpenJev**, p = 0.03 |
@@ -313,6 +314,53 @@ the model scored a bare index, and `noul` options as `"no: a majority would
 not call this toxic"` — a yes/no question about a yes/no answer. Both were
 genuinely wrong and both are fixed. Effect on results: `sst5` 0.270 → 0.220,
 `civil_comments` unchanged. Correct, but not the cause.
+
+## The binary held-out task was never a transfer failure
+
+`civil_comments` sat at 0.500 accuracy with macro-F1 0.333 through every
+run, which is a model answering the same way every time, and we spent two
+separate efforts on it: augmenting `choice` into yes/no, then recovering 21
+real `noul` tasks. Neither moved it. Both were aimed at the wrong thing.
+
+| | AUROC | accuracy |
+|---|---|---|
+| ranking quality | **0.714** | — |
+| at the 0.5 threshold | — | 0.515 |
+| at a fitted threshold | — | **0.680** |
+
+The model ranks toxic comments above clean ones perfectly respectably. It
+puts 98% of its probability mass above 0.5, so argmax calls everything toxic
+and accuracy lands on the class balance. **That is a calibration result, not
+a transfer result**, and reporting only argmax accuracy on an uncalibrated
+binary measures the threshold as much as the model. `eval_heldout.py` now
+reports AUROC alongside accuracy for binary tasks so the two cannot be
+confused again.
+
+Two corrections to how we found this, both ours:
+
+**A label inversion in the inference helper.** `openjev/infer.py` derived
+option names with `list(criteria)`, which is *dict* order. A `noul` whose
+criteria happened to be written `{"true": ..., "false": ...}` had its two
+probabilities swapped, so `probabilities["true"]` read the "no" slot. That
+turned AUROC 0.712 into 0.288 — exactly `1 - 0.712` — and looked like a model
+ranking toxic comments as cleaner than clean ones. It affected the diagnostic
+only; `eval_heldout.py` uses the canonical `option_labels` and its published
+accuracies were never wrong. `infer.py` now imports that one definition, and
+a test pins the two renderings position-for-position.
+
+**A description finding we overstated mid-investigation.** With the
+inversion in place, `noul` descriptions-as-options read as 0.369 against
+0.712 for dropping them, which looked like the rubric actively inverting the
+model. Corrected, it is roughly 0.63 against 0.712: dropping them helps,
+modestly, and the dramatic version was the bug talking. The mechanism still
+holds — a `noul`'s two descriptions necessarily restate one judgement from
+opposite sides, so scoring both measures their overlap — and the options are
+now bare polarity.
+
+**Methodological caveat.** That rendering choice was made by comparing
+variants on the held-out task, which is the wrong place to choose anything.
+It is principled and small, but it should be re-settled on held-in binaries
+before the held-out number is quoted as clean.
 
 ## Ordinal scale augmentation is a null result
 

@@ -109,12 +109,16 @@ class DecisionModel:
 
 
 def _labels(q: Question) -> list[str]:
-    crit = getattr(q, "criteria", None)
-    if isinstance(crit, dict):
-        return list(crit)
-    if isinstance(crit, list):
-        return [str(i) for i in range(len(crit))]
-    return ["false", "true"]
+    # Must agree with encode.question_options position for position. A local
+    # reimplementation here returned criteria in *dict* order, so a noul whose
+    # criteria happened to be written {"true": ..., "false": ...} had its two
+    # probabilities swapped: `probabilities["true"]` read the "no" slot. On
+    # held-out civil_comments that turned AUROC 0.712 into 0.288, which is
+    # exactly 1 - 0.712, and looked like the model ranking toxic comments as
+    # clean. One definition, imported, so the two cannot drift again.
+    from .data import option_labels
+
+    return option_labels(q)
 
 
 def _resolve(path: str | Path) -> Path:

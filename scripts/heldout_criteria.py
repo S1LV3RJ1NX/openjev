@@ -682,17 +682,31 @@ CIVIL_INSTRUCTIONS = (
     'rather than reply to it?'
 )
 
+# These were rewritten after the originals were measured as actively harmful.
+#
+# The first pair carved out an exception: "partisan, angry and strongly worded
+# comments, and criticism of policies, institutions or public figures' actions"
+# were declared not toxic. The labels are a crowd majority vote, and that crowd
+# frequently does call hostile political commentary toxic, so the rubric
+# contradicted its own gold. A model that followed it scored AUROC 0.396 --
+# below chance, ranking toxic comments as cleaner than clean ones -- while the
+# bare question with no descriptions at all scored 0.712 on the same
+# checkpoint.
+#
+# The replacement describes what the raters were asked and declines to
+# adjudicate the hard cases, rather than being tuned until the number moves.
+# Writing a rubric to fit the labels would make the task unfailable and
+# measure nothing.
 CIVIL: dict[str, str] = {
     'true':
-        'A majority of raters would call this toxic: it insults, demeans, threatens or '
-        'attacks a person or a group, uses obscenity or slurs aggressively, or is '
-        'contemptuous enough to drive people out of the conversation. Strength of opinion '
-        'alone does not make a comment toxic; the hostility has to be directed at people.',
+        'A majority of raters called this toxic: rude, disrespectful, hateful or '
+        'aggressive towards a person or a group. Insults, contempt, obscenity and '
+        'slurs qualify, and so does hostility aimed at people through a political '
+        'or social position.',
     'false':
-        'A majority of raters would not call this toxic. This includes blunt, sarcastic, '
-        'partisan, angry and strongly worded comments, and criticism of policies, '
-        'institutions or public figures\' actions, as long as the comment is not '
-        'demeaning or abusive towards people.',
+        'A majority of raters did not call this toxic. Disagreement, criticism and '
+        'strong feeling on their own are not toxicity; what raters reacted to was '
+        'hostility directed at people.',
 }
 
 

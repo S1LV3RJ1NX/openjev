@@ -149,6 +149,32 @@ def expected_cost(
     return total / n, auto / n
 
 
+def auroc(scores: list[float], labels: list[int]) -> float:
+    """Threshold-free ranking quality, ties averaged.
+
+    Argmax accuracy on a binary question measures the decision threshold as
+    much as the model. A held-out task can rank almost perfectly and still
+    score 0.500 by putting every probability on one side of 0.5, which reads
+    as "no transfer" and is not. Report both.
+    """
+    pos = sum(labels)
+    neg = len(labels) - pos
+    if not pos or not neg:
+        return float("nan")
+    order = sorted(range(len(scores)), key=lambda i: scores[i])
+    ranks = [0.0] * len(scores)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and scores[order[j + 1]] == scores[order[i]]:
+            j += 1
+        avg = (i + j) / 2 + 1
+        for k in range(i, j + 1):
+            ranks[order[k]] = avg
+        i = j + 1
+    return (sum(r for r, l in zip(ranks, labels) if l) - pos * (pos + 1) / 2) / (pos * neg)
+
+
 def recall_for(pred: list[str], gold: list[str], label: str) -> float:
     tp = sum(p == label and g == label for p, g in zip(pred, gold))
     fn = sum(p != label and g == label for p, g in zip(pred, gold))

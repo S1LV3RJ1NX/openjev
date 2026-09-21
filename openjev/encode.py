@@ -72,11 +72,26 @@ def question_options(q: Question) -> list[str]:
             for i, c in enumerate(q.criteria)
         ]
     if isinstance(q, Noul):
-        crit = q.criteria or {}
-        return [
-            _described(crit.get("false")) or option_text("no", crit.get("false")),
-            _described(crit.get("true")) or option_text("yes", crit.get("true")),
-        ]
+        # Bare polarity, never the descriptions. A `noul`'s two descriptions
+        # necessarily describe the same judgement from opposite sides, so they
+        # share most of their wording -- "a majority of raters would call this
+        # toxic" against "a majority of raters would not". Scoring two long
+        # near-identical passages at the marker measures their overlap rather
+        # than their difference.
+        #
+        # Measured on held-out civil_comments, same checkpoint: descriptions
+        # as options score AUROC 0.369, *below* chance, ranking toxic comments
+        # as cleaner than clean ones. Dropping them scores 0.712.
+        #
+        # Folding them into the instructions instead was tried and is worse
+        # again, 0.253, and an ad-hoc wording of the same idea scored 0.752.
+        # A three-way spread that large from connective wording alone means
+        # the right phrasing is not something to pick by trying variants
+        # against the held-out set, which is how a benchmark gets gamed. So
+        # this takes the untuned option: the descriptions are not rendered.
+        # Choosing a way to reintroduce them is open work, and it has to be
+        # settled on held-in data before the held-out number is read again.
+        return ["no", "yes"]
     raise TypeError(f"unknown question type {type(q)}")
 
 

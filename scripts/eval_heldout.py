@@ -30,7 +30,7 @@ from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
 from openjev.ckpt import load_into, wants_head  # noqa: E402
 from openjev.heldout import load_suite  # noqa: E402
-from openjev.metrics import accuracy, bootstrap_ci, macro_f1  # noqa: E402
+from openjev.metrics import accuracy, auroc, bootstrap_ci, macro_f1  # noqa: E402
 from openjev.model import OpenJev  # noqa: E402
 
 
@@ -45,7 +45,7 @@ def score(model, task, packer, device, bs, limit=None):
         b["_samples"] = s
         return b
 
-    gold, pred = [], []
+    gold, pred, pos_p = [], [], []
     for batch in DataLoader(ds, batch_size=bs, shuffle=False, collate_fn=c):
         samples = batch.pop("_samples")
         b = {k: (v.to(device) if torch.is_tensor(v) else v) for k, v in batch.items()}
@@ -61,7 +61,10 @@ def score(model, task, packer, device, bs, limit=None):
                 labels = s.packed.labels[qid]  # type: ignore[attr-defined]
                 gold.append(labels[s.targets[qid]])
                 pred.append(labels[int(p.argmax())])
-    return gold, pred
+                # Keep the positive-class probability on binary questions, so
+                # ranking can be reported separately from the threshold.
+                pos_p.append(float(p[-1].exp()) if k == 2 else float("nan"))
+    return gold, pred, pos_p
 
 
 def main() -> None:
@@ -148,7 +151,7 @@ def main() -> None:
             ]
         ],
     )
-    g, pr = score(model, sanity, packer, device, args.bs)
+    g, pr, _ = score(model, sanity, packer, device, args.bs)
     acc = accuracy(pr, g)
     print(f"\n== HARNESS SANITY (must be near 1.0; chance is 0.333)  {acc:.3f}")
     if acc < 0.6:
@@ -165,28 +168,41 @@ def main() -> None:
             if not len(t):
                 continue
             K = len(next(iter(t.questions.values())).labels)
-            g, pr = score(model, t, packer, device, args.bs, limit=args.limit or 200)
+            g, pr, _ = score(model, t, packer, device, args.bs, limit=args.limit or 200)
             a = accuracy(pr, g)
             print(f"{p.name[:38]:<40}{K:>5}{len(g):>6}{a:>8.4f}{a * K:>9.1f}x")
 
     # ---- the actual question ---------------------------------------------
     print(f"\n== HELD-OUT SUITE (schemas never trained on) ==")
-    print(f"{'task':<26}{'K':>5}{'n':>6}{'acc':>8}{'95% CI':>16}{'x chance':>10}{'macroF1':>9}")
+    print(f"{'task':<26}{'K':>5}{'n':>6}{'acc':>8}{'95% CI':>16}{'x chance':>10}"
+          f"{'macroF1':>9}{'AUROC':>8}")
     mult = []
     for name, task in load_suite().items():
         qid = next(iter(task.questions))
         K = len(task.questions[qid].labels)
         try:
-            g, pr = score(model, task, packer, device, args.bs, args.limit)
+            g, pr, pp = score(model, task, packer, device, args.bs, args.limit)
         except Exception as e:  # noqa: BLE001
             print(f"{name:<26}{K:>5}  failed: {str(e)[:50]}")
             continue
         a, lo, hi = bootstrap_ci(accuracy, pr, g, n_boot=500)
         mult.append(a * K)
+        # Binary only: argmax accuracy there is as much a statement about the
+        # 0.5 threshold as about the model, and a task can rank well while
+        # scoring exactly chance.
+        au = ""
+        if K == 2 and pp and pp[0] == pp[0]:
+            labels_seen = sorted(set(g))
+            if len(labels_seen) == 2:
+                pos = labels_seen[-1] if "true" not in labels_seen else "true"
+                au = f"{auroc(pp, [int(x == pos) for x in g]):>8.3f}"
         print(f"{name:<26}{K:>5}{len(g):>6}{a:>8.4f}{f'[{lo:.3f},{hi:.3f}]':>16}"
-              f"{a * K:>9.1f}x{macro_f1(pr, g):>9.4f}")
+              f"{a * K:>9.1f}x{macro_f1(pr, g):>9.4f}{au:>8}")
     if mult:
         print(f"\nmean multiple of chance: {sum(mult) / len(mult):.1f}x")
+        print("AUROC is shown for binary tasks only. Accuracy there depends on "
+              "the 0.5 threshold;\nAUROC does not, so a gap between them is a "
+              "calibration result, not a transfer result.")
 
 
 if __name__ == "__main__":
