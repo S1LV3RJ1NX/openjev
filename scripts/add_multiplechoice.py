@@ -18,6 +18,7 @@ so each example brings its own menu and the task-level menu is a placeholder.
 from __future__ import annotations
 
 import argparse
+import collections
 import random
 import re
 import sys
@@ -55,7 +56,7 @@ def load_with_backoff(tasksource, tid: str, max_rows: int, retries: int):
             delay *= 2
 
 
-def to_task(task_id: str, dd, max_rows: int) -> Task | None:
+def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     split = dd.get("train") or next(iter(dd.values()))
     cols = split.column_names
     choice_cols = sorted(
@@ -79,13 +80,34 @@ def to_task(task_id: str, dd, max_rows: int) -> Task | None:
             continue
         if not 0 <= int(gold_idx) < len(opts):
             continue
+        gold = opts[int(gold_idx)]
+        # tasksource ships MultipleChoice correct-answer-first: measured, the
+        # gold sits at index 0 in 100% of rows across all 83 tasks. Storing
+        # that order teaches "pick the first option" to anything that reads
+        # the menu as written, and makes any evaluation with option shuffling
+        # turned off meaningless. Shuffle here so the data on disk is honest
+        # rather than relying on a downstream consumer to correct it.
+        rng.shuffle(opts)
         examples.append(Example(
             state=state,
-            answers={"answer": opts[int(gold_idx)]},
+            answers={"answer": gold},
             criteria={"answer": {o: o for o in opts}},
             meta={"tier": "mixture_mc", "source": task_id},
         ))
     if len(examples) < 32:
+        return None
+
+    # A task whose gold is the same string every time teaches a constant
+    # answer, not a decision.
+    golds = {e.answers["answer"] for e in examples}
+    if len(golds) < 2:
+        return None
+
+    # And one whose gold still lands at a fixed index would teach position.
+    at_index = collections.Counter(
+        list(e.criteria["answer"]).index(e.answers["answer"]) for e in examples
+    )
+    if max(at_index.values()) / len(examples) > 0.9:
         return None
 
     return Task(
@@ -134,7 +156,7 @@ def main() -> None:
             print(f"FAIL {tid[:52]:<54} {str(e).splitlines()[0][:50]}")
             continue
         try:
-            task = to_task(tid, dd, args.max_rows)
+            task = to_task(tid, dd, args.max_rows, rng)
         except Exception as e:  # noqa: BLE001
             failed += 1
             print(f"FAIL {tid[:52]:<54} {str(e).splitlines()[0][:50]}")
