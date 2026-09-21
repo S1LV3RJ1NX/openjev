@@ -73,18 +73,55 @@ result["needs_human"].probabilities["true"]
 Multi-label is `noul` per label, not `choice`: a message can be about a refill
 *and* opening hours, and a softmax cannot say so.
 
-## Two recipes
+## Train on your own data
 
-**Fine-tune on your task.** 395 examples, 38 seconds, one GPU.
+Clone, bring a CSV, train, use. Four steps.
 
-**Start from the general checkpoint first.** Same data, same time — worth
-**+27 points**. This is the project's central claim and it is measured:
-intent 0.544 → 0.817, multi-label 0.453 → 0.718, p = 6e-18.
+**1. Build a task from your data.**
 
 ```bash
-uv run python scripts/train.py --task tasks/your_task \
-    --init-from checkpoints/mixture_big/model.pt --epochs 6
+uv run python scripts/make_task.py --csv mydata.csv \
+    --text-column message --label-column intent --name my_task
 ```
+
+That writes `tasks/my_task/` with a stratified split and a `choice` question.
+Or write the files by hand — the format is two file types and is specified in
+**[docs/dataset-format.md](docs/dataset-format.md)**, with a copy-paste
+template.
+
+**2. Write the option descriptions.** The scaffold leaves `TODO` placeholders.
+This is the step worth your time: descriptions stating what distinguishes a
+label from its neighbours were worth **+5 accuracy points** on Banking77,
+while descriptions that merely restated the label name were worth nothing
+(p = 0.75).
+
+**3. Train.** Two recipes.
+
+```bash
+# A — straight fine-tune. 395 examples, 38 seconds, one GPU.
+uv run python scripts/train.py --task tasks/my_task --epochs 6 --bs 8
+
+# B — start from the general checkpoint. Same data, same time, +27 points.
+uv run python scripts/train.py --task tasks/my_task \
+    --init-from checkpoints/mixture_big/model.pt --epochs 6 --bs 8
+```
+
+Recipe B is the project's central claim and it is measured: intent
+0.544 → 0.817, multi-label 0.453 → 0.718, **p = 6e-18**. Two safety gates that
+never learned to fire at all under A reached 0.429 and 0.750 under B from the
+same handful of positive examples.
+
+**4. Evaluate, then use.** Training fits calibration temperatures on `dev`
+automatically and saves them with the checkpoint.
+
+```bash
+uv run python scripts/eval_router.py --ckpt checkpoints/my_task/model.pt
+```
+
+Before trusting the numbers, check per-class recall rather than accuracy. A
+class with a handful of examples gets learned as "never predict this" — ours
+scored 0.000 recall while looking 0.984 accurate. `docs/dataset-format.md`
+lists the other traps we hit.
 
 ## Where Jev wins
 
@@ -116,6 +153,7 @@ buys nothing and a plain classifier is simpler.
 
 | | |
 |---|---|
+| [Dataset format](docs/dataset-format.md) | The spec, a template, and the mistakes we made |
 | [Results](docs/results.md) | Every measurement, what worked and what did not |
 | [Architecture](docs/architecture.md) | The design, with diagrams, and why each choice |
 | [Evaluation](docs/evaluation.md) | The two suites and the contamination guard |
