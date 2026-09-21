@@ -164,12 +164,55 @@ def ordinal_rank(label: str) -> int | None:
     return None
 
 
-def as_ordinal(names: list) -> list[int] | None:
-    """Ranks for a label set, if every label is ordinal and they are distinct."""
-    ranks = [ordinal_rank(n) for n in names]
-    if any(r is None for r in ranks) or len(set(ranks)) != len(ranks):
+# Ordered vocabularies. A label set that is a subset of one of these, in any
+# order, is ordinal — sentiment and Likert scales are rankings, and emitting
+# them as unordered menus throws the ranking away. Matching against a known
+# scale is far safer than guessing from bare integers.
+ORDERED_VOCABS = [
+    ["very negative", "negative", "neutral", "positive", "very positive"],
+    ["strongly negative", "negative", "neutral", "positive", "strongly positive"],
+    ["negative", "neutral", "positive"],
+    ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"],
+    # NLI (contradiction / neutral / entailment) is deliberately NOT here.
+    # It is arguably an ordered scale of support, but the mixture contains
+    # dozens of NLI tasks, so including it would convert a large fraction of
+    # what currently works into a different primitive on the strength of a
+    # contestable judgement call. Conventional treatment is categorical.
+    ["never", "rarely", "sometimes", "often", "always"],
+    ["poor", "fair", "good", "very good", "excellent"],
+    ["terrible", "bad", "okay", "good", "great"],
+    ["none", "low", "medium", "high"],
+    ["low", "medium", "high"],
+    ["not helpful", "slightly helpful", "helpful", "very helpful"],
+    ["unacceptable", "acceptable"],
+    ["worse", "same", "better"],
+]
+
+
+def _vocab_ranks(names: list) -> list[int] | None:
+    norm = [re.sub(r"[_\-]+", " ", str(n)).strip().lower() for n in names]
+    if len(set(norm)) != len(norm):
         return None
-    return ranks  # type: ignore[return-value]
+    for vocab in ORDERED_VOCABS:
+        if len(norm) < 3:  # a two-way split is not usefully ordinal
+            continue
+        if all(n in vocab for n in norm):
+            return [vocab.index(n) for n in norm]
+    return None
+
+
+def as_ordinal(names: list) -> list[int] | None:
+    """Ranks for a label set, if it unambiguously denotes an ordering.
+
+    Two routes, both conservative: an explicit ordinal pattern in the label
+    itself ('3 stars', 'depth_7'), or membership in a known ordered
+    vocabulary. Bare integers still do not qualify — the mixture contains
+    relation classes labelled '1'..'6' with no ordering at all.
+    """
+    ranks = [ordinal_rank(n) for n in names]
+    if not any(r is None for r in ranks) and len(set(ranks)) == len(ranks):
+        return ranks  # type: ignore[return-value]
+    return _vocab_ranks(names)
 
 
 def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
