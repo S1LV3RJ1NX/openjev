@@ -56,6 +56,14 @@ about 2x at inference for nothing.
 
 ## Measured against `jev-1.13.0`
 
+![OpenJev against Jev on the router](comparison_router.png)
+
+Accuracy on the left, all three systems on the same 450 test items.
+Latency on the right, whole router in one call. One caveat on that panel:
+our figures are local GPU compute and the API's 407 ms is an end-to-end
+hosted call including network, so it is the latency a user experiences and
+not a claim about the speed of their model.
+
 Paired on the same 450 held-out test items, exact McNemar. Reproduce with
 `scripts/compare_to_jev.py`.
 

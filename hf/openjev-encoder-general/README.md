@@ -54,6 +54,13 @@ bug.
 
 **Mean 21.9x chance, and every interval excludes its chance floor.**
 
+![held-out transfer across mixture generations](heldout_transfer.png)
+
+Three bars per task, one per mixture generation. The middle one is *worse*
+than the first: that is negative transfer from a mixture change that traded
+away `choice` tasks, kept visible because a chart showing only the best run
+would imply steady progress that did not happen.
+
 **Fine-tuned on a healthcare routing task**, 395 examples, 38 seconds, paired
 against a commercial typed-decision API on the same 450 items with exact
 McNemar:
