@@ -326,6 +326,23 @@ on the same 450 items, exact McNemar.
 
 **Three wins, four ties, no losses.**
 
+By tier on the multi-label set, which is where the reference API was
+weakest. `compound_3` is three separate intents in one message:
+
+| tier | n | OpenJev | Jev |
+|---|---|---|---|
+| `compound_3` | 31 | **0.903** | 0.645 |
+| `compound` | 22 | **1.000** | 0.909 |
+| `single` | 27 | **0.963** | 0.852 |
+| `ambiguous` | 3 | 0.333 | 0.667 |
+| overall | 450 | **0.909** | 0.822 |
+
+The `ambiguous` tier is 3 items and decides nothing either way.
+
+This is the `noul` primitive and multi-question packing working together:
+ten questions — one intent `choice`, five topic `noul`s and four gates — all
+answered in a single forward pass over the shared message.
+
 What makes this more than a scaling result is that the adapter is the
 *smallest* configuration that works, not the largest:
 

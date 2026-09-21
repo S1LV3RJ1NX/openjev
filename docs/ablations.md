@@ -262,6 +262,7 @@ and we caused it twice before measuring it.
 |---|---|---|---|---|
 | intent | 0.979 | 0.941 | 9.8e-04 | **OpenJev** |
 | multi-label exact set | 0.909 | 0.822 | 7.2e-06 | **OpenJev** |
+| `compound_3` tier, three intents in one message | 0.903 | 0.645 | — | **OpenJev** |
 | scope gate | 0.978 | 0.880 | 3.9e-10 | **OpenJev** |
 | clinical / abusive / injection gates | — | — | ≥ 0.34 | level |
 
