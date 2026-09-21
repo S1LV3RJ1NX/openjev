@@ -19,8 +19,23 @@ result = model.predict(
         "needs_human": Noul(instructions="Does this need a human?"),
     },
 )
-result["intent"].probabilities   # {"refill": 0.71, "store_hours": 0.24, ...}
+result["intent"].probabilities    # {"refill": 0.71, "store_hours": 0.24, ...}
+result["intent"].label            # "refill"
+result["urgency"].score           # 1.30 — the expected level, not the argmax
+result["urgency"].is_unimodal     # False means that 1.30 describes nothing
+result["needs_human"].probabilities["true"]
 ```
+
+`score` returns a **number**, which is the point of it being a separate
+primitive: a distribution of `[0.01, 0.69, 0.29, 0.01]` over "can wait / a few
+days / today / blocking" gives 1.30, so mostly *a few days* with real pull
+toward *today*. That is something you can threshold or price. The argmax, `1`,
+throws it away.
+
+Check `is_unimodal` before trusting it. On an input that is either trivial or
+an emergency, `[0.45, 0.02, 0.03, 0.50]` averages to 1.58 — a level with 2%
+probability, looking like a calm middling answer while the model believes two
+contradictory things.
 
 OpenJev is an attempt to build, in the open, the class of model TypeSafe AI
 introduced with Jev. It started by using Jev — reading its docs, calling its

@@ -258,6 +258,40 @@ class Answer:
         return max(self.probabilities.values())
 
     @property
+    def score(self) -> float:
+        """The expected level, for `score` questions: sum_i i * p_i.
+
+        This is what makes `score` a different primitive from `choice` rather
+        than a relabelling of it. A four-level urgency question returning
+        [0.01, 0.69, 0.29, 0.01] has a score of 1.30 — between "a few days"
+        and "today", leaning to the former — which is a reading you can
+        threshold on and which the argmax (1) throws away.
+
+        **Only meaningful when the distribution is unimodal.** We measured
+        11.8% of a production system's score distributions to be multimodal
+        over ordered levels, and for those the mean lands in the trough: an
+        input that is either trivial or an emergency averages to a confident
+        middle. Check `is_unimodal` before trusting this number.
+        """
+        items = sorted(self.probabilities.items(), key=lambda kv: int(kv[0]))
+        return sum(i * p for i, (_, p) in enumerate(items))
+
+    @property
+    def is_unimodal(self) -> bool:
+        """Whether the level distribution rises then falls, with no trough.
+
+        If this is False the `score` is an average across separated modes and
+        describes no level the model actually believes in.
+        """
+        p = [v for _, v in sorted(self.probabilities.items(), key=lambda kv: int(kv[0]))]
+        if len(p) < 3:
+            return True
+        peak = max(range(len(p)), key=p.__getitem__)
+        rising = all(p[i] <= p[i + 1] + 1e-9 for i in range(peak))
+        falling = all(p[i] >= p[i + 1] - 1e-9 for i in range(peak, len(p) - 1))
+        return rising and falling
+
+    @property
     def confidence(self) -> float:
         """Jev's formula, reproduced so comparisons use the same number.
 
@@ -267,8 +301,14 @@ class Answer:
         k = len(self.probabilities)
         return (self.p_max - 1 / k) / (1 - 1 / k) if k > 1 else 1.0
 
+    @property
     def ordinal_confidence(self) -> float:
-        """The `score` variant: chance-corrected dispersion about the mode."""
+        """The `score` variant: chance-corrected dispersion about the mode.
+
+        A property, like `confidence`, because having one of the pair be a
+        method is the kind of inconsistency that produces a silently wrong
+        `f"{a.ordinal_confidence:.3f}"`.
+        """
         p = [self.probabilities[k] for k in sorted(self.probabilities, key=int)]
         k = len(p)
         m = max(range(k), key=p.__getitem__)

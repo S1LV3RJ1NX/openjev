@@ -143,6 +143,8 @@ def main() -> None:
     ap.add_argument("--freeze-backbone", action="store_true",
                     help="train only the calibration head (use with --decoder)")
     ap.add_argument("--preamble", default=None)
+    ap.add_argument("--init-from", default=None,
+                    help="start from a checkpoint instead of the raw backbone")
     ap.add_argument("--out", default="checkpoints")
     args = ap.parse_args()
 
@@ -250,6 +252,16 @@ def main() -> None:
                   f"({100 * n / total:.3f}%)")
     else:
         model = OpenJev(backbone=args.backbone, vocab_size=len(tok)).to(device)
+
+    if args.init_from:
+        # The project's central claim is that a general checkpoint makes a
+        # specialist cheap. That is only testable if a specialist can start
+        # from one.
+        prev = torch.load(args.init_from, map_location="cpu", weights_only=False)
+        missing, unexpected = model.load_state_dict(prev["state_dict"], strict=False)
+        print(f"initialised from {args.init_from} "
+              f"(trained on {prev.get('trained_on')}); "
+              f"{len(missing)} missing, {len(unexpected)} unexpected")
 
     head = [p for n, p in model.named_parameters()
             if n.startswith("scorer") and p.requires_grad]
