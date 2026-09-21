@@ -188,7 +188,13 @@ def main() -> None:
         # The builder already filtered, but a mixture can be assembled by
         # hand, so check again rather than trust it.
         from openjev.heldout import assert_training_mixture_clean
-        assert_training_mixture_clean([t.description.replace("tasksource ", "") for t in tasks])
+        sources = [t.description.replace("tasksource ", "") for t in tasks]
+        assert_training_mixture_clean(sources)
+        # Say so. A guard that is silent on success leaves no evidence in the
+        # log that it ever ran, and "we enforce it on every run" then rests on
+        # reading the source rather than on the run itself.
+        print(f"contamination guard: {len(sources)} sources checked against the "
+              f"held-out suite, no overlap")
         ks = [len(next(iter(t.questions.values())).labels) for t in tasks]
         print(f"mixture {name}: {len(tasks)} tasks, {sum(len(t) for t in tasks)} rows")
         print(f"option counts: min {min(ks)} median {sorted(ks)[len(ks)//2]} max {max(ks)}")
