@@ -1,496 +1,234 @@
 # Results
 
-Everything measured by us, with the command to reproduce it. Numbers move when
-you rerun them; intervals are bootstrap over examples.
+Everything measured by us, with the command to reproduce it. Bootstrap
+intervals over examples; paired comparisons use exact McNemar.
 
-## Banking77 specialist
+> **Provenance.** Every figure attributed to Jev was measured against the
+> public TypeSafe API, model `jev-1.13.0`, on 20 September 2026, at the sample
+> sizes stated. Black-box measurements of a hosted endpoint on one day from
+> one network location. Reproduce before relying on them.
 
-**In-task, not a generalization result.** This model was fine-tuned on 9,839
-Banking77 training examples. The reference system was not: it answered the same
-question zero-shot from the option text alone. These measure different things,
-and the comparison below is only meaningful as "what does having labels buy
-you", not as "which model is better".
+---
 
-`tasks/heldout/banking77` is therefore **disqualified as a held-out task for
-this checkpoint**. The trainer refuses to run on it without `--allow-heldout`,
-and records the override in the checkpoint file.
+## Summary
 
-```bash
-uv run python scripts/build_banking77_specialist.py
-uv run python scripts/train.py --task tasks/banking77_specialist \
-    --epochs 3 --bs 16 --max-len 4096 --allow-heldout
-```
-
-ModernBERT-base (149.6M params, of which the shared scorer is 593K), 3 epochs,
-batch 16, 1,845 steps, **13.5 minutes on one H100**. Test is the same 600 rows
-as `tasks/heldout/banking77`.
-
-| | accuracy | 95% CI | macro-F1 | ECE | Brier |
-|---|---|---|---|---|---|
-| OpenJev, raw | 0.9233 | [0.900, 0.945] | 0.9230 | 0.056 | 0.1300 |
-| OpenJev, temperature-scaled | **0.9233** | [0.900, 0.945] | **0.9230** | **0.029** | **0.1194** |
-| *reference: Jev `1.13.0`, zero-shot* | *0.820* | *[0.777, 0.863]* | *0.806* | *0.068* | *0.277* |
-
-The reference row was measured against the public TypeSafe API on 20 September
-2026 on 300 stratified rows of the same test split, so it is a different sample
-from our 600 and should be read as approximate.
-
-### What this does and does not support
-
-**Supports:** the architecture learns. A shared scoring head over option
-markers, with no per-class parameters, reaches 92.3% on a 77-way task — in line
-with what ordinary fine-tuned encoders have long achieved on Banking77. The
-head is not the bottleneck, and a 150M model trained for 13 minutes on one GPU
-is enough.
-
-**Supports:** if you have labels for your task, fine-tuning a small encoder
-beats a general decision model on that task, by about ten points here. That is
-the project's actual pitch and it is the least surprising result in the table.
-
-**Does not support:** any claim about zero-shot ability, generalization, or
-being "better than Jev". We trained on the task. The interesting comparison —
-a held-out schema neither model has seen — has not been run yet.
-
-### Temperature scaling did exactly what it should
-
-Accuracy is **identical** before and after (0.9233 both), while ECE halves from
-0.056 to 0.029 and Brier improves from 0.1300 to 0.1194. That is the expected
-behaviour and a useful check on the implementation: temperature scaling is
-monotonic, so it cannot reorder predictions and cannot change accuracy. If it
-had, something would be wrong.
-
-The fitted temperature is **1.917**, comfortably above 1, meaning the model was
-overconfident — the standard consequence of training to convergence on
-cross-entropy, and the reason the calibration step exists at all.
-
-## Zero-shot from the warm start alone: a negative result
-
-The scoring head can reuse the backbone's own pretrained masked-LM head at
-each option marker (`logit(yes) - logit(no)`), which adds no parameters and
-can therefore be evaluated with **no training whatsoever**. The question that
-answers: how much zero-shot ability does a good encoder give us for free?
-
-```bash
-uv run python scripts/eval_zeroshot.py --backbone answerdotai/ModernBERT-large --limit 40
-```
-
-40 rows per task, accuracy as a multiple of chance (1/K), since option counts
-run from 2 to 151 and raw accuracy is not comparable across them:
-
-| task | K | base | large |
+| | OpenJev | Jev | verdict |
 |---|---|---|---|
-| banking77 | 77 | 0.0x | 11.5x |
-| clinc_oos | 151 | 0.0x | 0.0x |
-| massive_intent | 60 | 1.5x | 0.0x |
-| sst5 | 5 | 0.9x | 0.7x |
-| ag_news | 4 | 0.8x | 1.1x |
-| civil_comments_toxicity | 2 | 1.0x | 1.1x |
-| helpsteer_helpfulness | 5 | 1.0x | 1.0x |
-| **mean** | | **0.7x** | **2.2x** |
-
-**The answer is: nothing usable.** ModernBERT-base is at chance across the
-board and scores a literal 0.0000 on both high-cardinality tasks.
-ModernBERT-large is better but still unusable — its 2.2x mean is carried
-almost entirely by one task, and it is *below* chance on three.
-
-This is worth stating plainly because it is easy to assume otherwise: a strong
-bidirectional encoder plus a clever output format does **not** produce a
-zero-shot decision model. The format makes zero-shot *possible*, since the
-scoring head has no per-class parameters and a new label set is just new
-input. It does not make it *present*.
-
-That is consistent with UniMC, which needed a multi-task "MC tuning" stage to
-get zero-shot behaviour, and with the Flan Collection finding that held-out
-performance is a function of training task count. **The multi-task stage is
-not an optimisation on top of the architecture; it is where the capability
-comes from.** Any plan that treated it as optional was wrong, including an
-earlier version of ours that framed the warm start as the cheap lever.
-
-One caveat on the comparison we wanted but could not run: the obvious
-alternative warm starts — `MoritzLaurer/ModernBERT-large-zeroshot-v2.0` and
-`tasksource/ModernBERT-large-nli` — are sequence-classification checkpoints
-with no masked-LM head, so they cannot be scored this way at all. Comparing
-them needs the trained scorer, which means it belongs after the multi-task
-run, not before it.
-
-## Multi-task training: learns the tasks, transfers nothing
-
-61 tasks from `tasksource` (95,413 rows), ModernBERT-base, 2 epochs, ~12
-minutes on one H100. The held-out suite was excluded at build time.
-
-```bash
-VIRTUAL_ENV=.venv-data uv run --no-project python scripts/build_mixture.py
-uv run python scripts/train.py --mixture tasks/mixture --epochs 2 --bs 16
-uv run python scripts/eval_heldout.py --ckpt checkpoints/mixture/model.pt
-```
-
-**Held-in control** — tasks this checkpoint was trained on, 200 rows each:
-
-| task | K | accuracy | x chance |
-|---|---|---|---|
-| ethos_binary | 2 | 0.840 | 1.7x |
-| glue_mrpc | 2 | 0.760 | 1.5x |
-| glue_qnli | 2 | 0.715 | 1.4x |
-| glue_cola | 2 | 0.700 | 1.4x |
-| glue_mnli | 3 | 0.675 | 2.0x |
-
-**Held-out suite** — schemas never trained on:
-
-| task | K | accuracy | 95% CI | x chance |
-|---|---|---|---|---|
-| banking77 | 77 | **0.0000** | [0.000, 0.000] | 0.0x |
-| clinc_oos | 151 | **0.0000** | [0.000, 0.000] | 0.0x |
-| massive_intent | 60 | 0.0400 | [0.015, 0.070] | 2.4x |
-| sst5 | 5 | 0.2000 | [0.150, 0.255] | 1.0x |
-| ag_news | 4 | 0.2250 | [0.170, 0.290] | 0.9x |
-| civil_comments_toxicity | 2 | 0.5150 | [0.445, 0.585] | 1.0x |
-| helpsteer_helpfulness | 5 | 0.1650 | [0.120, 0.215] | 0.8x |
-| **mean** | | | | **0.9x** |
-
-**The control is what makes this readable.** The checkpoint clearly learned —
-0.84 on ethos, 0.675 on three-way MNLI — while scoring at chance on every
-held-out schema. So the machinery works and the transfer is genuinely absent.
-Had both been at chance, this would have been a bug report instead.
-
-Note also that training changed nothing versus no training at all: the
-untrained MLM-head baseline was 0.7x to 2.2x, and this is 0.9x.
-
-### Why, and what it does not mean
-
-This does **not** show the architecture cannot generalize. Two concrete
-deficiencies in the mixture explain it, both fixable:
-
-**It is far too small.** 61 tasks against the ~282 where the Flan Collection
-ablation says most of the held-out gain has accrued, and held-out performance
-there rises log-linearly in task count. We are at the bottom of that curve.
-The shortfall is mechanical rather than fundamental: 285 of 346 candidate
-loads failed, 238 of them `HfHubHTTPError` from pulling hundreds of datasets
-without backoff. The builder now retries and throttles.
-
-**It has no cardinality diversity.** Option counts came out min 2, median 3,
-max 20, while the held-out suite runs to 151. The model never saw a menu
-remotely that size. The literal 0.0000 on banking77 and clinc_oos is the
-signature of collapsing onto one label when handed 77 or 151 options, not of
-ranking them badly — at chance it should have got roughly 3 of 200 right.
-
-So the honest reading is that we have confirmed the architecture trains and
-have **not yet built a mixture capable of testing the generalization claim**.
-The next build needs several hundred tasks and deliberate high-K sourcing
-before a negative result here means anything about the design.
-
-See [`architecture.md`](architecture.md#measured-is-packing-worth-its-complexity).
-Flat in question count; 24x over the naive one-sequence-per-question
-alternative at a 2.8k-token state; no benefit at all on short states.
-
-## Healthcare router: one real win, and a data-starvation diagnosis
-
-First OpenJev numbers on `tasks/healthcare_router`, and the first test of the
-`noul` primitive, multi-question packing and the safety gates — none of which
-Banking77 exercises. Trained on the router's own 395-example train split, 6
-epochs, 38 seconds.
-
-```bash
-uv run python scripts/train.py --task tasks/healthcare_router --epochs 6 --bs 8
-uv run python scripts/eval_router.py --ckpt checkpoints/healthcare_router/model.pt
-```
-
-| | OpenJev | Jev 1.13.0 | delta |
-|---|---|---|---|
-| intent choice, lenient | 0.544 | 0.909 | **−0.365** |
-| multi-label exact set | 0.453 | 0.822 | **−0.369** |
-| multi-label F1 | 0.554 | 0.890 | −0.336 |
-| `G_clinical` recall | 0.898 | 0.926 | −0.028 |
-| `G_clinical` FPR | 0.047 | 0.006 | **8x worse** |
-| **`clinical_oblique` recall** | **0.931** | 0.793 | **+0.138** |
-| `G_abusive` recall | 0.000 | 0.714 | −0.714 |
-| `G_injection` recall | 0.125 | 0.917 | −0.792 |
-| `G_pharmacy` FPR | 0.826 | 0.087 | **collapsed to majority class** |
-
-### Paired McNemar against the same 450 items
-
-Summary numbers hide who was right on which item. Exact two-sided McNemar,
-where `b01` counts items Jev got right and we did not, and `b10` the reverse:
-
-| slice | n | ours | Jev | b01 | b10 | p |
-|---|---|---|---|---|---|---|
-| intent choice (lenient) | 338 | 0.544 | 0.941 | 142 | 8 | 7.8e-33 |
-| multi-label exact set | 450 | 0.453 | 0.822 | 180 | 14 | 6.6e-38 |
-| `G_injection` correctness | 450 | 0.949 | 0.996 | 21 | 0 | 9.5e-07 |
-| `G_clinical` correctness | 450 | 0.940 | 0.978 | 24 | 7 | 3.3e-03 |
-| `G_abusive` correctness | 450 | 0.984 | 0.996 | 5 | 0 | 0.063 |
-| `G_pharmacy` correctness | 450 | 0.942 | 0.880 | 20 | 48 | 9.1e-04 |
-| **`clinical_oblique` recall** | **29** | **0.931** | **0.793** | **0** | **4** | **0.125** |
-
-**Two corrections this forces, both against us.**
-
-*The oblique-clinical result is not a win.* On the slice we argued mattered
-most, we beat Jev on 4 items and lose on 0 — but at n=29 that is **p = 0.125,
-not significant**. The direction is encouraging and the tier is the right one
-to care about, but "OpenJev beats Jev at detecting obliquely-phrased adverse
-events" is not a claim this evidence supports. It needs a larger
-`clinical_oblique` tier before it means anything.
-
-*The `G_pharmacy` "win" is an artifact.* We score 0.942 against Jev's 0.880 at
-p = 0.0009, which looks like our best result on the board. It is not. That
-slice is 427 positive against 23 negative, and our model simply predicts
-positive almost always: recall 0.984 with a **false-positive rate of 0.826**,
-against Jev's 0.087. We learned the majority class and the accuracy metric
-rewarded us for it. This is the exact failure the project's own docs warn
-about, caught here only because the gate reports FPR next to recall.
-
-`G_abusive` deserves the same scepticism: 0.984 "correctness" while recall is
-**0.000**. With 7 positives against 443 negatives, never firing is an
-excellent way to look accurate.
-
-**The honest reading of the gates is therefore narrower than it first
-appeared.** Our `G_clinical` false-positive rate is 0.047 against Jev's 0.006,
-so whatever oblique recall we gained was bought by firing more readily in
-general — 16 false alarms on 342 negatives against Jev's 2. Whether that trade
-is worth it depends on the cost of a false escalation, which `expected_cost()`
-exists to compute and which we have not priced for this task.
-
-**Everything else is much worse, and the cause is data, not architecture.**
-395 training examples across 10 questions is about 40 per question.
-`G_abusive` has 7 positives in the whole test split and correspondingly few in
-train; it scored 0.000, never learning to fire at all. `G_injection` reached
-0.125. That is not a model failing so much as a concept being learned from a
-handful of instances.
-
-Which points somewhere specific: **the router suite was built as an evaluation
-set and is too small to train on.** The fix is not more router data, it is a
-general checkpoint strong enough to fine-tune from — a specialist starting
-from a good base needs far fewer examples than one starting from a raw
-encoder. That is the argument for the project having a general model at all,
-and it is the work below.
-
-## Zero-shot generalization: it works, and it is almost entirely prompt format
-
-The decoder path (causal backbone, per-option yes/no readout at a marker, no
-generation) transfers to schemas it has never trained on. **No training of any
-kind** — this is a stock Qwen3-1.7B with a prompt.
-
-### Headline, n=200 per task
-
-| task | primitive | K | accuracy | x chance |
-|---|---|---|---|---|
-| clinc_oos | choice | 151 | 0.285 | **43.0x** |
-| massive_intent | choice | 60 | 0.335 | 20.1x |
-| banking77 | choice | 77 | 0.170 | 13.1x |
-| sst5 | score | 5 | 0.270 | 1.4x |
-| ag_news | choice | 4 | 0.275 | 1.1x |
-| civil_comments_toxicity | noul | 2 | 0.515 | 1.0x |
-| helpsteer_helpfulness | score | 5 | 0.150 | 0.7x |
-| **mean** | | | | **11.5x** |
-
-For comparison, the encoder path scores a literal **0.000** on both
-`banking77` and `clinc_oos`, and the same decoder with a naive prompt scores
-0.8x chance overall.
-
-### The progression is the finding
-
-Every gain came from prompt format. Same model, same architecture, no
-training:
-
-| change | mean x chance |
-|---|---|
-| bare concatenation of state and options | 0.8x |
-| + each option framed as an explicit yes/no question | 2.9x |
-| + a preamble stating the task | 6.8x † |
-| + context budget raised so `clinc_oos` stops dropping out | 12.3x † |
-| + one worked demonstration (n=200) | **11.5x** |
-
-† measured at n=40; see the correction below.
-
-The control that makes this convincing is the failure: shortening the option
-framing to `{opt}\ncorrect? answer` collapsed the mean from 6.8x to 2.9x and
-`banking77` from 0.325 to 0.125. Terser prompts are not neutral here.
-
-### Correction: the n=40 numbers were inflated
-
-An earlier commit reported `banking77` at 0.325 (25.0x chance) and a 12.3x
-mean. Those were measured on **40 rows per task**. Re-run at 200 rows,
-`banking77` is **0.205** without demonstrations and 0.170 with, and the mean
-is 9.2x to 11.5x.
-
-The large jump from chance to roughly 11x is robust. The fine-grained
-comparisons between prompt variants at n=40 were not, and should not have
-been reported as results — a 6-item swing looked like a 2x difference.
-
-### What one demonstration does
-
-Paired at n=200, adding a single worked example is a net gain but not
-uniformly: mean 9.2x → 11.5x, driven by `massive_intent` (0.220 → 0.335) and
-`clinc_oos` (0.210 → 0.285), while `banking77` slips (0.205 → 0.170). It helps
-most where the label space is largest.
-
-### Honest positioning
-
-Jev scores **0.820** zero-shot on `banking77`; we score 0.170 to 0.205. That
-is not parity and nothing here should be read as approaching it. What changed
-is the qualitative gap: the model went from indistinguishable from chance to
-clearly better than chance on 60-, 77- and 151-way menus it has never seen.
-
-### The `score` and `noul` primitives stay at chance, and it is not a bug
-
-`sst5` (1.1x), `ag_news` (1.1x), `civil_comments_toxicity` (1.0x) and
-`helpsteer_helpfulness` (0.8x) are all at chance. The obvious suspect was
-option rendering, and it was genuinely wrong: a `score` level was being
-rendered as `"0: very negative: the writer condemns the film"`, making the
-model score a bare index, and a `noul` option as `"no: a majority would not
-call this toxic"`, which asks a yes/no question about a yes/no answer. Only
-`choice` has a label worth showing, since there the label carries meaning.
-
-Fixing it changed nothing: `sst5` 0.270 → 0.220, `civil_comments` unchanged at
-0.515, mean unchanged at 11.5x. The fix was correct and is kept, but it was
-not the cause.
-
-**The real pattern is an asymmetry in option count, and it is worth reading
-carefully.** Absolute accuracy is mediocre everywhere — 0.17 to 0.34 on the
-large menus, 0.22 to 0.52 on the small ones. What differs is what that buys
-you: 0.170 against 77 options is 13x chance and genuinely informative, while
-0.275 against 4 options is 1.1x and worth nothing. The "x chance" column
-flatters high cardinality.
-
-So the honest statement is **not** "it generalizes to large menus but not
-small ones". It is that the readout produces a weakly informative ranking, and
-a weakly informative ranking over 151 options looks impressive while the same
-signal over 4 options looks like noise. The calibration numbers say the same
-thing: ECE is 0.711 on `ag_news`, 0.811 on `helpsteer`, 0.558 on `sst5`. The
-probabilities are badly wrong even where the argmax is sometimes right.
-
-This matches what an independent implementation of the same readout reports:
-the mechanism works, and decision quality is a separate phase requiring a
-trained calibration head rather than a better prompt. Prompt format took us
-from chance to a usable signal; it will not take us further.
-
-## Head-to-head: label-space augmentation fixes the encoder
-
-Both architectures through `scripts/eval_heldout.py`, same 200 rows per task,
-same control. The encoder is trained on the 141-task mixture with label-space
-augmentation; the decoder is untrained.
-
-| task | K | encoder (trained) | decoder (untrained) |
-|---|---|---|---|
-| banking77 | 77 | 0.205 · **15.8x** | 0.170 · 13.1x |
-| clinc_oos | 151 | 0.180 · 27.2x | 0.285 · **43.0x** |
-| massive_intent | 60 | 0.305 · 18.3x | 0.335 · **20.1x** |
-| sst5 | 5 | **0.360 · 1.8x** | 0.220 · 1.1x |
-| ag_news | 4 | **0.655 · 2.6x** | 0.275 · 1.1x |
-| civil_comments_toxicity | 2 | **0.615 · 1.2x** | 0.515 · 1.0x |
-| helpsteer_helpfulness | 5 | **0.230 · 1.2x** | 0.165 · 0.8x |
-| mean | | 9.7x | **11.5x** |
-
-Controls: harness sanity 1.000 for both. Encoder held-in control 0.83 to 0.97
-on five trained tasks, so it plainly learned.
-
-**The encoder went from a literal 0.000 on `banking77` and `clinc_oos`, and
-chance on every low-cardinality task, to above chance on all seven.** That is
-the single largest change in the project, and it came from label-space
-augmentation plus a mixture grown from 61 to 141 tasks. Those two moved
-together, so the split between them is not isolated here.
-
-**The mean is misleading and the per-task pattern is the real result.** The
-decoder's higher mean (11.5x vs 9.7x) rests entirely on `clinc_oos`, where
-43.0x against a 1/151 chance floor dominates the average. On the four
-low-cardinality tasks the encoder wins every one, and not narrowly: `ag_news`
-0.655 against 0.275, which is the difference between a usable classifier and
-a coin flip. Reading "x chance" as a scoreboard would pick the wrong
-architecture.
-
-**Six of seven are significantly above chance, not seven.**
-`helpsteer_helpfulness` is 0.230 with a 95% interval of [0.170, 0.290], which
-contains the 0.200 chance level. Every other task's interval excludes its
-chance floor. Ordinal quality rating remains the one primitive we have not
-moved.
-
-### What this settles, and what it does not
-
-Settled: the encoder path generalizes to unseen schemas when the training
-mixture contains large menus, and the way to get large menus is to synthesize
-them rather than to find datasets that have them. The earlier conclusion that
-"the encoder cannot generalize" was wrong — it was a statement about a
-61-task mixture with a maximum of 20 options, not about the architecture.
-
-Not settled: which path to ship. The encoder is 150M parameters, deterministic
-and trained in 72 minutes; the decoder is 1.7B and untrained. A fair
-comparison needs the decoder's calibration head trained on the same mixture,
-which has not been run.
-
-## The central claim, tested: does a general checkpoint make a specialist cheap?
-
-This is the project's whole argument, and until now it was an assertion. Same
-router task, same 395 training examples, same 6 epochs, same 38 seconds. The
-only difference is the starting weights.
+| Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
+| Banking77, never seen it | 0.205 | **0.820** | Jev, clearly |
+| CLINC-150 (K=151), never seen it | 0.285 | not measured | 43x chance |
+| Router intent | 0.817 | **0.941** | Jev, p = 1e-07 |
+| Router multi-label exact set | 0.718 | **0.822** | Jev, p = 3e-05 |
+| `G_clinical` correctness | 0.971 | 0.978 | **level**, p = 0.63 |
+| Probability precision | full | 0.01 grid, 71.9% hard zeros | **OpenJev** |
+| Deterministic | yes | no, no seed | **OpenJev** |
+
+---
+
+# What worked
+
+## 1. The general checkpoint is worth +27 points to a specialist
+
+**The project's central claim, and the strongest result here.** Same router
+task, same 395 training examples, same 6 epochs, same 38 seconds. Only the
+starting weights differ.
 
 ```bash
 uv run python scripts/train.py --task tasks/healthcare_router \
     --init-from checkpoints/mixture_big/model.pt --epochs 6 --bs 8
 ```
 
-| | from raw ModernBERT | from the general checkpoint | Jev |
+| | from raw ModernBERT | from general checkpoint | Jev |
 |---|---|---|---|
-| intent, lenient | 0.544 | **0.817** | 0.909 |
-| intent, strict | 0.544 | **0.817** | 0.941 |
+| intent (lenient / strict) | 0.544 | **0.817** | 0.909 / 0.941 |
 | multi-label exact set | 0.453 | **0.718** | 0.822 |
 | multi-label F1 | 0.554 | **0.816** | 0.890 |
 | `G_clinical` recall | 0.898 | **0.991** | 0.926 |
-| `G_clinical` FPR | 0.047 | **0.035** | 0.006 |
 | `clinical_oblique` recall | 0.931 | **0.966** | 0.793 |
 | `G_abusive` recall | 0.000 | **0.429** | 0.714 |
 | `G_injection` recall | 0.125 | **0.750** | 0.917 |
 
-Paired McNemar, general-init against from-scratch on the same items:
+Paired McNemar against from-scratch: intent **b10=108, b01=16, p = 6.0e-18**;
+multi-label **b10=144, b01=25, p = 1.6e-21**.
+
+**Why it works.** 395 examples across 10 questions is ~40 per question, and
+two gates had so few positives (`G_abusive`: 7) that from scratch they never
+learned to fire at all. A checkpoint that already knows "score how well this
+option describes this state" only has to learn *this* label set, not the task
+shape. That is the whole argument for having a general model.
+
+## 2. Label-space augmentation fixes high-cardinality transfer
+
+The encoder scored a literal **0.000** on Banking77 and CLINC and chance
+everywhere else. Padding training menus with labels borrowed from other tasks
+in the mixture — gold answer unchanged, so the example stays valid — moved it
+above chance on all seven held-out tasks.
+
+| task | K | before | after |
+|---|---|---|---|
+| banking77 | 77 | 0.000 | **0.205** (15.8x) |
+| clinc_oos | 151 | 0.000 | **0.180** (27.2x) |
+| massive_intent | 60 | 0.040 | **0.305** (18.3x) |
+| ag_news | 4 | 0.225 | **0.655** (2.6x) |
+| sst5 | 5 | 0.200 | **0.360** (1.8x) |
+
+**Why it works.** The mixture topped out at 20 options while deployments ask
+for 151. A model that has never seen a large menu collapses onto one label
+when handed one — which is what an exact 0.000 looks like, since chance alone
+would have produced ~3 correct in 200. You do not need datasets with large
+menus; you can synthesize them.
+
+Caveat: the mixture also grew 61 → 141 tasks in the same change, so the two
+are not separated here.
+
+## 3. Prompt format took the decoder from chance to usable
+
+A causal backbone with per-option yes/no readout, **no training at all**:
+
+| change | mean x chance |
+|---|---|
+| bare concatenation of state and options | 0.8x |
+| + each option framed as an explicit yes/no question | 2.9x |
+| + a preamble stating the task | ~6.8x |
+| + context budget so `clinc_oos` stops dropping out | ~12x |
+| final, n=200 | **11.5x** |
+
+Same 1.7B model, same architecture, no weights changed. The control that makes
+this convincing is the failure: shortening the option framing to
+`{opt}\ncorrect? answer` **halved** the mean.
+
+**Why it works.** At the readout position the model must be able to tell a
+yes/no question was asked. A bare `...refill: another fill:` reads like
+nothing in its training distribution, so the readout measures noise.
+
+## 4. The packed shared prefix is real, and large
+
+ModernBERT-base, bf16, H100, 50 questions, median of 10:
+
+| state | packed tokens | naive tokens | packed | naive | speedup |
+|---|---|---|---|---|---|
+| ~90 tok | 713 | 3,800 | 9.6 ms | 9.6 ms | 1.00x |
+| ~700 tok | 1,133 | 24,800 | 9.7 ms | 51.7 ms | **5.3x** |
+| ~2.8k tok | 2,573 | 96,800 | 11.0 ms | 263.5 ms | **24.0x** |
+
+Latency is flat in question count: at a 700-token state, 1 and 50 questions
+both take 9.6 ms.
+
+**Caveat worth keeping:** at short states packing buys nothing. 9.6 ms is a
+fixed-overhead floor and both paths hit it.
+
+## 5. Banking77 specialist: 92.3% in 13.5 minutes
+
+ModernBERT-base, 3 epochs, one H100. **In-task** — we trained on 9,839
+Banking77 examples and Jev did not, so this measures what labels buy, not
+which model is better.
+
+| | accuracy | macro-F1 | ECE | Brier |
+|---|---|---|---|---|
+| raw | 0.9233 | 0.9230 | 0.056 | 0.1300 |
+| temperature-scaled | **0.9233** | 0.9230 | **0.029** | 0.1194 |
+
+Temperature scaling behaved exactly as theory requires: **accuracy identical
+to four decimal places** while ECE halves. It is monotonic and cannot reorder
+predictions; had accuracy moved, the implementation would be wrong.
+
+## 6. The contamination guard caught a real leak
+
+`tasksource` contains most common benchmarks, not always under a recognisable
+name. Verified with `scripts/verify_heldout_lineage.py`:
 
 ```
-intent choice          0.817 vs 0.544   b10=108  b01=16   p = 6.0e-18
-multi-label exact set  0.718 vs 0.453   b10=144  b01=25   p = 1.6e-21
+rotten_tomatoes (train)   77.0% of SST-5 test sentences, verbatim
+glue/sst2 (validation)    75.4% of SST-5 dev
+toxic_conversations      100.0% of its rows are Civil Comments rows
 ```
 
-**108 items fixed against 16 broken.** The claim holds, and it is the strongest
-result in this repository. A specialist trained on 395 examples from a general
-checkpoint beats one trained on the same 395 examples from a raw encoder by 27
-points, and the two gates that had completely failed to learn — `G_abusive` at
-0.000 and `G_injection` at 0.125 — now reach 0.429 and 0.750 from the same
-handful of positives.
+`rotten_tomatoes` is the dangerous one: a filter keyed on "sst" reports clean
+while three quarters of the test set leaks. In the live build the guard
+excluded 23 tasks including all of these.
 
-### Against Jev, after the general init
+---
 
-```
-intent choice                    0.817 vs 0.941   p = 1.0e-07   behind
-multi-label exact set            0.718 vs 0.822   p = 3.2e-05   behind
-G_clinical correctness           0.971 vs 0.978   p = 0.63      level
-clinical_oblique recall          0.966 vs 0.793   p = 0.0625    see below
-```
+# What did not work
 
-`G_clinical` correctness is now **statistically indistinguishable from Jev**.
-Intent and multi-label remain significantly behind.
+## Warm-starting from a raw masked LM gives nothing
 
-### A tier that cannot prove its own result
+Reusing the pretrained MLM head at the option marker adds no parameters and
+can be run untrained. ModernBERT-base scored **0.7x chance**, large **2.2x**,
+with a literal 0.0000 on both high-cardinality tasks. A strong bidirectional
+encoder plus a clever output format does not produce a zero-shot decision
+model. The format makes zero-shot *possible*; it does not make it *present*.
 
-Oblique-clinical recall is 0.966 against 0.793, winning 5 items and losing 0.
-That is p = 0.0625. With n = 29 and zero losses, **5 wins is the best possible
-outcome and still cannot reach p < 0.05** — the exact test floors at
-2 × 2⁻⁵ = 0.0625. Two independently trained checkpoints have now both won this
-tier cleanly, 4-0 and 5-0, and neither can be called significant.
+## A 61-task mixture transfers nothing
 
-That is a flaw in our dataset, not in the model. The tier that motivated the
-entire safety argument is too small to ever settle it, and the fix is more
-`clinical_oblique` items, not more training. Recorded here so the number is
-never quoted as a win.
+Held-in control 0.68–0.84 on trained tasks, held-out **0.9x chance** — no
+better than no training. At the time this looked like an architecture verdict.
+It was not: the mixture was capped at 20 options. See result 2.
 
-### The `G_pharmacy` gate is still degenerate
+## Fixing the primitive rendering changed nothing
 
-FPR 0.783, essentially unchanged. It predicts positive on almost everything
-because the slice is 427 positive against 23 negative. The general init did
-not fix it and was never going to: no starting point rescues a gate with 23
-negative examples.
+`score` levels were rendered `"0: very negative: the writer condemns..."` so
+the model scored a bare index, and `noul` options as `"no: a majority would
+not call this toxic"` — a yes/no question about a yes/no answer. Both were
+genuinely wrong and both are fixed. Effect on results: `sst5` 0.270 → 0.220,
+`civil_comments` unchanged. Correct, but not the cause.
 
-## Not yet measured
+## `score` and `noul` stay at chance, and we now know why
 
-- Held-out schema transfer, which is the number that matters for the zero-shot
-  claim and the one we expect to lose on.
-- The healthcare router suite, including the oblique-clinical gate.
-- Anything on `score` or `noul` primitives — Banking77 is `choice` only.
-- Latency served the same way as the reference system. Our 9.6 ms is local
-  compute with no network; the reference's ~400 ms included a 331 ms round
-  trip. Comparing them directly would be dishonest.
+`helpsteer_helpfulness` is the one held-out task still at chance (0.230, CI
+[0.170, 0.290] containing its 0.200 floor). Cause found by inspection: the
+mixture contains **128 `choice` questions, 13 `noul`, and zero `score`**. The
+model never saw an ordinal question. Worse, ordinal data was present and being
+flattened — `yelp_review_full` ships `['1 star' … '5 stars']` and was emitted
+as an unordered menu.
+
+The builder now detects ordinal label sets and emits `Score`. Whether that
+lifts `helpsteer` is **untested**.
+
+## The `G_pharmacy` gate is degenerate and cannot be rescued
+
+FPR **0.783** after the general init, essentially unchanged from 0.826. It
+predicts positive on almost everything because the slice is 427 positive to 23
+negative. No starting checkpoint fixes a gate with 23 negative examples.
+
+## Noise robustness is a dead end
+
+Paired on the same 130 items, clean and degraded both score 121/130, 124 of
+130 get an identical predicted label, McNemar p = 1.0. Only ASR-style term
+substitution bites. **Do not spend augmentation budget here.**
+
+---
+
+# Claims we retracted
+
+Kept deliberately, because a results file that only grows in one direction is
+not evidence.
+
+| claim | why it was wrong |
+|---|---|
+| Banking77 zero-shot 0.325 (25x chance) | measured at n=40; at n=200 it is 0.205 |
+| "OpenJev beats Jev at oblique clinical detection" | 5-0 on items but p = 0.0625 at n=29 |
+| `G_pharmacy` 0.942 vs Jev's 0.880, our best gate | class imbalance; our FPR is 0.783 |
+| "The encoder cannot generalize" | true of a 61-task mixture, not the architecture |
+| "The warm start is the cheap lever" | it gives nothing; the data stage does the work |
+| Precision recoverable by inverting `confidence` | real but ≤0.018 and no extra threshold granularity |
+
+## A tier that cannot prove its own result
+
+`clinical_oblique` recall is 0.966 against Jev's 0.793, winning 5 items and
+losing 0. That is p = 0.0625. **With n = 29 and zero losses, 5 wins is the best
+achievable outcome** — the exact test floors at 2 × 2⁻⁵. Two independently
+trained checkpoints have won this tier cleanly, 4-0 and 5-0, and neither is
+significant. The tier that motivated the safety argument is too small to
+settle it. The fix is more items, not more training.
+
+---
+
+# Not yet measured
+
+- Decoder calibration head on the mixture (running).
+- Whether ordinal tasks lift `helpsteer` (builder fixed, not retrained).
+- Latency served the same way as Jev. Our 9.6 ms is local compute; Jev's
+  ~400 ms included a 331 ms round trip from India.
+- Expected cost per decision with real per-class prices, which is the metric
+  that should actually decide deployment.

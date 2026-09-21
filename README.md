@@ -1,181 +1,136 @@
-# OpenJev
+<h1 align="center">OpenJev</h1>
 
-**Open System One models you can train on your own data.**
+<p align="center">
+  <b>Typed decisions from a small model you can train yourself.</b><br>
+  State in, typed answers with calibrated probabilities out. No text generation.
+</p>
 
-A System One model takes some state — a support ticket, an email, a JSON
-document — plus a set of typed questions, and returns a typed answer with a
-probability for every option. It does not generate text. There is nothing to
-parse, no schema to validate, and no free-text field for an answer to escape
-through.
+<p align="center">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
+  <img alt="Python" src="https://img.shields.io/badge/python-3.10%2B-blue">
+  <img alt="Status" src="https://img.shields.io/badge/status-research%20preview-orange">
+  <img alt="Backbone" src="https://img.shields.io/badge/backbone-ModernBERT%20%7C%20Qwen3-green">
+  <a href="docs/results.md"><img alt="Results" src="https://img.shields.io/badge/results-measured%2C%20with%20CIs-brightgreen"></a>
+  <a href="https://www.buymeacoffee.com/"><img alt="Buy Me A Coffee" src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-FFDD00?logo=buy-me-a-coffee&logoColor=black"></a>
+</p>
+
+---
+
+## Quick start
+
+```bash
+git clone https://github.com/S1LV3RJ1NX/openjev && cd openjev
+uv sync
+```
+
+Train a decision model on your own task in about a minute:
+
+```bash
+uv run python scripts/train.py --task tasks/healthcare_router --epochs 6 --bs 8
+uv run python scripts/eval_router.py --ckpt checkpoints/healthcare_router/model.pt
+```
+
+Score any held-out schema with no training at all:
+
+```bash
+uv run python scripts/eval_heldout.py --decoder --backbone Qwen/Qwen3-1.7B --limit 200
+```
+
+## How to use it
+
+Give it a state and some typed questions. Every question is answered in **one
+forward pass over a shared state**, so asking twenty costs about the same as
+asking one.
 
 ```python
+from openjev import Choice, Score, Noul
+
 result = model.predict(
     state="I need a refill on my thyroid tablets, and are you open on Sunday?",
     questions={
         "intent":      Choice(instructions="What is this about?",
-                              criteria={"refill": "...", "store_hours": "...", ...}),
+                              criteria={"refill": "another fill of a prescription",
+                                        "store_hours": "when a branch is open"}),
         "urgency":     Score(instructions="How time-critical?",
                              criteria=["can wait", "today", "immediate"]),
         "needs_human": Noul(instructions="Does this need a human?"),
     },
 )
-result["intent"].probabilities    # {"refill": 0.71, "store_hours": 0.24, ...}
-result["intent"].label            # "refill"
-result["urgency"].score           # 1.30 — the expected level, not the argmax
-result["urgency"].is_unimodal     # False means that 1.30 describes nothing
+
+result["intent"].probabilities      # {"refill": 0.71, "store_hours": 0.24, ...}
+result["intent"].confidence         # chance-corrected, comparable across menus
+result["urgency"].score             # 1.30 — the expected level, not the argmax
+result["urgency"].is_unimodal       # False means that 1.30 describes nothing
 result["needs_human"].probabilities["true"]
 ```
 
-`score` returns a **number**, which is the point of it being a separate
-primitive: a distribution of `[0.01, 0.69, 0.29, 0.01]` over "can wait / a few
-days / today / blocking" gives 1.30, so mostly *a few days* with real pull
-toward *today*. That is something you can threshold or price. The argmax, `1`,
-throws it away.
+| primitive | returns | use for |
+|---|---|---|
+| `choice` | one of N options, with probabilities | routing, intent, classification |
+| `score` | a **number** on an ordered rubric | urgency, severity, quality |
+| `noul` | P(true) | flags, gates, multi-label |
 
-Check `is_unimodal` before trusting it. On an input that is either trivial or
-an emergency, `[0.45, 0.02, 0.03, 0.50]` averages to 1.58 — a level with 2%
-probability, looking like a calm middling answer while the model believes two
-contradictory things.
+Multi-label is `noul` per label, not `choice`: a message can be about a refill
+*and* opening hours, and a softmax cannot say so.
 
-OpenJev is an attempt to build, in the open, the class of model TypeSafe AI
-introduced with Jev. It started by using Jev — reading its docs, calling its
-API, and measuring its behaviour on tasks we cared about — and then asking what
-it would take to build something with the same shape that anyone can train on
-their own data and run on their own hardware. The credit for the idea, and for
-the API design we deliberately follow, belongs to them.
+## Two recipes
 
-Three primitives, borrowed from that API shape so that code written against
-either runs against the other and comparisons are like-for-like:
+**Fine-tune on your task.** 395 examples, 38 seconds, one GPU.
+
+**Start from the general checkpoint first.** Same data, same time — worth
+**+27 points**. This is the project's central claim and it is measured:
+intent 0.544 → 0.817, multi-label 0.453 → 0.718, p = 6e-18.
+
+```bash
+uv run python scripts/train.py --task tasks/your_task \
+    --init-from checkpoints/mixture_big/model.pt --epochs 6
+```
+
+## Where Jev wins
+
+We measured TypeSafe's Jev against our own suite and it is ahead on the things
+that matter most, so use it if those matter more than self-hosting:
+
+- **Zero-shot accuracy.** 0.820 on Banking77 having never seen it; our best
+  untrained number is 0.205.
+- **Routing quality.** Router intent 0.941 against our 0.817 (p = 1e-07).
+- **Gate precision.** `G_clinical` false-positive rate 0.006 against our 0.035.
+- **Scale.** 255 options and a 32k context, out of the box.
+
+Where we are level or ahead: `G_clinical` correctness (p = 0.63, no detectable
+difference), full-precision probabilities (Jev quantizes to 0.01, putting
+71.9% of values at a hard zero), determinism (Jev has none and no seed), and
+cost — this runs on your own hardware with no data leaving it.
+
+## Where this architecture fits
+
+**Good fit:** high-volume routing, triage, guardrails and tool selection where
+you have labels; long states asked many questions at once; regulated data that
+cannot leave your network; anything needing a real probability to threshold on.
+
+**Poor fit:** you have no labels and need it to work on arbitrary schemas
+today — use Jev. Short states with one or two questions — the shared prefix
+buys nothing and a plain classifier is simpler.
+
+## Docs
 
 | | |
 |---|---|
-| `choice` | pick one of N labelled options |
-| `score` | place the state on an ordered rubric |
-| `noul` | a yes/no question returning P(true) |
+| [Results](docs/results.md) | Every measurement, what worked and what did not |
+| [Architecture](docs/architecture.md) | The design, with diagrams, and why each choice |
+| [Evaluation](docs/evaluation.md) | The two suites and the contamination guard |
+| [Prior art](docs/prior-art.md) | UniMC, PCW, CORN, ADB — most of this exists |
 
----
+## Honesty policy
 
-## Status: first result in, no released checkpoint
-
-The architecture trains. On Banking77, fine-tuned from ModernBERT-base in
-**13.5 minutes on one H100**, it reaches **92.3% accuracy** (macro-F1 0.923,
-ECE 0.029 after calibration) on a 77-way task, against 82.0% for a zero-shot
-commercial reference on the same test split.
-
-**Read that carefully**: we trained on 9,839 Banking77 examples and the
-reference did not. It measures what having labels buys you, not which model is
-better, and it says nothing about zero-shot ability. Full numbers and caveats
-in [`docs/results.md`](docs/results.md).
-
-What exists today:
-
-- `openjev/` — the typed-decision format, a metric suite, the packer and model
-- `tasks/` — two evaluation suites, with reference baselines measured on an
-  existing commercial system so we know what we are aiming at
-- `scripts/` — a readable training loop and dataset builders
-- `docs/` — the architecture, the evaluation, prior art, results
-
-Multi-task training on 61 tasksource tasks learns those tasks (0.84 on ethos,
-0.675 on three-way MNLI) but transfers **nothing** to held-out schemas —
-0.9x chance, no better than no training at all. That is a mixture problem,
-not an architecture verdict: 61 tasks against the ~282 where Flan says the
-gain accrues, with option counts capped at 20 while the held-out suite runs
-to 151.
-
-Not done yet: a mixture large and diverse enough to actually test
-generalization, the `score` and `noul` primitives, and a released
-checkpoint.
-
----
-
-## Why build this
-
-Most agent pipelines spend a large fraction of their calls on classification,
-routing and tool selection — deciding *which* of a known set of things applies.
-That work does not need a model that writes. Removing generation removes the
-token-by-token decode loop, which is where most of the latency and cost sits.
-
-The properties that matter for that job are unglamorous: the output is always a
-valid member of the set you supplied, you get a probability on every option so
-your own code can decide when to escalate, and the whole thing is small enough
-to self-host, which matters when the data cannot leave your network.
-
-## What is planned
-
-- A ModernBERT-based encoder with one shared scoring head over option markers,
-  so a new label set changes the *input* rather than the weights
-- Many questions about one state in a single forward pass, via a shared state
-  prefix with block-diagonal attention
-- Ordinal handling for `score` that a plain softmax cannot express
-- Calibration fitted per question type and option count
-- A trainer that runs on a consumer GPU, and a converter so you can bring a CSV
-  or a `tasksource` task
-
-See [`docs/architecture.md`](docs/architecture.md) for the design, and
-[`docs/results.md`](docs/results.md) for measurements. The
-reasoning behind each choice.
-
-## The evaluation
-
-Built before the model, on purpose. An evaluation written after you see your
-results is an evaluation you tuned.
-
-**`tasks/healthcare_router`** — 988 synthetic pharmacy-routing items across 18
-tiers, testing compound utterances, negation, oblique safety signals,
-transcription noise and adversarial input. Ours, handwritten, no real user data.
-
-**`tasks/heldout`** — seven public tasks, 4,200 rows, covering all three
-primitives with option counts from 2 to 151. This is the generalization check:
-entire *schemas* are held out, never random rows.
-
-Contamination here is the default rather than the exception. `tasksource`, the
-obvious training source, contains most common benchmarks — and not always under
-a recognisable name. We found that `rotten_tomatoes` contains 77% of SST-5's
-test sentences verbatim, and that `toxic_conversations` is 100% Civil Comments
-rows. So:
-
-```python
-from openjev.heldout import assert_training_mixture_clean
-assert_training_mixture_clean(mixture_names)   # call BEFORE training
-```
-
-See [`docs/evaluation.md`](docs/evaluation.md).
-
-## On the numbers in these docs
-
-Where a figure is attributed to TypeSafe's Jev, we measured it ourselves
-against the public API (model `jev-1.13.0`) on 20 September 2026, using the
-sample sizes stated alongside each number. Those are black-box measurements of
-a hosted endpoint on one day from one network location, not statements about
-how that system is built — its architecture, size and training data are not
-public. Treat them as a benchmark reference point, reproduce them before
-relying on them, and read the caveats, which are recorded next to the results
-rather than buried.
-
-We have published no comparison in our own favour, because we have nothing to
-compare yet.
-
-## Install
-
-```bash
-uv add openjev        # not yet on PyPI; clone for now
-```
-
-```bash
-git clone https://github.com/<owner>/openjev && cd openjev && uv sync
-uv run python -c "from openjev import Task; print(len(Task.load('tasks/heldout/banking77')))"
-```
-
-## Contributing
-
-The most useful contributions right now are adversarial: find a place where the
-evaluation is saturated, mislabelled, or measuring the wrong thing. Several
-tiers in the router suite are already at ceiling and are documented as
-regression floors rather than scoring targets — more of those are worth
-knowing about.
+Every Jev figure was measured by us against the public API (`jev-1.13.0`,
+20 Sep 2026) at stated sample sizes, with the caveats kept next to the
+numbers. Negative results are documented as prominently as positive ones, and
+[docs/results.md](docs/results.md) contains a list of claims we retracted after
+better measurement. No claim of parity with Jev is made anywhere, because the
+numbers do not show it.
 
 ## Licence
 
-Apache 2.0. Dataset rows retain their upstream licences; see
-[`tasks/heldout/README.md`](tasks/heldout/README.md). Two datasets with no
-usable licence are not redistributed here and are regenerated locally instead.
+Apache 2.0. Dataset rows keep their upstream licences; see
+[`tasks/heldout/README.md`](tasks/heldout/README.md).

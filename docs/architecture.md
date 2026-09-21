@@ -5,6 +5,46 @@ this is implemented yet.** Where a claim rests on measurement it says so and
 gives the sample size; where it rests on published work it cites it; where it
 is a bet, it says that too.
 
+## At a glance
+
+```mermaid
+flowchart LR
+    S["state<br/><i>ticket, email, JSON</i>"] --> P
+    Q1["Q1 choice<br/>77 options"] --> P
+    Q2["Q2 score<br/>4 levels"] --> P
+    Q3["Q3 noul"] --> P
+    P["packed sequence<br/>shared prefix +<br/>block-diagonal mask"] --> E["encoder<br/><b>one forward pass</b>"]
+    E --> M["gather option markers"]
+    M --> H["shared scorer<br/>Linear(d,1)<br/><i>no per-class weights</i>"]
+    H --> R1["probs over Q1's options"]
+    H --> R2["probs over Q2's levels"]
+    H --> R3["P(true)"]
+```
+
+Nothing is generated. The cost of asking more questions is the length of the
+questions, not another pass over the state.
+
+## Why the output layer has no per-class weights
+
+```mermaid
+flowchart TB
+    subgraph bad ["Ordinary classifier — label set baked into weights"]
+        A1[hidden state] --> A2["Linear(d, 77)"] --> A3["fixed 77 classes"]
+        A4["new label ⇒ new column ⇒ retrain"]
+    end
+    subgraph good ["OpenJev — options are input"]
+        B1["option text in the sequence"] --> B2["marker hidden state"]
+        B2 --> B3["Linear(d, 1), shared"] --> B4["one score per option"]
+        B5["new label ⇒ new input ⇒ no retraining"]
+    end
+```
+
+This is what makes a runtime-variable menu possible at all, and it is the
+prerequisite for zero-shot transfer. Measured support: descriptive option
+*keys* with no descriptions, and opaque keys (`option_0`…) carrying the real
+descriptions, score the same 75.0% on the same items. The semantics are read
+from wherever they sit.
+
 ## The core idea: options are input, not output
 
 A normal classifier ends in `Linear(d, n_classes)`, so the label set is baked
@@ -48,6 +88,22 @@ each question sees the state and its own options but not its siblings.
   bidirectional    attends to STATE and       attends to STATE and
   among themselves its own block only         its own block only
 ```
+
+The attention mask, which is the whole mechanism:
+
+```mermaid
+flowchart LR
+    B1["Q1 block"] -- "may attend" --> ST["STATE prefix"]
+    B2["Q2 block"] -- "may attend" --> ST
+    B1 -- "may attend" --> B1
+    B2 -- "may attend" --> B2
+    B1 x-- "BLOCKED" --x B2
+```
+
+Verified rather than assumed: adding ten sibling questions that explicitly
+assert the answer moved the target's probability vector by 0.0022 mean
+absolute deviation against a **0.0029 replication noise floor** — below the
+floor, with 0 of 30 argmax flips. One question cannot prompt-inject another.
 
 The masking machinery is established. **Parallel Context Windows**
 ([arXiv:2212.10947](https://arxiv.org/abs/2212.10947)) gives the formalism and
@@ -97,6 +153,25 @@ run through SDPA, which is O(L²) and gets no block-sparsity benefit, and at
 these sequence lengths it is already flat. FlexAttention's `BlockMask` becomes
 relevant only at much longer packed sequences. Reproduce with
 [`scripts/bench_packing.py`](../scripts/bench_packing.py).
+
+## Two recipes, and which to use
+
+```mermaid
+flowchart TB
+    RAW["raw ModernBERT"] -->|"fine-tune on 395 examples"| A["intent 0.544<br/>multi-label 0.453"]
+    RAW -->|"train on 141-task mixture<br/>+ label-space augmentation"| GEN["general checkpoint<br/><i>above chance on 6/7 held-out</i>"]
+    GEN -->|"same 395 examples, same 38s"| B["intent <b>0.817</b><br/>multi-label <b>0.718</b>"]
+    A -.->|"+27 points, p = 6e-18"| B
+```
+
+**Recipe A**, straight fine-tune, is one command and works. **Recipe B**,
+via the general checkpoint, costs nothing extra at specialist-training time
+and is worth 27 points. The two gates that never learned to fire at all under
+recipe A — `G_abusive` at 0.000, `G_injection` at 0.125 — reach 0.429 and
+0.750 under recipe B from the same handful of positive examples.
+
+That difference *is* the argument for the project shipping a general model
+rather than only a trainer.
 
 ## Backbone and warm start
 
