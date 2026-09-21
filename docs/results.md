@@ -16,7 +16,8 @@ intervals over examples; paired comparisons use exact McNemar.
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
 | Banking77, never seen it | 0.355 | **0.820** | Jev, clearly |
-| CLINC-150 (K=151), never seen it | 0.420 | not measured | 63x chance |
+| CLINC-150 (K=151), never seen it | 0.518 | not measured | 78x chance |
+| Held-out suite, 5 of 7 tasks | 17.6x chance | not measured | `score`/`noul` still at chance |
 | Router intent | 0.817 | **0.941** | Jev, p = 1e-07 |
 | Router multi-label exact set | 0.718 | **0.822** | Jev, p = 3e-05 |
 | `G_clinical` correctness | 0.971 | 0.978 | **level**, p = 0.63 |
@@ -166,7 +167,36 @@ Temperature scaling behaved exactly as theory requires: **accuracy identical
 to four decimal places** while ECE halves. It is monotonic and cannot reorder
 predictions; had accuracy moved, the implementation would be wrong.
 
-## 7. The contamination guard caught a real leak
+## 7. Recasting `choice` as yes/no breaks the degenerate binary
+
+Three encoder runs, identical except for the augmentation flags, same
+143-task `mixture_ord2`, one epoch each. Harness sanity 1.000, held-in
+control 1.4–2.3x.
+
+| held-out task | no augmentation | `--scale-prob 0.5` | `+ --noul-prob 0.25` |
+|---|---|---|---|
+| clinc_oos (K=151) | 0.490 | 0.445 | **0.518** |
+| banking77 (K=77) | 0.187 | 0.212 | **0.278** |
+| massive_intent (K=60) | **0.362** | 0.348 | 0.298 |
+| ag_news | **0.560** | 0.492 | 0.408 |
+| sst5 (`score`) | 0.342 | **0.348** | 0.308 |
+| helpsteer (`score`) | 0.110 | 0.128 | **0.222** |
+| civil_comments (`noul`) | 0.498 | 0.500 | **0.528** |
+| civil_comments macro-F1 | 0.333 | 0.333 | **0.403** |
+| **mean x chance** | 16.5x | 15.7x | **17.6x** |
+
+The macro-F1 row is the one that matters. A binary task at 0.333 macro-F1 is
+a model answering the same way every time, and it had done that in every run
+until this one. Converting `choice` questions into "is it this one?" gives
+the primitive 121 tasks' worth of supervision it was not getting from the 13
+labelled for it, and the constant answer goes away.
+
+**It is not a win yet.** At n=600 the CI is [0.490, 0.572] against a 0.500
+floor, so the accuracy gain is not significant; only the collapse is fixed.
+`helpsteer` doubles, 0.110 to 0.222, but lands exactly on its 0.233
+majority-class baseline, which is not skill either.
+
+## 8. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:
@@ -207,17 +237,48 @@ not call this toxic"` — a yes/no question about a yes/no answer. Both were
 genuinely wrong and both are fixed. Effect on results: `sst5` 0.270 → 0.220,
 `civil_comments` unchanged. Correct, but not the cause.
 
-## `score` and `noul` stay at chance, and we now know why
+## Ordinal scale augmentation is a null result
 
-`helpsteer_helpfulness` is the one held-out task still at chance (0.230, CI
-[0.170, 0.290] containing its 0.200 floor). Cause found by inspection: the
+The two held-out tasks still at chance are both non-`choice`:
+`helpsteer_helpfulness` at 0.222, CI [0.188, 0.252] containing its 0.200
+floor, and `civil_comments` at 0.528, CI [0.490, 0.572] containing 0.500.
+Result 7 fixed the binary's degeneracy without moving its accuracy off the
+floor. This is the ordinal half, and it failed outright.
+
+Cause found by inspection: the
 mixture contains **128 `choice` questions, 13 `noul`, and zero `score`**. The
 model never saw an ordinal question. Worse, ordinal data was present and being
 flattened — `yelp_review_full` ships `['1 star' … '5 stars']` and was emitted
 as an unordered menu.
 
-The builder now detects ordinal label sets and emits `Score`. Whether that
-lifts `helpsteer` is **untested**.
+The builder now detects ordinal label sets and emits `Score`, which took the
+mixture from 0 to 9 ordinal tasks. Six of those nine are the same
+three-level negative/neutral/positive scale, against a held-out task wanting
+a five-level helpfulness judgement, so the obvious next move was to
+synthesize the missing diversity the way label-space augmentation did for
+cardinality: merge adjacent levels and remap the gold, and restate a scale
+in another vocabulary of the same length within its semantic family.
+
+**It does nothing.** Ablated at `--scale-prob 0` against 0.5, everything
+else held fixed:
+
+| | `--scale-prob 0` | `--scale-prob 0.5` |
+|---|---|---|
+| helpsteer | 0.110 (0.6x) | 0.128 (0.6x) |
+| sst5 | 0.342 (1.7x) | 0.348 (1.7x) |
+| mean over the suite | **16.5x** | 15.7x |
+
+Both ordinal tasks land on the same multiple of chance either way, and the
+suite mean is slightly *worse* with the augmentation. The mechanism is
+correct and tested — gold stays on the right level, merges stay contiguous
+and monotone — it simply is not the bottleneck. The gain from 9.7x to ~16x
+came from rebuilding the mixture, not from this.
+
+It stays in the tree behind a flag that defaults to off, because the
+hypothesis is worth retesting once there is real ordinal data to train on.
+`helpsteer` sitting *below* its own floor in both arms, at 0.6x with gold
+skewed high (58/122/140/140/140), points at something systematic rather
+than at scarcity.
 
 ## The `G_pharmacy` gate is degenerate and cannot be rescued
 
