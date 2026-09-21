@@ -25,9 +25,15 @@ mixture rebuild in the same change, moves a 77-way held-out menu from a
 literal $0.000$ to $0.205$; a model that has never seen a large menu
 collapses onto one label when handed one, though we did not separate the
 two interventions and so cannot attribute the gain cleanly. Scaling and
-auditing the mixture to 279 tasks reaches \textbf{21.9$\times$ chance},
-with all seven held-out tasks clearing their floor and a 151-way menu at
-94.9$\times$.
+auditing the mixture to 279 tasks reaches \textbf{21.9$\times$ chance}
+on an encoder, with all seven held-out tasks clearing their floor and a
+151-way menu at 94.9$\times$. Swapping the encoder for rank-16 LoRA
+adapters on a 1.7B decoder, holding the data fixed, reaches
+\textbf{32.7$\times$}: every task improves, every task also clears its
+majority-class baseline, and a 151-way menu reaches 118$\times$. This
+settles our architecture choice in favour of the decoder, since merging
+the adapter removes the latency argument for the encoder
+($1.07\times$).
 
 \paragraph{Against Jev, the result splits cleanly on one axis: labels.}
 Given 395 labelled examples and 258 seconds, a rank-16 LoRA adapter on
@@ -39,10 +45,14 @@ asymmetric and in our favour}, since we are fine-tuned on that task and
 Jev is zero-shot on it, so the claim it supports is that a few hundred
 labels are worth more than the gap between an open 1.7B model and a
 closed API. The adapter is $87$\,MB and outperforms opening all
-$1{,}725$M parameters ($0.929$, $3.4$\,GB). Without labels the picture
-inverts: $0.290$ on Banking77 against Jev's $0.820$, and applied zero-shot
-to the routing task our general checkpoint reaches intent $0.601$ with a
-clinical-gate recall of $0.111$, which is not a usable gate.
+$1{,}725$M parameters ($0.929$, $3.4$\,GB). Curiously, initialising that
+adapter from our general checkpoint rather than from base weights makes
+it \emph{worse} ($0.953$, $p=0.012$), reversing a $+36$ point gain from
+the same intervention on the encoder: staged fine-tuning pays only when
+the base model cannot perform the task form at all. Without labels the
+picture inverts: $0.728$ on Banking77 against Jev's $0.820$, and applied
+zero-shot to the routing task our general encoder reaches intent $0.601$
+with a clinical-gate recall of $0.111$, which is not a usable gate.
 
 \paragraph{Takeaway.} Use Jev, or something like it, when you need typed
 decisions on a schema you have no labels for; that capability is real and

@@ -316,3 +316,59 @@ Outcome 3 is currently the most likely. It is not a failure — the suite went
 from 0.9x to 17.6x chance and the fine-tuned model beats the reference API
 — but it is a different claim from the one we set out to make, and it will
 be reported as such.
+
+
+## S-D6: intermediate-task transfer helps the encoder and hurts the decoder
+
+The LoRA form of the +36-point result. Initialise the router adapter
+from the general adapter instead of from base Qwen3, train identically.
+
+| init | intent accuracy | 95% CI |
+|---|---|---|
+| base Qwen3 | **0.979** | [0.962, 0.994] |
+| general adapter | 0.953 | [0.926, 0.973] |
+
+Paired McNemar on the same 338 items: **p = 0.012**, base-only-right 10,
+general-only-right 1. The general initialisation is significantly worse.
+
+This is the direct opposite of the encoder result, where the same move
+was worth **+36 points**, and the contradiction is the interesting part.
+
+The encoder had to learn what a menu is from 450 router examples, so the
+mixture supplied a capability it did not otherwise have. Base Qwen3
+already reads menus from pretraining, so the mixture supplies nothing
+new and its 279-task specialisation is net interference on a narrow
+14-intent problem. Negative transfer, and the second time this project
+has measured it.
+
+**The practical rule.** Two-stage fine-tuning is worth it when your base
+model cannot do the task form at all. Once it can, train the task
+adapter directly from base and skip the intermediate stage. The general
+adapter is still the right artifact for zero-shot, where there is no
+task data to train on. It is the wrong starting point when there is.
+
+
+## G-F1b: the decoder transfers better and deploys worse
+
+Ran the general LoRA adapter zero-shot on the router, the same check the
+encoder got.
+
+| | encoder | LoRA decoder |
+|---|---|---|
+| held-out suite | 21.9x | **32.7x** |
+| router intent, zero-shot | **0.601** | 0.467 |
+| router multi-label exact | 0.243 | 0.207 |
+| G_clinical recall | 0.111 | 0.380 |
+| G_pharmacy recall / FPR | - | 0.440 / 0.696 |
+
+**The ranking reverses.** The decoder wins every one of seven public
+benchmarks and loses the one task with an operational shape: packed
+multi-question states, compound multi-label answers, gates with recall
+floors.
+
+Neither is deployable zero-shot, so this does not change the
+architecture call, which rests on transfer where no labels exist and
+fine-tuned accuracy where they do. The decoder wins both. What it does
+change is how much weight the 32.7x deserves. Benchmark transfer
+measured what we asked of it and did not predict readiness on a real
+task, and running only the suite would have hidden that.

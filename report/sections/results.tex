@@ -74,7 +74,56 @@ majority-class baseline rather than $1/K$, \texttt{civil\_comments} wins
 outright ($0.683$ vs $0.500$, $p<10^{-15}$) but \texttt{helpsteer} sits on
 the line: $0.262$ against a $0.233$ baseline, $p = 0.050$. Six of seven
 are unambiguous; the seventh beats chance while only matching the trivial
-baseline.
+baseline. The decoder of Section~\ref{sec:res-declora} removes this
+caveat.
+
+\subsection{A LoRA decoder transfers substantially better}
+\label{sec:res-declora}
+
+The same mixture, the same augmentation, rank-16 adapters on
+Qwen3-1.7B instead of the encoder. This was the experiment our
+pre-registered ablation plan named as deciding the architecture, and it
+decides it clearly. Harness sanity $1.000$; held-in control
+$1.5$--$2.5\times$, against the encoder's $1.1$--$2.3\times$.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrcrr}
+\toprule
+task & $K$ & accuracy & 95\% CI & $\times$ chance & encoder \\
+\midrule
+\texttt{clinc\_oos}      & 151 & \textbf{0.783} & [0.752, 0.817] & \textbf{118.3} & 0.628 \\
+\texttt{massive\_intent} &  60 & \textbf{0.773} & [0.738, 0.805] & \textbf{46.4}  & 0.473 \\
+\texttt{banking77}       &  77 & \textbf{0.728} & [0.693, 0.765] & \textbf{56.1}  & 0.290 \\
+\texttt{ag\_news}        &   4 & 0.803 & [0.772, 0.838] & 3.2  & 0.735 \\
+\texttt{sst5}            &   5 & 0.438 & [0.400, 0.475] & 2.2  & 0.412 \\
+\texttt{civil\_comments} &   2 & 0.688 & [0.655, 0.727] & 1.4  & 0.683 \\
+\texttt{helpsteer}       &   5 & 0.282 & [0.247, 0.320] & 1.4  & 0.262 \\
+\midrule
+\multicolumn{4}{l}{mean multiple of chance} & \textbf{32.7} & 21.9 \\
+\bottomrule
+\end{tabular}
+\caption{Held-out transfer, LoRA decoder against the encoder on identical
+data and identical items. Every task improves.}
+\label{tab:declora}
+\end{table}
+
+Two results matter here beyond the mean. First, \textbf{every task now
+beats its majority-class baseline}, not merely $1/K$: \texttt{helpsteer}
+reaches $0.282$ against $0.233$ at $p = 0.0025$, removing the single
+caveat that qualified the encoder result. Second, \textbf{Banking77
+zero-shot rises from $0.290$ to $0.728$} against the commercial
+reference's $0.820$. A fifty-three point deficit becomes nine.
+
+\paragraph{The architecture decision.} Our ablation registry fixed three
+possible outcomes before this run so that the choice could not be
+rationalised afterwards. Latency does not separate the backbones once the
+adapter is merged ($1.07\times$, Section~\ref{sec:res-latency}), and a
+1.7B model fits a consumer GPU, so zero-shot transfer was the deciding
+axis. The decoder takes it by eleven multiples of chance. We therefore
+recommend the LoRA decoder as the default artifact and retain the encoder
+for deployments where p95 latency binds (20\,ms against 56\,ms) or where
+a 0.6\,GB footprint outweighs nine points of zero-shot accuracy.
 
 \begin{figure}[t]
 \centering

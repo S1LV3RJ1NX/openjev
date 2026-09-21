@@ -55,6 +55,14 @@ encoder result is gone.
 **Banking77 zero-shot went from 0.290 to 0.728** against the reference
 API's 0.820. We were 53 points behind; we are now 9.
 
+### The catch: it deploys worse than it benchmarks
+
+Zero-shot on the router, the decoder scores intent **0.467** against the
+encoder's **0.601**, despite winning all seven benchmarks. The ordering
+reverses on the one task with an operational shape. Neither is usable
+zero-shot, so the architecture call stands, but 32.7x is a benchmark
+number and not a readiness claim.
+
 ### The architecture decision
 
 This settles the question the ablation registry was built around. Latency

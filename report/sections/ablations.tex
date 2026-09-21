@@ -97,15 +97,57 @@ even when it loads perfectly, because a 4.2M head on a frozen backbone
 barely fits its own training mixture. Only the harness sanity task caught
 it.
 
+\subsection{Intermediate-task transfer helps the encoder and hurts the
+decoder}
+\label{sec:abl-sd6}
+
+The clearest illustration that an intervention is not good in itself, only
+good relative to what the base model already does. Initialising the
+router adapter from the general adapter of Section~\ref{sec:res-declora},
+rather than from base Qwen3, and training identically:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+initialisation & intent accuracy & 95\% CI \\
+\midrule
+base Qwen3          & \textbf{0.979} & [0.962, 0.994] \\
+general adapter     & 0.953 & [0.926, 0.973] \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Paired McNemar on the same 338 items: $p = 0.012$, with 10 items the
+base initialisation gets right that the general one misses against 1 in
+the other direction. The general initialisation is significantly
+\emph{worse}.
+
+On the encoder path the identical intervention was worth $+36$ points.
+The contradiction resolves on what each backbone lacked. The encoder had
+to learn the very notion of scoring against a menu from 395 router
+examples, so the mixture supplied a missing capability. Base Qwen3
+already reads menus from pretraining, so the mixture supplies nothing new
+and its 279-task specialisation acts as interference on a narrow
+fourteen-intent problem. This is negative transfer, the second instance
+measured in this work.
+
+The practical rule we draw: stage your fine-tuning when the base model
+cannot perform the task \emph{form} at all, and train the task adapter
+directly from base once it can. The general adapter remains the right
+artifact for zero-shot use, where by definition no task data exists to
+train on; it is the wrong starting point when task data does exist.
+
 \subsection{Interventions that worked}
 
 For completeness, the positive results, ordered by effect size: label-space
-augmentation (\S\ref{sec:res-data}); mixture scale and auditing
-($17.6\times \to 21.9\times$); prompt format on a decoder backbone
-($0.8\times \to 11.5\times$); intermediate-task transfer ($+36$ points at
-395 target examples); LoRA over full fine-tuning ($0.979$ vs $0.929$ at
-$1/39$ the size); and adapter merging ($1.96\times \to 1.07\times$
-latency).
+augmentation (\S\ref{sec:res-data}); the decoder backbone over the encoder
+($21.9\times \to 32.7\times$, \S\ref{sec:res-declora}); mixture scale and
+auditing ($17.6\times \to 21.9\times$); prompt format on a decoder backbone
+($0.8\times \to 11.5\times$); intermediate-task transfer on the encoder
+only ($+36$ points at 395 target examples, and see
+\S\ref{sec:abl-sd6} for where it reverses); LoRA over full fine-tuning
+($0.979$ vs $0.929$ at $1/39$ the size); and adapter merging
+($1.96\times \to 1.07\times$ latency).
 
 \subsection{Methodological caveat}
 

@@ -7,8 +7,10 @@ The split is clean and it is about labels. \textbf{Given roughly 400
 labelled examples for your task, a 1.7B model with an 87\,MB adapter beats
 a commercial typed-decision API} on a hardened routing benchmark, runs on
 your own hardware, returns full-precision probabilities, and is
-deterministic. \textbf{Without labels, it does not come close}: $0.290$ on
-Banking77 against roughly $0.820$.
+deterministic. \textbf{Without labels, it is close but still behind}:
+$0.728$ on Banking77 against roughly $0.820$. That margin was $0.290$
+against $0.820$ on our encoder, and the decoder narrowed a fifty-three
+point deficit to nine without any new data.
 
 Both halves matter. The first says the capability is not gated behind
 scale or a vendor. The second says the vendor's actual product, working
@@ -91,11 +93,33 @@ levels; we use the ordering only in rendering and in an expectation-based
 readout. Rank-consistent objectives~\cite{corn} and adaptive rejection
 boundaries~\cite{adb} are the obvious next step and are not implemented.
 
-\paragraph{Zero-shot on a real task is much worse than on benchmarks.}
-$21.9\times$ chance on the held-out suite coexists with intent $0.601$ and
-a clinical-gate recall of $0.111$ on the routing task. Safety gates in
-particular appear to need task supervision, and we would not deploy any
-zero-shot gate on this evidence.
+\paragraph{Zero-shot on a real task is much worse than on benchmarks, and
+benchmark transfer does not rank models on it.} $21.9\times$ chance on the
+held-out suite coexists with intent $0.601$ and a clinical-gate recall of
+$0.111$ on the routing task. Safety gates in particular appear to need
+task supervision, and we would not deploy any zero-shot gate on this
+evidence.
+
+The stronger version of this caveat emerged when we ran the same check on
+the decoder. It transfers far better on the benchmark suite
+($32.7\times$ against $21.9\times$, every task improved) and yet does
+\emph{worse} zero-shot on the routing task: intent $0.467$ against the
+encoder's $0.601$, with multi-label exact set $0.207$ and a pharmacy gate
+at $0.440$ recall and $0.696$ false-positive rate. Its clinical-gate
+recall is higher than the encoder's ($0.380$ against $0.111$) and still
+nowhere near usable.
+
+So the ordering that held across seven public benchmarks reverses on the
+one task with an operational shape: multi-question packing, compound
+multi-label answers, and gates with recall floors. We report this because
+it undercuts the natural reading of our own headline result. Held-out
+benchmark transfer measured what we asked it to measure and did not
+predict deployment readiness, and we would not have discovered that by
+running the suite alone. It does not change the architecture choice,
+which rests on zero-shot transfer where no labels exist and on fine-tuned
+accuracy where they do, and the decoder wins both; it does mean nobody
+should read $32.7\times$ as a statement about a system anyone would ship
+unsupervised.
 
 \paragraph{Synthetic evaluation.} The routing task is handwritten and
 systematically composed, not real traffic. It is evidence a method works,
