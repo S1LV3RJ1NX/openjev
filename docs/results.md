@@ -363,6 +363,59 @@ the mechanism works, and decision quality is a separate phase requiring a
 trained calibration head rather than a better prompt. Prompt format took us
 from chance to a usable signal; it will not take us further.
 
+## Head-to-head: label-space augmentation fixes the encoder
+
+Both architectures through `scripts/eval_heldout.py`, same 200 rows per task,
+same control. The encoder is trained on the 141-task mixture with label-space
+augmentation; the decoder is untrained.
+
+| task | K | encoder (trained) | decoder (untrained) |
+|---|---|---|---|
+| banking77 | 77 | 0.205 · **15.8x** | 0.170 · 13.1x |
+| clinc_oos | 151 | 0.180 · 27.2x | 0.285 · **43.0x** |
+| massive_intent | 60 | 0.305 · 18.3x | 0.335 · **20.1x** |
+| sst5 | 5 | **0.360 · 1.8x** | 0.220 · 1.1x |
+| ag_news | 4 | **0.655 · 2.6x** | 0.275 · 1.1x |
+| civil_comments_toxicity | 2 | **0.615 · 1.2x** | 0.515 · 1.0x |
+| helpsteer_helpfulness | 5 | **0.230 · 1.2x** | 0.165 · 0.8x |
+| mean | | 9.7x | **11.5x** |
+
+Controls: harness sanity 1.000 for both. Encoder held-in control 0.83 to 0.97
+on five trained tasks, so it plainly learned.
+
+**The encoder went from a literal 0.000 on `banking77` and `clinc_oos`, and
+chance on every low-cardinality task, to above chance on all seven.** That is
+the single largest change in the project, and it came from label-space
+augmentation plus a mixture grown from 61 to 141 tasks. Those two moved
+together, so the split between them is not isolated here.
+
+**The mean is misleading and the per-task pattern is the real result.** The
+decoder's higher mean (11.5x vs 9.7x) rests entirely on `clinc_oos`, where
+43.0x against a 1/151 chance floor dominates the average. On the four
+low-cardinality tasks the encoder wins every one, and not narrowly: `ag_news`
+0.655 against 0.275, which is the difference between a usable classifier and
+a coin flip. Reading "x chance" as a scoreboard would pick the wrong
+architecture.
+
+**Six of seven are significantly above chance, not seven.**
+`helpsteer_helpfulness` is 0.230 with a 95% interval of [0.170, 0.290], which
+contains the 0.200 chance level. Every other task's interval excludes its
+chance floor. Ordinal quality rating remains the one primitive we have not
+moved.
+
+### What this settles, and what it does not
+
+Settled: the encoder path generalizes to unseen schemas when the training
+mixture contains large menus, and the way to get large menus is to synthesize
+them rather than to find datasets that have them. The earlier conclusion that
+"the encoder cannot generalize" was wrong — it was a statement about a
+61-task mixture with a maximum of 20 options, not about the architecture.
+
+Not settled: which path to ship. The encoder is 150M parameters, deterministic
+and trained in 72 minutes; the decoder is 1.7B and untrained. A fair
+comparison needs the decoder's calibration head trained on the same mixture,
+which has not been run.
+
 ## Not yet measured
 
 - Held-out schema transfer, which is the number that matters for the zero-shot
