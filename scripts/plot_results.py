@@ -118,7 +118,10 @@ def main() -> None:
             ax.bar(xs, [vals.get(t, 0) for t in tasks], width=width, label=label)
         # Chance is 1.0 on this axis, so the line is the thing to clear.
         ax.axhline(1.0, color="black", linewidth=1, linestyle="--")
-        ax.text(len(tasks) - 0.4, 1.15, "chance", fontsize=8, ha="right")
+        # Label it below the line and hard left: the rightmost tasks are the
+        # ones that sit closest to chance, so anything above the line there
+        # lands on top of the bars it is meant to explain.
+        ax.text(-0.45, 0.94, "chance", fontsize=8, ha="left", va="top")
         ax.set_yscale("log")
         ax.set_ylabel("multiple of chance (log scale)")
         ax.set_xticks([j + 0.4 - width / 2 for j in range(len(tasks))])

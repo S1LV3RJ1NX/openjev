@@ -50,6 +50,13 @@ overlap.
 chance floor, and the three high-cardinality menus are clear by wide
 margins.
 
+![held-out transfer across mixture generations](plots/heldout_transfer.png)
+
+The three bars per task are the last three mixtures. The middle one is
+worse than the first: that is the negative transfer from trading away
+`choice` tasks, and it is why the audit came before this run rather than
+after.
+
 **One task is weaker than that table implies.** Chance is not always the
 right floor: a task with skewed labels can be beaten by always predicting
 the most common one. Against *that* baseline:
