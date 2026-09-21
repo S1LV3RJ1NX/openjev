@@ -37,7 +37,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 # Import only the pure-python schema; openjev has no heavy deps.
-from openjev.schema import Choice, Example, Noul, Task  # noqa: E402
+from openjev.schema import Choice, Example, Noul, Score, Task  # noqa: E402
 
 OUT = ROOT / "tasks" / "mixture"
 
@@ -141,6 +141,37 @@ def _mc_task(task_id, tr, choice_cols, cols, names, max_rows, rng) -> Task | Non
     )
 
 
+ORDINAL_PATTERNS = [
+    re.compile(r"^\s*(\d+)\s*stars?\s*$", re.I),          # yelp: '1 star' .. '5 stars'
+    re.compile(r"^\s*depth[_\s-]?(\d+)\s*$", re.I),        # tree depth
+    re.compile(r"^\s*(?:level|rating|score|grade)[_\s-]?(\d+)\s*$", re.I),
+]
+
+
+def ordinal_rank(label: str) -> int | None:
+    """The rank a label denotes, if it unambiguously denotes one.
+
+    Deliberately conservative. Bare integers are *not* treated as ordinal:
+    the mixture contains `recast_kg_relations` with labels '1'..'6' that are
+    arbitrary relation classes, and imposing an order on those would teach
+    the model a ranking that does not exist. Only patterns that carry an
+    explicit ordinal word ('3 stars', 'depth_7', 'level_2') qualify.
+    """
+    for pat in ORDINAL_PATTERNS:
+        m = pat.match(str(label))
+        if m:
+            return int(m.group(1))
+    return None
+
+
+def as_ordinal(names: list) -> list[int] | None:
+    """Ranks for a label set, if every label is ordinal and they are distinct."""
+    ranks = [ordinal_rank(n) for n in names]
+    if any(r is None for r in ranks) or len(set(ranks)) != len(ranks):
+        return None
+    return ranks  # type: ignore[return-value]
+
+
 def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     """tasksource's standardised columns -> one openjev Task."""
     if "train" not in dd:
@@ -165,8 +196,49 @@ def to_task(task_id: str, dd, max_rows: int, rng: random.Random) -> Task | None:
     if not text_cols:
         return None
 
-    binary = len(names) == 2
     qid = "answer"
+
+    # Ordinal label sets become `score` questions. Emitting them as `choice`
+    # discards the ordering, and the mixture previously contained zero score
+    # questions at all -- which is exactly why the held-out ordinal task sat
+    # at chance while every choice task cleared it.
+    ranks = as_ordinal(names)
+    if ranks is not None and len(names) >= 3:
+        order = sorted(range(len(names)), key=lambda i: ranks[i])
+        levels = [humanize(names[i]) for i in order]
+        pos = {orig: new for new, orig in enumerate(order)}
+        examples = []
+        for r in tr.select(range(min(len(tr), max_rows))):
+            lab = r["labels"]
+            if not isinstance(lab, int) or isinstance(lab, bool):
+                continue
+            if not 0 <= lab < len(names):
+                continue
+            text_cols_o = [c for c in ("sentence1", "sentence2") if c in cols]
+            if not text_cols_o:
+                continue
+            state = ({c: r[c] for c in text_cols_o} if len(text_cols_o) > 1
+                     else r[text_cols_o[0]])
+            if not state:
+                continue
+            examples.append(Example(
+                state=state, answers={qid: pos[lab]},
+                meta={"tier": "mixture_ordinal", "source": task_id},
+            ))
+        if len(examples) < 32:
+            return None
+        rng.shuffle(examples)
+        return Task(
+            name=safe_name(task_id),
+            description=f"tasksource {task_id}",
+            questions={qid: Score(
+                instructions="Where on this scale does the input fall?",
+                criteria=levels,
+            )},
+            examples=examples,
+        )
+
+    binary = len(names) == 2
     criteria = {str(n): humanize(n) for n in names}
     question = (
         Noul(instructions=f"Is the answer to this {humanize(names[1])}?")
