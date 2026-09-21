@@ -15,8 +15,8 @@ intervals over examples; paired comparisons use exact McNemar.
 | | OpenJev | Jev | verdict |
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
-| Banking77, never seen it | 0.205 | **0.820** | Jev, clearly |
-| CLINC-150 (K=151), never seen it | 0.285 | not measured | 43x chance |
+| Banking77, never seen it | 0.355 | **0.820** | Jev, clearly |
+| CLINC-150 (K=151), never seen it | 0.420 | not measured | 63x chance |
 | Router intent | 0.817 | **0.941** | Jev, p = 1e-07 |
 | Router multi-label exact set | 0.718 | **0.822** | Jev, p = 3e-05 |
 | `G_clinical` correctness | 0.971 | 0.978 | **level**, p = 0.63 |
@@ -101,7 +101,41 @@ this convincing is the failure: shortening the option framing to
 yes/no question was asked. A bare `...refill: another fill:` reads like
 nothing in its training distribution, so the readout measures noise.
 
-## 4. The packed shared prefix is real, and large
+## 4. Training a head on the frozen decoder: 16.2x chance, and a clean split by primitive
+
+A 4.2M-parameter residual scorer on a frozen Qwen3-1.7B, one epoch over the
+141-task `mixture_big`. The head is zero-initialised so the run starts exactly
+at the untrained readout and can only improve on it.
+
+```bash
+uv run python scripts/train.py --mixture tasks/mixture_big --decoder \
+    --freeze-backbone --backbone Qwen/Qwen3-1.7B --epochs 1 --bs 4 \
+    --max-len 3072 --head-lr 1e-3 --distractor-prob 0.5 --max-options 120 \
+    --preamble "You judge whether a candidate answer is correct for a question about an input."$'\n\n'"Input:"$'\n'
+```
+
+| held-out task | K | encoder | decoder + head | x chance |
+|---|---|---|---|---|
+| clinc_oos | 151 | 0.180 | **0.420** | 63.4x |
+| banking77 | 77 | 0.205 | **0.355** | 27.3x |
+| massive_intent | 60 | 0.305 | 0.290 | 17.4x |
+| ag_news | 4 | **0.655** | 0.490 | 2.0x |
+| sst5 (`score`) | 5 | **0.360** | 0.185 | 0.9x |
+| helpsteer (`score`) | 5 | 0.230 | 0.235 | 1.2x |
+| civil_comments (`noul`) | 2 | 0.500 | 0.490 | 1.0x |
+
+Mean **16.2x chance**, against 9.7x for the encoder and 11.5x for the same
+decoder untrained. Harness sanity 0.833, held-in control run and reported.
+
+**The split is the finding.** Every task above chance is a `choice` question,
+and every task at chance is `score` or `noul`. The two backbones are also
+complements rather than rivals: the decoder wins the large menus by a wide
+margin and the encoder wins every menu with five options or fewer. Nothing
+here is an architecture verdict on `score` and `noul` — `mixture_big` contains
+128 `choice` questions against 13 `noul` and **zero** `score`, so the model was
+never taught the ordinal primitive at all.
+
+## 5. The packed shared prefix is real, and large
 
 ModernBERT-base, bf16, H100, 50 questions, median of 10:
 
@@ -117,7 +151,7 @@ both take 9.6 ms.
 **Caveat worth keeping:** at short states packing buys nothing. 9.6 ms is a
 fixed-overhead floor and both paths hit it.
 
-## 5. Banking77 specialist: 92.3% in 13.5 minutes
+## 6. Banking77 specialist: 92.3% in 13.5 minutes
 
 ModernBERT-base, 3 epochs, one H100. **In-task** — we trained on 9,839
 Banking77 examples and Jev did not, so this measures what labels buy, not
@@ -132,7 +166,7 @@ Temperature scaling behaved exactly as theory requires: **accuracy identical
 to four decimal places** while ECE halves. It is monotonic and cannot reorder
 predictions; had accuracy moved, the implementation would be wrong.
 
-## 6. The contamination guard caught a real leak
+## 7. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:
@@ -190,6 +224,28 @@ lifts `helpsteer` is **untested**.
 FPR **0.783** after the general init, essentially unchanged from 0.826. It
 predicts positive on almost everything because the slice is 427 positive to 23
 negative. No starting checkpoint fixes a gate with 23 negative examples.
+
+## A partially loaded model reported a plausible number
+
+The first decoder evaluation returned 5.8x chance, which would have read as
+"training the head made transfer worse" — a publishable-sounding negative
+result. It was wrong. `eval_heldout.py` built `OpenJevDecoder` without
+`learned_head=True`, so `load_state_dict(strict=False)` dropped all six
+scorer tensors and scored the untrained readout. Loading the head correctly
+gives 16.2x on the same checkpoint.
+
+Two guards caught it and one nearly did not. The harness sanity task fell to
+0.333, exactly chance, and printed its warning. The held-in control sat at
+1.0–1.2x on tasks the model had been trained on, which cannot happen if the
+model loaded. But the mismatch itself printed only a warning and the script
+carried on to produce a full, well-formatted results table.
+
+Both loaders now raise instead of warning, because a warning above a complete
+table gets read as a footnote. Checkpoints also record the backbone, whether
+the head exists, and the preamble and option template, since the same weights
+scored under a different prompt are a different system. A separate guard
+refuses to overwrite a checkpoint of a different architecture, after a
+decoder run silently replaced the encoder checkpoint that result 1 depends on.
 
 ## Noise robustness is a dead end
 

@@ -87,6 +87,10 @@ def main() -> None:
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--thresh", type=float, default=0.5)
     ap.add_argument("--dump", help="write per-item predictions for paired comparison")
+    ap.add_argument("--decoder", action="store_true",
+                    help="causal backbone; usually inferred from the checkpoint")
+    ap.add_argument("--preamble", default=None,
+                    help="overrides the preamble stored in the checkpoint")
     args = ap.parse_args()
 
     sys.stdout.reconfigure(line_buffering=True)
@@ -94,10 +98,38 @@ def main() -> None:
     ck = torch.load(args.ckpt, map_location="cpu", weights_only=False)
     backbone = ck.get("backbone", "answerdotai/ModernBERT-base")
     tok = AutoTokenizer.from_pretrained(backbone)
-    packer = Packer(tok, max_len=args.max_len, max_state_len=args.max_len // 2)
+    # A decoder checkpoint needs the causal packing it was trained with: the
+    # marker sits after the option text and the task preamble is part of the
+    # format. Reading those off the checkpoint keeps eval and training in step.
+    is_decoder = bool(ck.get("decoder")) or args.decoder
+    template = ck.get("option_template") or (
+        "\nQuestion: {q}\nIs the answer: {opt}\nAnswer" if is_decoder else None
+    )
+    packer = Packer(
+        tok, max_len=args.max_len, max_state_len=args.max_len // 2,
+        marker=":" if is_decoder else None, marker_after=is_decoder,
+        option_template=template,
+        preamble=args.preamble if args.preamble is not None else ck.get("preamble"),
+    )
 
-    model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
-    model.load_state_dict(ck["state_dict"], strict=False)
+    if is_decoder:
+        from openjev.decoder import OpenJevDecoder
+
+        has_head = any(k.startswith("scorer.") for k in ck.get("state_dict", {}))
+        model = OpenJevDecoder(
+            backbone=backbone, tokenizer=tok,
+            learned_head=ck.get("learned_head", has_head),
+        ).to(device)
+    else:
+        model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
+    missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
+    if missing or unexpected:
+        raise SystemExit(
+            f"state_dict mismatch: {len(missing)} missing, {len(unexpected)} "
+            f"unexpected.\n  missing: {missing[:4]}\n  unexpected: {unexpected[:4]}\n"
+            f"A partially loaded model still produces a full results table, and "
+            f"that table is wrong. Fix the construction and re-run."
+        )
     model.eval()
 
     task = Task.load(args.task, args.split)

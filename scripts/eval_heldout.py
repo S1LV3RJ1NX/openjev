@@ -103,14 +103,26 @@ def main() -> None:
     if args.decoder:
         from openjev.decoder import OpenJevDecoder
 
-        model = OpenJevDecoder(backbone=backbone, tokenizer=tok).to(device)
+        # A checkpoint carrying scorer weights was trained with the residual
+        # head, and building the model without it drops those tensors on the
+        # floor — strict=False reports them as "unexpected" and evaluates the
+        # untrained readout instead. Infer the head from the weights present.
+        has_head = any(k.startswith("scorer.") for k in (ck.get("state_dict") or {}))
+        model = OpenJevDecoder(
+            backbone=backbone, tokenizer=tok,
+            learned_head=ck.get("learned_head", has_head),
+        ).to(device)
     else:
         model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
     if ck.get("state_dict"):
         missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
         if missing or unexpected:
-            print(f"!! state_dict mismatch: {len(missing)} missing, "
-                  f"{len(unexpected)} unexpected; first missing {missing[:3]}")
+            raise SystemExit(
+                f"state_dict mismatch: {len(missing)} missing, {len(unexpected)} "
+                f"unexpected.\n  missing: {missing[:4]}\n  unexpected: {unexpected[:4]}\n"
+                f"Evaluating a partially loaded model produces numbers that look "
+                f"real and are not. Fix the model construction and re-run."
+            )
     model.eval()
     print(f"{args.ckpt or backbone}  {'decoder' if args.decoder else 'encoder'}"
           f"  trained_on={ck.get('trained_on', 'nothing')}")

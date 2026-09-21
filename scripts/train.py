@@ -138,6 +138,8 @@ def main() -> None:
     ap.add_argument("--distractor-prob", type=float, default=0.0,
                     help="probability of padding a choice menu with borrowed labels")
     ap.add_argument("--max-options", type=int, default=128)
+    ap.add_argument("--scale-prob", type=float, default=0.0,
+                    help="probability of rewording or coarsening an ordinal scale")
     ap.add_argument("--decoder", action="store_true",
                     help="causal LM backbone with yes/no readout")
     ap.add_argument("--freeze-backbone", action="store_true",
@@ -146,6 +148,8 @@ def main() -> None:
     ap.add_argument("--init-from", default=None,
                     help="start from a checkpoint instead of the raw backbone")
     ap.add_argument("--out", default="checkpoints")
+    ap.add_argument("--overwrite", action="store_true",
+                    help="allow replacing a checkpoint of a different architecture")
     args = ap.parse_args()
 
     # Redirected to a file, Python block-buffers stdout and a long run looks
@@ -209,7 +213,7 @@ def main() -> None:
                 TaskDataset(
                     t, packer, shuffle_options=True, seed=i,
                     distractors=uniq, distractor_prob=args.distractor_prob,
-                    max_options=args.max_options,
+                    max_options=args.max_options, scale_prob=args.scale_prob,
                 )
                 for i, t in enumerate(tasks)
             ]
@@ -336,15 +340,41 @@ def main() -> None:
 
     out_dir = Path(args.out) / name
     out_dir.mkdir(parents=True, exist_ok=True)
+    dest = out_dir / "model.pt"
+    # Refuse to overwrite a checkpoint of a different architecture. A decoder
+    # run once silently replaced the encoder checkpoint that a published
+    # result depended on, because both defaulted to the mixture's name.
+    if dest.exists() and not args.overwrite:
+        try:
+            prev = torch.load(dest, map_location="cpu", weights_only=False)
+        except Exception:
+            prev = {}
+        if prev.get("backbone") and (
+            prev["backbone"] != args.backbone
+            or bool(prev.get("decoder")) != bool(args.decoder)
+        ):
+            raise SystemExit(
+                f"{dest} holds a {prev['backbone']} "
+                f"({'decoder' if prev.get('decoder') else 'encoder'}) checkpoint and this "
+                f"run is {args.backbone} ({'decoder' if args.decoder else 'encoder'}).\n"
+                f"Pass --out to a different directory, or --overwrite if you mean it."
+            )
     torch.save(
         {
             "state_dict": model.state_dict(),
             "backbone": args.backbone,
+            "decoder": bool(args.decoder),
+            # The prompt format is part of the model: the same weights scored
+            # with a different preamble are a different system. Store it so an
+            # evaluation cannot quietly drift away from how this was trained.
+            "learned_head": bool(args.decoder),
+            "preamble": args.preamble,
+            "option_template": template,
             "temperatures": temps,
             "trained_on": name,
             "heldout_override": bool(args.allow_heldout),
         },
-        out_dir / "model.pt",
+        dest,
     )
     print(f"\nsaved to {out_dir/'model.pt'}  ({time.time() - t0:.0f}s total)")
 
