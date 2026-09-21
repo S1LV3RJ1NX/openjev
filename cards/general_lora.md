@@ -33,17 +33,18 @@ bootstrap resamples.
 
 | task | K | chance | accuracy | 95% CI | x chance |
 |---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | **0.815** | [0.785, 0.843] | **123.1x** |
-| banking77 | 77 | 0.013 | **0.607** | [0.572, 0.645] | **46.7x** |
-| massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** |
-| ag_news | 4 | 0.250 | 0.793 | [0.758, 0.828] | 3.2x |
+| clinc_oos | 151 | 0.007 | **0.702** | [0.667, 0.738] | **106.0x** |
+| banking77 | 77 | 0.013 | **0.605** | [0.570, 0.642] | **46.6x** |
+| massive_intent | 60 | 0.017 | **0.775** | [0.742, 0.807] | **46.5x** |
+| ag_news | 4 | 0.250 | 0.793 | [0.760, 0.828] | 3.2x |
 | sst5 | 5 | 0.200 | 0.465 | [0.425, 0.502] | 2.3x |
-| civil_comments | 2 | 0.500 | 0.688 | [0.652, 0.723] | 1.4x |
-| helpsteer | 5 | 0.200 | 0.268 | [0.235, 0.307] | 1.3x |
+| civil_comments | 2 | 0.500 | 0.742 | [0.710, 0.777] | 1.5x |
+| helpsteer | 5 | 0.200 | 0.273 | [0.240, 0.312] | 1.4x |
 
-**Mean 32.1x chance, every task scored at its full advertised menu.** All seven beat chance, and all seven beat their
+**Mean 29.6x chance, every task scored at its full advertised menu**,
+which needs `--max-len 6144` for the 151-way one. All seven beat chance, and all seven beat their
 majority-class baseline, including the skewed ones, though helpsteer
-only just: 0.268 against 0.233 at p = 0.021.
+only just: 0.273 against 0.233 at p = 0.010.
 
 Read the three-digit menus first. Choosing correctly among 151 intents
 having never seen the label set is the capability that makes this useful.
@@ -54,9 +55,10 @@ much more.
 ## Honest comparison
 
 TypeSafe's Jev scores **0.820** on Banking77 zero-shot. This adapter
-scores **0.607** on the same 600 items. They are ahead by nine points.
+scores **0.605** on the same 600 items, both on the full 77-way menu.
+They are ahead by twenty-one points.
 
-That gap used to be fifty-three, against our encoder's 0.290. If you want
+That gap used to be forty-eight, against our encoder's 0.343. If you want
 the best zero-shot accuracy available and can send data to an API, their
 number is still the better one.
 
@@ -144,8 +146,8 @@ multiple-choice tasks found and fixed.
 
 | | this adapter | encoder |
 |---|---|---|
-| held-out mean | **32.1x chance** | 17.2x |
-| Banking77 zero-shot | **0.607** | 0.343 |
+| held-out mean | **29.6x chance** | 17.2x |
+| Banking77 zero-shot | **0.605** | 0.343 |
 | p95 latency, batch 1 | 56 ms | **20 ms** |
 | footprint | 3.4 GB | **0.6 GB** |
 

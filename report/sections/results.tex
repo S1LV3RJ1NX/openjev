@@ -96,15 +96,15 @@ $1.5$--$2.5\times$, against the encoder's $1.1$--$2.3\times$.
 \toprule
 task & $K$ & accuracy & 95\% CI & $\times$ chance & encoder \\
 \midrule
-\texttt{clinc\_oos}      & 151 & \textbf{0.815} & [0.785, 0.843] & \textbf{123.1} & 0.382 \\
-\texttt{massive\_intent} &  60 & \textbf{0.773} & [0.738, 0.805] & \textbf{46.4}  & 0.473 \\
-\texttt{banking77}       &  77 & \textbf{0.607} & [0.572, 0.645] & \textbf{46.7}  & 0.343 \\
-\texttt{ag\_news}        &   4 & 0.793 & [0.758, 0.828] & 3.2  & 0.735 \\
+\texttt{clinc\_oos}      & 151 & \textbf{0.702} & [0.667, 0.738] & \textbf{106.0} & 0.382 \\
+\texttt{massive\_intent} &  60 & \textbf{0.775} & [0.742, 0.807] & \textbf{46.5}  & 0.473 \\
+\texttt{banking77}       &  77 & \textbf{0.605} & [0.570, 0.642] & \textbf{46.6}  & 0.343 \\
+\texttt{ag\_news}        &   4 & 0.793 & [0.760, 0.828] & 3.2  & 0.735 \\
 \texttt{sst5}            &   5 & 0.465 & [0.425, 0.502] & 2.3  & 0.412 \\
-\texttt{civil\_comments} &   2 & 0.688 & [0.652, 0.723] & 1.4  & 0.683 \\
-\texttt{helpsteer}       &   5 & 0.268 & [0.235, 0.307] & 1.3  & 0.262 \\
+\texttt{civil\_comments} &   2 & 0.742 & [0.710, 0.777] & 1.5  & 0.683 \\
+\texttt{helpsteer}       &   5 & 0.273 & [0.240, 0.312] & 1.4  & 0.262 \\
 \midrule
-\multicolumn{4}{l}{mean multiple of chance} & \textbf{32.1} & 17.2 \\
+\multicolumn{4}{l}{mean multiple of chance} & \textbf{29.6} & 17.2 \\
 \bottomrule
 \end{tabular}
 \caption{Held-out transfer, LoRA decoder against the encoder on identical
@@ -115,10 +115,10 @@ Every task improves.}
 
 Two results matter here beyond the mean. First, \textbf{every task now
 beats its majority-class baseline}, not merely $1/K$, which the encoder
-did not manage: \texttt{helpsteer} reaches $0.268$ against $0.233$,
-although only at $p = 0.021$, and that margin is thin enough that a
+did not manage: \texttt{helpsteer} reaches $0.273$ against $0.233$,
+although only at $p = 0.010$, and that margin is thin enough that a
 change in sampling could erase it. Second, \textbf{Banking77 zero-shot
-rises from $0.343$ to $0.607$} against the commercial reference's
+rises from $0.343$ to $0.605$} against the commercial reference's
 $0.820$, closing about half the gap and leaving twenty-one points.
 
 \paragraph{These numbers replace an earlier, inflated set.} Auditing our
@@ -131,8 +131,12 @@ the multiple of chance was still computed against $1/151$ and $1/77$. The
 accuracies were real; the multiples credited the model for a discrimination
 it never performed. We previously reported $32.8\times$ for this model
 and $21.9\times$ for the encoder; the corrected figures are
-$32.1\times$ and $17.2\times$, and Banking77 falls from $0.737$ to
-$0.607$. The encoder figure additionally came from an in-training
+$29.6\times$ and $17.2\times$, Banking77 falls from $0.737$ to $0.605$,
+and \texttt{clinc\_oos} from $0.783$ to $0.702$. Correcting it took two
+attempts: at $4096$ tokens banking77's 77 options fit but
+\texttt{clinc\_oos} is still clipped to 64, because the decoder's
+per-option template costs tokens the encoder's does not, and the full
+151-way menu needs $6144$. The encoder figure additionally came from an in-training
 evaluator on a superseded version of the suite and did not reproduce.
 \texttt{eval\_heldout.py} now records the menu the model actually saw,
 scores against that, prints $K\rightarrow k$ when they differ, and names

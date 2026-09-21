@@ -15,9 +15,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | | OpenJev | Jev | verdict |
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
-| Held-out suite, all 7 beat chance | **32.1x chance** | not measured | 0.9x at the start |
-| Held-out CLINC (K=151), never seen it | **0.815** | not measured | 123x chance |
-| Banking77, never seen it | 0.607 | **0.820** | Jev, by 21 points |
+| Held-out suite, all 7 beat chance | **29.6x chance** | not measured | 0.9x at the start |
+| Held-out CLINC (K=151), never seen it | **0.702** | not measured | 106x chance |
+| Banking77, never seen it | 0.605 | **0.820** | Jev, by 21 points |
 | Router intent, LoRA | **0.979** | 0.941 | **OpenJev**, p = 1e-03 |
 | Router multi-label exact set, LoRA | **0.909** | 0.822 | **OpenJev**, p = 7e-06 |
 | `G_pharmacy`, LoRA | **0.978** | 0.880 | **OpenJev**, p = 4e-10 |
@@ -29,7 +29,7 @@ intervals over examples; paired comparisons use exact McNemar.
 
 ---
 
-## Part 2 result: a LoRA decoder reaches 32.1x chance
+## Part 2 result: a LoRA decoder reaches 29.6x chance
 
 The deciding experiment. Rank-16 adapters on Qwen3-1.7B, same 279-task
 mixture the encoder used, same augmentation. Harness sanity 1.000,
@@ -37,15 +37,15 @@ held-in control 1.5–2.5x.
 
 | task | K | chance | accuracy | 95% CI | x chance | encoder |
 |---|---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | **0.815** | [0.785, 0.843] | **123.1x** | 0.382 |
-| massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** | 0.473 |
-| banking77 | 77 | 0.013 | **0.607** | [0.572, 0.645] | **46.7x** | 0.343 |
-| ag_news | 4 | 0.250 | 0.793 | [0.758, 0.828] | 3.2x | 0.735 |
+| clinc_oos | 151 | 0.007 | **0.702** | [0.667, 0.738] | **106.0x** | 0.382 |
+| massive_intent | 60 | 0.017 | **0.775** | [0.742, 0.807] | **46.5x** | 0.473 |
+| banking77 | 77 | 0.013 | **0.605** | [0.570, 0.642] | **46.6x** | 0.343 |
+| ag_news | 4 | 0.250 | 0.793 | [0.760, 0.828] | 3.2x | 0.735 |
 | sst5 | 5 | 0.200 | 0.465 | [0.425, 0.502] | 2.3x | 0.412 |
-| civil_comments | 2 | 0.500 | 0.688 | [0.652, 0.723] | 1.4x | 0.683 |
-| helpsteer | 5 | 0.200 | 0.268 | [0.235, 0.307] | 1.3x | 0.262 |
+| civil_comments | 2 | 0.500 | 0.742 | [0.710, 0.777] | 1.5x | 0.683 |
+| helpsteer | 5 | 0.200 | 0.273 | [0.240, 0.312] | 1.4x | 0.262 |
 
-**Mean 32.1x, against the encoder's 17.2x. Every task improved.**
+**Mean 29.6x, against the encoder's 17.2x. Every task improved.**
 
 All seven scored at their full advertised menu. That qualifier is load
 bearing, and the reason is below.
@@ -62,29 +62,37 @@ chance was still computed against 1/151 and 1/77, so a model choosing
 among 64 options was being credited as though it had chosen among 151.
 Accuracy was real; the multiple was not.
 
-Two numbers we published are therefore withdrawn:
+Numbers we published and now withdraw:
 
 | | published | corrected | why |
 |---|---|---|---|
-| encoder held-out mean | 17.2x | **17.2x** | came from the in-training evaluator on a superseded suite; does not reproduce |
-| decoder held-out mean | 32.1x | **32.1x** | menus truncated to 64 at `--max-len 2048` |
-| banking77, decoder | 0.607 | **0.607** | 64 of 77 options shown |
+| encoder held-out mean | 21.9x | **17.2x** | came from the in-training evaluator on a superseded suite; does not reproduce |
+| decoder held-out mean | 32.8x | **29.6x** | menus truncated to 64 |
+| banking77, decoder | 0.737 | **0.605** | 64 of 77 options shown |
+| clinc_oos, decoder | 0.783 | **0.702** | 64 of 151 options shown |
 
 The gap to the reference API on Banking77 is therefore **21 points, not
-the 9 we claimed**: 0.607 against 0.820, both on the full 77-way menu.
+the 9 we claimed**: 0.605 against 0.820, both on the full 77-way menu.
+
+It took two passes to correct this. The first used `--max-len 4096`,
+which fits banking77's 77 options but still clips clinc_oos to 64,
+because the decoder's per-option template costs tokens the encoder's
+does not. The guard below is what caught that second miss. The full
+151-way menu needs `--max-len 6144`, and every number in the table
+above was produced at that budget with no truncation warning.
 
 `scripts/eval_heldout.py` now measures the menu the model actually saw,
 scores the multiple against that number, prints `K->k` when they differ,
 and ends with a warning naming every truncated task. The bug is
 detectable now rather than silent.
 
-**And every task now beats its majority-class baseline**, which the
-encoder's `helpsteer` did not: 0.268 against 0.233 at p = 0.021,
+**And every task still beats its majority-class baseline**, which the
+encoder's `helpsteer` did not: 0.273 against 0.233 at p = 0.010,
 alongside civil_comments and sst5 at p < 1e-15. That helpsteer margin is
 thin, and it is the one result here that a modest change in sampling
 could erase.
 
-**Banking77 zero-shot went from 0.343 to 0.607** against the reference
+**Banking77 zero-shot went from 0.343 to 0.605** against the reference
 API's 0.820, closing roughly half the gap but not the rest.
 
 ### The catch: it deploys worse than it benchmarks
@@ -92,7 +100,7 @@ API's 0.820, closing roughly half the gap but not the rest.
 Zero-shot on the router, the decoder scores intent **0.467** against the
 encoder's **0.601**, despite winning all seven benchmarks. The ordering
 reverses on the one task with an operational shape. Neither is usable
-zero-shot, so the architecture call stands, but 32.1x is a benchmark
+zero-shot, so the architecture call stands, but 29.6x is a benchmark
 number and not a readiness claim.
 
 ### The architecture decision
