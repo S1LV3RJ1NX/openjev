@@ -25,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from openjev import Task  # noqa: E402
 from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
+from openjev.ckpt import load_into, wants_head  # noqa: E402
 from openjev.metrics import bootstrap_ci, multilabel  # noqa: E402
 from openjev.model import OpenJev  # noqa: E402
 
@@ -122,21 +123,12 @@ def main() -> None:
     if is_decoder:
         from openjev.decoder import OpenJevDecoder
 
-        has_head = any(k.startswith("scorer.") for k in ck.get("state_dict", {}))
         model = OpenJevDecoder(
-            backbone=backbone, tokenizer=tok,
-            learned_head=ck.get("learned_head", has_head),
+            backbone=backbone, tokenizer=tok, learned_head=wants_head(ck),
         ).to(device)
     else:
         model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
-    missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
-    if missing or unexpected:
-        raise SystemExit(
-            f"state_dict mismatch: {len(missing)} missing, {len(unexpected)} "
-            f"unexpected.\n  missing: {missing[:4]}\n  unexpected: {unexpected[:4]}\n"
-            f"A partially loaded model still produces a full results table, and "
-            f"that table is wrong. Fix the construction and re-run."
-        )
+    load_into(model, ck)
     model.eval()
 
     task = Task.load(args.task, args.split)

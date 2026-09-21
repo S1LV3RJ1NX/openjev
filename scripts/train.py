@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from openjev import Choice, Task  # noqa: E402
 from openjev.data import TaskDataset, collate, option_labels  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
+from openjev.ckpt import load_into, save as save_ckpt  # noqa: E402
 from openjev.metrics import accuracy, bootstrap_ci, brier, ece, macro_f1  # noqa: E402
 from openjev.model import OpenJev  # noqa: E402
 
@@ -265,6 +266,15 @@ def main() -> None:
         # specialist cheap. That is only testable if a specialist can start
         # from one.
         prev = torch.load(args.init_from, map_location="cpu", weights_only=False)
+        # Initialising an encoder from a decoder checkpoint loads nothing and
+        # looks like a normal from-scratch run. Now that both kinds sit in
+        # neighbouring directories, check before trusting the weights.
+        if prev.get("backbone") and prev["backbone"] != args.backbone:
+            raise SystemExit(
+                f"--init-from is a {prev['backbone']} checkpoint but this run is "
+                f"{args.backbone}. Almost nothing would load and the run would "
+                f"look like training from scratch."
+            )
         missing, unexpected = model.load_state_dict(prev["state_dict"], strict=False)
         print(f"initialised from {args.init_from} "
               f"(trained on {prev.get('trained_on')}); "
@@ -343,43 +353,26 @@ def main() -> None:
 
     out_dir = Path(args.out) / name
     out_dir.mkdir(parents=True, exist_ok=True)
-    dest = out_dir / "model.pt"
-    # Refuse to overwrite a checkpoint of a different architecture. A decoder
-    # run once silently replaced the encoder checkpoint that a published
-    # result depended on, because both defaulted to the mixture's name.
-    if dest.exists() and not args.overwrite:
-        try:
-            prev = torch.load(dest, map_location="cpu", weights_only=False)
-        except Exception:
-            prev = {}
-        if prev.get("backbone") and (
-            prev["backbone"] != args.backbone
-            or bool(prev.get("decoder")) != bool(args.decoder)
-        ):
-            raise SystemExit(
-                f"{dest} holds a {prev['backbone']} "
-                f"({'decoder' if prev.get('decoder') else 'encoder'}) checkpoint and this "
-                f"run is {args.backbone} ({'decoder' if args.decoder else 'encoder'}).\n"
-                f"Pass --out to a different directory, or --overwrite if you mean it."
-            )
-    torch.save(
-        {
-            "state_dict": model.state_dict(),
-            "backbone": args.backbone,
-            "decoder": bool(args.decoder),
-            # The prompt format is part of the model: the same weights scored
-            # with a different preamble are a different system. Store it so an
-            # evaluation cannot quietly drift away from how this was trained.
-            "learned_head": bool(args.decoder),
-            "preamble": args.preamble,
-            "option_template": template,
-            "temperatures": temps,
-            "trained_on": name,
-            "heldout_override": bool(args.allow_heldout),
-        },
-        dest,
+    # A frozen-backbone decoder only trains the head, so storing the backbone
+    # turns a 17MB model into a 3.3GB file for nothing.
+    dest = save_ckpt(
+        out_dir / "model.pt", model,
+        backbone=args.backbone,
+        decoder=bool(args.decoder),
+        head_only=bool(args.decoder and args.freeze_backbone),
+        overwrite=args.overwrite,
+        # The prompt format is part of the model: the same weights scored with
+        # a different preamble are a different system. Store it so evaluation
+        # cannot quietly drift away from how this was trained.
+        learned_head=bool(args.decoder),
+        preamble=args.preamble,
+        option_template=template,
+        temperatures=temps,
+        trained_on=name,
+        heldout_override=bool(args.allow_heldout),
     )
-    print(f"\nsaved to {out_dir/'model.pt'}  ({time.time() - t0:.0f}s total)")
+    size_mb = dest.stat().st_size / 1e6
+    print(f"\nsaved to {dest}  ({size_mb:.0f} MB, {time.time() - t0:.0f}s total)")
 
 
 if __name__ == "__main__":

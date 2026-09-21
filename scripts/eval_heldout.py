@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from openjev import Task  # noqa: E402
 from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
+from openjev.ckpt import load_into, wants_head  # noqa: E402
 from openjev.heldout import load_suite  # noqa: E402
 from openjev.metrics import accuracy, bootstrap_ci, macro_f1  # noqa: E402
 from openjev.model import OpenJev  # noqa: E402
@@ -107,22 +108,12 @@ def main() -> None:
         # head, and building the model without it drops those tensors on the
         # floor — strict=False reports them as "unexpected" and evaluates the
         # untrained readout instead. Infer the head from the weights present.
-        has_head = any(k.startswith("scorer.") for k in (ck.get("state_dict") or {}))
         model = OpenJevDecoder(
-            backbone=backbone, tokenizer=tok,
-            learned_head=ck.get("learned_head", has_head),
+            backbone=backbone, tokenizer=tok, learned_head=wants_head(ck),
         ).to(device)
     else:
         model = OpenJev(backbone=backbone, vocab_size=len(tok)).to(device)
-    if ck.get("state_dict"):
-        missing, unexpected = model.load_state_dict(ck["state_dict"], strict=False)
-        if missing or unexpected:
-            raise SystemExit(
-                f"state_dict mismatch: {len(missing)} missing, {len(unexpected)} "
-                f"unexpected.\n  missing: {missing[:4]}\n  unexpected: {unexpected[:4]}\n"
-                f"Evaluating a partially loaded model produces numbers that look "
-                f"real and are not. Fix the model construction and re-run."
-            )
+    load_into(model, ck)
     model.eval()
     print(f"{args.ckpt or backbone}  {'decoder' if args.decoder else 'encoder'}"
           f"  trained_on={ck.get('trained_on', 'nothing')}")
