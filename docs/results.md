@@ -33,7 +33,9 @@ intervals over examples; paired comparisons use exact McNemar.
 
 The deciding experiment. Rank-16 adapters on Qwen3-1.7B, same 279-task
 mixture the encoder used, same augmentation. Harness sanity 1.000,
-held-in control 1.5–2.5x.
+held-in control 0.847 to 0.980 accuracy, 1.7 to 2.0x chance, on five
+tasks the model was trained on. Both run alongside the table below, so a
+weak held-out number here would be a transfer result and not a bug.
 
 | task | K | chance | accuracy | 95% CI | x chance | encoder |
 |---|---|---|---|---|---|---|
