@@ -16,6 +16,46 @@
 
 ---
 
+## What this is, and what it is not
+
+**It is a fine-tune-first tool.** Give it roughly 400 labelled examples and it
+is peer-level with the commercial API it was built to understand: a
+statistical tie on multi-label compound routing, ahead on obliquely-worded
+clinical risk (1.000 against 0.793) and on scope gating, behind on
+single-label intent (0.899 against 0.941). Training takes 38 seconds on one
+GPU and the data never leaves your machine.
+
+**It is not a zero-shot replacement.** On a schema it has never seen,
+Banking77, it scores 0.355 against roughly 0.820. That gap is real and this
+README will say so until a measurement says otherwise.
+
+### Why, and where you come in
+
+Zero-shot ability on typed decisions does not come from the architecture. We
+tested that: a strong encoder with a clever output format scores **0.7x
+chance** untrained, and a 61-task mixture transferred nothing at all. It
+comes from **task diversity in training data**. Our mixture is 143 tasks
+scraped from `tasksource`; the Flan work suggests the gain keeps accruing
+past ~282, and ours is lopsided besides — 100 `choice` tasks against 34
+`noul` and 9 `score`, which is exactly why the two non-`choice` held-out
+tasks sit at chance while every `choice` task clears it.
+
+Assembling a genuinely diverse typed-decision dataset is more than one person
+can do. **If the community builds that dataset, a general encoder with real
+zero-shot ability is reachable**, and everything needed to try is already
+here: the [format](docs/dataset-format.md), a
+[CSV scaffold](scripts/make_task.py), a contamination guard that refuses a
+mixture overlapping the evaluation suite, and an
+[evaluation harness](docs/evaluation.md) with a held-in control so "no
+transfer" cannot be confused with a bug.
+
+What would help most, in order: ordinal (`score`) tasks, which we have almost
+none of; yes/no (`noul`) tasks; and anything with a menu past 20 options.
+
+**One untested hypothesis.** Everything here is base-sized: ModernBERT-base
+and Qwen3-1.7B. Scaling the backbone may move zero-shot transfer and we have
+not measured it, so we are not claiming it either way.
+
 ## Quick start
 
 ```bash

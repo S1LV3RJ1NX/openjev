@@ -28,6 +28,24 @@ intervals over examples; paired comparisons use exact McNemar.
 
 ---
 
+## The mixtures referred to below
+
+Several training mixtures appear in these results and they are not
+interchangeable. Each row is a superset of the ideas above it.
+
+| mixture | tasks | rows | `choice` / `noul` / `score` | what changed |
+|---|---|---|---|---|
+| `mixture` | 61 | — | — | first attempt; transferred nothing |
+| `mixture_big` | 141 | 189,462 | 128 / 13 / 0 | rebuilt with an auth token and backoff |
+| `mixture_ord2` | 143 | 192,462 | 121 / 13 / 9 | ordinal label sets detected and emitted as `score` |
+| `mixture_noul` | 143 | 192,462 | 100 / 34 / 9 | negation pairs retyped from `choice` to `noul` |
+| `mixture_ord3` | 145 | 198,154 | 100 / 34 / 11 | curated star-rating datasets added |
+
+Where a result below names a figure like "13 `noul` tasks", it is describing
+the mixture that run used, not the current one.
+
+---
+
 # What worked
 
 ## 1. The general checkpoint is worth +36 points to a specialist
@@ -305,7 +323,8 @@ Result 7 fixed the binary's degeneracy without moving its accuracy off the
 floor. This is the ordinal half, and it failed outright.
 
 Cause found by inspection: the
-mixture contains **128 `choice` questions, 13 `noul`, and zero `score`**. The
+`mixture_big` contains **128 `choice` questions, 13 `noul`, and zero
+`score`**. The
 model never saw an ordinal question. Worse, ordinal data was present and being
 flattened — `yelp_review_full` ships `['1 star' … '5 stars']` and was emitted
 as an unordered menu.
