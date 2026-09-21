@@ -112,7 +112,7 @@ much as the model.
 
 | | encoder | decoder |
 |---|---|---|
-| model | `answerdotai/ModernBERT-base` | `Qwen/Qwen3-1.7B` |
+| model | [`answerdotai/ModernBERT-base`](https://huggingface.co/answerdotai/ModernBERT-base) | [`Qwen/Qwen3-1.7B`](https://huggingface.co/Qwen/Qwen3-1.7B) |
 | parameters | 150M | 1,725M |
 | attention | bidirectional | causal, block-diagonal per question |
 | readout | linear scorer at the marker | `logit(yes) − logit(no)` at the marker |
@@ -139,6 +139,41 @@ They can disagree, and they do. Study S is won; Study G is not.
 | `tasks/mixture_final` | 279 tasks, 323,466 | training for Study G |
 | `tasks/heldout` | 7 tasks, 4,200 | evaluation for Study G, never trained on |
 | `tasks/healthcare_router` | 395 train / 450 test | Study S, both ends |
+
+### Artifacts
+
+Everything measured below, published or explicitly marked as not yet.
+
+**Base models** (not ours, linked for reference)
+
+| | |
+|---|---|
+| encoder backbone | [`answerdotai/ModernBERT-base`](https://huggingface.co/answerdotai/ModernBERT-base) |
+| decoder backbone | [`Qwen/Qwen3-1.7B`](https://huggingface.co/Qwen/Qwen3-1.7B) |
+| encoder backbone, larger, queued for G-F2 | [`answerdotai/ModernBERT-large`](https://huggingface.co/answerdotai/ModernBERT-large) |
+
+**Trained by us**
+
+| artifact | experiment | size | link |
+|---|---|---|---|
+| encoder general checkpoint | G-B2/G-B3 | 0.6 GB | [`openjev-encoder-general`](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) |
+| encoder router specialist | S-D1 | 0.6 GB | [`openjev-router-healthcare`](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) |
+| **LoRA router adapter** | **S-D4** | **87 MB** | [`openjev-router-lora`](https://huggingface.co/s1lv3rj1nx/openjev-router-lora) |
+| encoder on the 279-task mixture | G-B10 | 0.6 GB | *running, will link* |
+| LoRA general adapter | G-C3 | ~90 MB | *queued, will link* |
+| decoder full fine-tune | S-D2 | 3.4 GB | *not published: dominated by S-D4* |
+| decoder head-only | S-D3 | 17 MB | *not published: negative result* |
+
+**Datasets**
+
+| dataset | role | link |
+|---|---|---|
+| held-out suite | Study G evaluation | [`openjev-heldout`](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) |
+| healthcare router | Study S, both ends | [`openjev-healthcare-router`](https://huggingface.co/datasets/s1lv3rj1nx/openjev-healthcare-router) |
+| 279-task training mixture | Study G training | *not yet published, ~200 MB* |
+
+Sources the mixture is assembled from are listed per task in its
+`description`, and every held-out task names its aliases in `holdout_of`.
 
 ---
 

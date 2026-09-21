@@ -243,6 +243,7 @@ buys nothing and a plain classifier is simpler.
 
 | | |
 |---|---|
+| [LoRA router adapter](https://huggingface.co/s1lv3rj1nx/openjev-router-lora) | **87 MB, beats the reference API on the router** |
 | [General checkpoint](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | What `--init-from` consumes, 17.6x chance on held-out schemas |
 | [Fine-tuned router](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) | A worked example you can run in three lines |
 | [Held-out suite](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) | 7 tasks and the contamination manifest |
