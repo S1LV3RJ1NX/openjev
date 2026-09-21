@@ -38,21 +38,38 @@ def safe_name(task_id: str) -> str:
     return re.sub(r"[^0-9a-zA-Z]+", "_", task_id).strip("_").lower()
 
 
+RETRY_AFTER = re.compile(r"Retry after (\d+) seconds")
+
+
 def load_with_backoff(tasksource, tid: str, max_rows: int, retries: int):
-    """The Hub rate-limits hard when pulling hundreds of datasets in a row."""
+    """The Hub rate-limits hard when pulling hundreds of datasets in a row.
+
+    The limit is an account-wide quota of 1000 API requests per 5 minutes,
+    not a bandwidth limit, so neither `hf_transfer` nor downloading from a
+    second machine helps: both spend from the same budget. Only waiting does.
+
+    Exponential backoff from 4s tops out around 60s, which is short of the
+    300s window, so a quota error is honoured at the length the Hub asks for
+    rather than guessed at.
+    """
     delay = 4.0
     for attempt in range(retries + 1):
         try:
             return tasksource.load_task(tid, max_rows=max_rows)
         except Exception as e:  # noqa: BLE001
+            text = f"{type(e).__name__}{e}"
             transient = any(
-                s in f"{type(e).__name__}{e}"
+                s in text
                 for s in ("HfHubHTTPError", "429", "Too Many Requests",
                           "ConnectionError", "ReadTimeout", "504", "502")
             )
             if not transient or attempt == retries:
                 raise
-            time.sleep(delay)
+            hinted = RETRY_AFTER.search(text)
+            wait = int(hinted.group(1)) + 5 if hinted else delay
+            if "429" in text or "Too Many Requests" in text:
+                wait = max(wait, 90.0)
+            time.sleep(wait)
             delay *= 2
 
 

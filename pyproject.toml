@@ -8,6 +8,7 @@ license = { text = "Apache-2.0" }
 keywords = ["classification", "calibration", "encoder", "routing", "typed-decisions"]
 dependencies = [
     "accelerate>=1.15.0",
+    "hf-transfer>=0.1.9",
     "pandas>=2.3.3",
     "pyarrow>=25.0.1",
     "safetensors>=0.8.0",
