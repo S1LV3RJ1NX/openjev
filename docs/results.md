@@ -398,6 +398,25 @@ it shows is that a few hundred labels outweigh the gap between an open
 | `G_clinical` | 0.987 | 0.978 | 7 | 3 | 0.34 | level |
 | `G_abusive` | 0.993 | 0.996 | 2 | 3 | 1.00 | level |
 | `G_injection` | 0.993 | 0.996 | 1 | 2 | 1.00 | level |
+| `compound` exact set | 1.000 | 0.909 | 2 | 0 | 0.50 | level |
+| `compound_3` exact set | 0.903 | 0.645 | 11 | 3 | 0.057 | level |
+| `clinical_oblique` recall | 0.966 | 0.793 | 5 | 0 | 0.063 | level |
+
+**Three of those "level" rows have large deltas and too few items.**
+`compound_3` is +0.258 and `clinical_oblique` recall is +0.172, both with
+zero or near-zero losses, and both miss significance only because the
+tiers hold 31 and 29 items. We report them as ties because that is what
+the test says. Do not read them as parity; read them as underpowered,
+and note that the two tiers where the reference system was weakest are
+the two where our lead is largest.
+
+Reproduce every row above:
+
+```bash
+python scripts/eval_router.py --ckpt <ckpt> --decoder --dump /tmp/ours.json
+python scripts/compare_to_jev.py --ours /tmp/ours.json \
+  --jev baselines/jev_healthcare_router.json
+```
 | `compound_3` tier | 0.903 | 0.645 | 11 | 3 | 0.057 | level |
 | `clinical_oblique` recall | 0.966 | 0.793 | 5 | 0 | 0.063 | level |
 

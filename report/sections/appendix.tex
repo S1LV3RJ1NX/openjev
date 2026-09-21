@@ -67,7 +67,8 @@ result & command \\
 \midrule
 Held-out transfer & \texttt{scripts/eval\_heldout.py --ckpt <ckpt>} \\
 Router against reference & \texttt{scripts/eval\_router.py --ckpt <ckpt> --dump o.json} \\
-Paired McNemar & \texttt{scripts/compare\_to\_jev.py --ours o.json --jev j.json} \\
+Paired McNemar & \texttt{scripts/compare\_to\_jev.py --ours o.json} \\
+ & \quad \texttt{--jev baselines/jev\_healthcare\_router.json} \\
 Latency & \texttt{scripts/bench\_latency.py --ckpt <ckpt>} \\
 Data audit & \texttt{scripts/audit\_data.py <task dir> --deep} \\
 Packing check & \texttt{scripts/check\_packing.py <mixture>} \\
@@ -75,6 +76,15 @@ Binary diagnosis & \texttt{scripts/diagnose\_binary.py --ckpt <ckpt>} \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+The reference system's per-item predictions on all 450 router test items
+ship in the repository as
+\texttt{baselines/jev\_healthcare\_router.json}. A McNemar test needs both
+systems' answers on the same items, so publishing only aggregate
+accuracies would let a reader check our deltas but not our significance
+claims. That file is one pass against a non-deterministic and evolving
+service, so it is the baseline we measured rather than a fixed property
+of the product.
 
 \section{Hyperparameters}
 \label{app:hparams}

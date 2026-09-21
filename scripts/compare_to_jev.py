@@ -106,6 +106,22 @@ def main() -> None:
         if o_g:
             report(g, o_g, j_g)
 
+    # ---- exact set on the compound tiers, where a single choice cannot
+    # express the answer and Jev was weakest
+    for tier in ("compound", "compound_3"):
+        sub = [e for e in shared if e.meta.get("tier") == tier]
+        o_c, j_c = [], []
+        for e in sub:
+            gold = {c: bool(e.answers[c]) for c in labels if c in e.answers}
+            if not gold:
+                continue
+            o_c.append(int(all(bool(ours[e.state]["nouls"].get(c)) == v
+                               for c, v in gold.items())))
+            j_c.append(int(all((jev[e.state]["nouls"].get(c, 0.0) >= args.thresh) == v
+                               for c, v in gold.items())))
+        if o_c:
+            report(f"{tier} exact set", o_c, j_c)
+
     # ---- oblique clinical recall, the tier Jev was weakest on
     obl = [e for e in shared if e.meta.get("tier") == "clinical_oblique"
            and bool(e.answers.get("G_clinical"))]

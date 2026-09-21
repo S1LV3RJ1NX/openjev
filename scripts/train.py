@@ -235,6 +235,16 @@ def main() -> None:
             t = Task.load(args.task, s)
             if len(t):
                 splits[s] = t
+        # `heldout_check` above already rejects a task whose directory name
+        # is in the suite. This second pass matches on the task's declared
+        # source instead, which catches a held-out dataset that has been
+        # renamed on disk. Both honour --allow-heldout.
+        from openjev.heldout import assert_training_mixture_clean
+        declared = splits["train"].name or name
+        if not args.allow_heldout:
+            assert_training_mixture_clean([declared])
+        print(f"contamination guard: {declared!r} checked against the held-out "
+              f"suite, no overlap")
         print(f"task {name}: " + "  ".join(f"{k}={len(v)}" for k, v in splits.items()))
         print(f"questions: {len(splits['train'].questions)}  device: {device}")
         train_ds = TaskDataset(splits["train"], packer, shuffle_options=True)
