@@ -39,6 +39,8 @@ def main() -> None:
     ap.add_argument("--in", dest="src", required=True)
     ap.add_argument("--out", dest="dst", required=True)
     ap.add_argument("--min-rows", type=int, default=32)
+    ap.add_argument("--max-menu-chars", type=int, default=4000,
+                    help="drop examples whose option menu alone is longer than this")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -82,6 +84,31 @@ def main() -> None:
                 removed = before - len(t.examples)
                 dropped_rows += removed
                 notes.append(f"{d.name}/{s}: dropped {removed} contradictory rows")
+
+            # --- menus too long to pack ------------------------------------
+            # Some MultipleChoice options are themselves multi-paragraph
+            # passages, so the menu alone exceeds the context budget and the
+            # trainer raises mid-run. Subsampling the menu does not help when
+            # two options are 2,000 characters each, and truncating an option
+            # can cut away the very text that distinguishes it, so these
+            # examples are dropped instead.
+            def menu_chars(e) -> int:
+                # criteria is a dict for choice/noul and a list for score.
+                menu = (e.criteria or {}).get(qid) or getattr(t.questions[qid], "criteria", None)
+                if isinstance(menu, dict):
+                    return sum(len(str(v)) for v in menu.values())
+                if isinstance(menu, list):
+                    return sum(len(str(v)) for v in menu)
+                return 0
+
+            over = [e for e in t.examples if menu_chars(e) > args.max_menu_chars]
+            if over:
+                before = len(t.examples)
+                keep_ids = {id(e) for e in over}
+                t.examples = [e for e in t.examples if id(e) not in keep_ids]
+                dropped_rows += before - len(t.examples)
+                notes.append(f"{d.name}/{s}: dropped {before - len(t.examples)} rows "
+                             f"whose menu exceeds {args.max_menu_chars} chars")
 
             if len(t.examples) < args.min_rows:
                 drop_task = True

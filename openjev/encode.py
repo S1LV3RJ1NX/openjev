@@ -50,6 +50,12 @@ def option_text(label: str, description: object | None) -> str:
         return label
     if not isinstance(description, str):
         description = json.dumps(description, ensure_ascii=False)
+    # A MultipleChoice menu is {option_text: option_text}, since the option is
+    # its own description. Rendering "label: description" there emits every
+    # option twice, doubling the menu for no signal and pushing packed
+    # sequences over the context budget.
+    if description.strip() == label.strip():
+        return label
     return f"{label}: {description}"
 
 
