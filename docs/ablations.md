@@ -187,7 +187,15 @@ things. The candidate axes, and what each turned out to be worth:
 | latency | **no.** Merged LoRA runs at 1.07x the encoder |
 | model size | **no.** 1.7B fits a consumer GPU |
 | fine-tuned accuracy | **yes, decoder.** 0.979 against 0.899 |
-| zero-shot transfer | **unresolved. This decides it** |
+| zero-shot transfer | **yes, decoder, decisively.** 32.7x against 21.9x |
+
+**Decided (G-C3).** Ship the LoRA decoder. It wins the only axis that
+separated the two, and wins it by a wide margin: 32.7x mean against
+21.9x, every one of seven held-out tasks improved, and Banking77
+zero-shot went from 0.290 to 0.728 against the reference API's 0.820.
+The encoder stays documented as the choice when p95 latency is the
+binding constraint (20 ms against 56 ms) or when a 0.6 GB footprint
+matters more than 9 points of zero-shot accuracy.
 
 Experiment **G-C3** measures the last row. The three possible outcomes and
 what ships under each are written in section 7, in advance.
@@ -237,7 +245,7 @@ and we caused it twice before measuring it.
 |---|---|---|---|
 | G-C1 | Both on the same mixture, zero-shot | 17.6x each; 5/7 vs 4/7 above chance | tie on the mean |
 | G-C2 | Was G-C1 fair? | no: encoder fully trained, decoder a 4.2M frozen head | **invalid** |
-| G-C3 | **LoRA decoder on the mixture** | **queued** | **decides the architecture** |
+| G-C3 | **LoRA decoder on the mixture** | **32.7x mean, all 7 tasks beat chance and majority; banking77 0.290 to 0.728** | **decided: ship the decoder** |
 | G-C4 | Latency, batch 1, ten questions | 19.9 / 22.4 ms p50 | near parity |
 | G-C5 | Merged against unmerged adapter | 1.96x unmerged, 1.07x merged | **always merge** |
 | G-C6 | Does latency grow with question count? | 1q 69 ms, 10q 74 ms | flat, as the reference is |

@@ -15,9 +15,9 @@ intervals over examples; paired comparisons use exact McNemar.
 | | OpenJev | Jev | verdict |
 |---|---|---|---|
 | Banking77, **fine-tuned on it** | **0.923** | — | in-task, not comparable |
-| Held-out suite, **all 7 tasks clear chance** | **21.9x chance** | not measured | 0.9x at the start |
-| Held-out CLINC (K=151) | **0.628** | not measured | 94.9x chance |
-| Banking77, never seen it | 0.290 | **0.820** | Jev, clearly |
+| Held-out suite, **all 7 beat chance and majority** | **32.7x chance** | not measured | 0.9x at the start |
+| Held-out CLINC (K=151), never seen it | **0.783** | not measured | 118x chance |
+| Banking77, never seen it | 0.728 | **0.820** | Jev, but by 9 points not 53 |
 | Router intent, LoRA | **0.979** | 0.941 | **OpenJev**, p = 1e-03 |
 | Router multi-label exact set, LoRA | **0.909** | 0.822 | **OpenJev**, p = 7e-06 |
 | `G_pharmacy`, LoRA | **0.978** | 0.880 | **OpenJev**, p = 4e-10 |
@@ -29,7 +29,44 @@ intervals over examples; paired comparisons use exact McNemar.
 
 ---
 
-## Part 2 result: all seven held-out tasks clear chance
+## Part 2 result: a LoRA decoder reaches 32.7x chance
+
+The deciding experiment. Rank-16 adapters on Qwen3-1.7B, same 279-task
+mixture the encoder used, same augmentation. Harness sanity 1.000,
+held-in control 1.5–2.5x.
+
+| task | K | chance | accuracy | 95% CI | x chance |
+|---|---|---|---|---|---|
+| clinc_oos | 151 | 0.007 | **0.783** | [0.752, 0.817] | **118.3x** |
+| banking77 | 77 | 0.013 | **0.728** | [0.693, 0.765] | **56.1x** |
+| massive_intent | 60 | 0.017 | **0.773** | [0.738, 0.805] | **46.4x** |
+| ag_news | 4 | 0.250 | 0.803 | [0.772, 0.838] | 3.2x |
+| sst5 | 5 | 0.200 | 0.438 | [0.400, 0.475] | 2.2x |
+| civil_comments | 2 | 0.500 | 0.688 | [0.655, 0.727] | 1.4x |
+| helpsteer | 5 | 0.200 | 0.282 | [0.247, 0.320] | 1.4x |
+
+**Mean 32.7x, against the encoder's 21.9x. Every task improved.**
+
+**And every task now beats its majority-class baseline**, which the
+encoder's `helpsteer` did not: 0.282 against 0.233 at p = 0.0025,
+alongside civil_comments and sst5 at p < 1e-15. The one asterisk on the
+encoder result is gone.
+
+**Banking77 zero-shot went from 0.290 to 0.728** against the reference
+API's 0.820. We were 53 points behind; we are now 9.
+
+### The architecture decision
+
+This settles the question the ablation registry was built around. Latency
+does not separate the backbones once the adapter is merged (1.07x), and
+1.7B fits a consumer GPU, so zero-shot transfer was the deciding axis.
+The decoder wins it decisively.
+
+**Ship the LoRA decoder.** Keep the encoder documented for the case where
+p95 latency binds (20 ms against 56 ms) or a 0.6 GB footprint matters
+more than 9 points of zero-shot accuracy.
+
+## Encoder result: all seven held-out tasks clear chance
 
 Encoder trained on the audited 279-task mixture. `scripts/eval_heldout.py`,
 n=600 per task, bootstrap CI over examples. Harness sanity 1.000, held-in

@@ -213,8 +213,9 @@ Jev wins. With them, we do.**
 **Jev wins on schemas you have not trained on:**
 
 - **Zero-shot accuracy.** 0.820 on Banking77 having never seen it. Our best
-  never-trained-on-it number is 0.343, and the published checkpoint is
-  0.290. That gap is large and it is the reason to pay them.
+  never-trained-on-it number is now 0.728, from a LoRA decoder trained on
+  the 279-task mixture. Nine points, where it used to be fifty-three.
+  Still theirs, and no longer a different league.
 - **Scale out of the box.** 255 options and a 32k context, no setup.
 
 **We win once fine-tuned on the task**, paired on the same 450 router items
@@ -257,7 +258,7 @@ buys nothing and a plain classifier is simpler.
 | | |
 |---|---|
 | [LoRA router adapter](https://huggingface.co/s1lv3rj1nx/openjev-router-lora) | **87 MB, beats the reference API on the router** |
-| [General checkpoint](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | What `--init-from` consumes, 21.9x chance on held-out schemas |
+| [General checkpoint](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | Encoder variant, 21.9x chance on held-out schemas |
 | [Fine-tuned router](https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare) | A worked example you can run in three lines |
 | [Held-out suite](https://huggingface.co/datasets/s1lv3rj1nx/openjev-heldout) | 7 tasks and the contamination manifest |
 | [Training mixture](https://huggingface.co/datasets/s1lv3rj1nx/openjev-mixture) | 279 tasks, 323,466 rows, audited clean |
