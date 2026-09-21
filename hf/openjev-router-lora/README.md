@@ -38,8 +38,17 @@ out = model.answer(
         "G_clinical": Noul(instructions="Does this describe a clinical symptom?"),
     },
 )
-out["A_intent"].label
+out["A_intent"].label                       # 'store_hours'  p = 0.85
+out["C_store_hours"].probabilities["true"]  # 1.000
+out["G_clinical"].probabilities["true"]     # 0.000
 ```
+
+That output is worth reading closely. The message contains **two** intents,
+a refill and an opening-hours question, and `A_intent` can only return one
+of them — here it picks `store_hours`. The `noul` flag catches the other at
+1.000. This is exactly why multi-label routing uses one `noul` per label
+rather than a single `choice`: a softmax over intents cannot say "both", and
+on three-intent messages that difference is 0.903 against 0.645.
 
 `pip install git+https://github.com/S1LV3RJ1NX/openjev`. The adapter is
 merged into the base weights on load, because leaving it unmerged costs

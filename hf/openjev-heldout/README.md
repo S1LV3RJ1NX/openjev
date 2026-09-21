@@ -85,13 +85,30 @@ Each task directory holds `task.json` (the schema) and `train/dev/test.jsonl`
 {"state": "how do I top up my card?", "answers": {"intent": "top_up_by_card"}, "meta": {"tier": "default"}}
 ```
 
-## Provenance
+## Provenance and licences
 
-Derived from public datasets, each named in its task's `holdout_of`. Built by
-`scripts/build_heldout.py`, which records source, split, sampling seed and
-row lineage. Verify with `scripts/verify_heldout_lineage.py`.
+Every task is a sample of a public dataset, named in its `source.json` and
+in `holdout_of`. Built by `scripts/build_heldout.py`, which records source,
+split, sampling seed and row lineage; verify with
+`scripts/verify_heldout_lineage.py`.
 
-## Licence
+| task | source |
+|---|---|
+| `banking77` | [PolyAI/banking77](https://huggingface.co/datasets/PolyAI/banking77) |
+| `clinc_oos` | [clinc/clinc_oos](https://huggingface.co/datasets/clinc/clinc_oos) |
+| `massive_intent` | [AmazonScience/massive](https://huggingface.co/datasets/AmazonScience/massive) |
+| `ag_news` | [fancyzhx/ag_news](https://huggingface.co/datasets/fancyzhx/ag_news) |
+| `sst5` | [SetFit/sst5](https://huggingface.co/datasets/SetFit/sst5) |
+| `civil_comments` | [google/civil_comments](https://huggingface.co/datasets/google/civil_comments) |
+| `helpsteer_helpfulness` | [nvidia/HelpSteer](https://huggingface.co/datasets/nvidia/HelpSteer) |
 
-Apache 2.0 for the assembly and the option descriptions. The underlying
-datasets keep their own licences; see each task's `holdout_of` for sources.
+**The GitHub repository withholds the `sst5` and `ag_news` rows** and ships
+only their schemas plus a rebuild command, because those two sources are
+the ones whose terms we read as not clearly permitting redistribution. They
+are included here for convenience with attribution above. If you are a
+rightsholder and would prefer they were not, open a discussion on this repo
+and they will be removed.
+
+The option descriptions, the sampling, the contamination manifest and the
+assembly are ours, Apache 2.0. Every underlying dataset keeps its own
+licence and its own terms govern the rows.

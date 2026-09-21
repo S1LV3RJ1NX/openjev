@@ -40,6 +40,14 @@ def audit_task(path: Path, deep: bool) -> list[tuple[str, str]]:
             except Exception as e:  # noqa: BLE001
                 out.append((ERROR, f"{s} will not load: {str(e)[:70]}"))
     if not splits:
+        # A task directory with a schema but no rows is usually deliberate:
+        # some sources do not permit redistribution, so the repo ships the
+        # schema and a rebuild command. Calling that an error trains people
+        # to ignore errors.
+        if (path / "task.json").exists():
+            return [(WARN, "schema present, no rows. Either a task whose "
+                           "source cannot be redistributed, or an interrupted "
+                           "build. Rebuild with scripts/build_heldout.py --fetch")]
         return [(ERROR, "no loadable split")]
 
     for s, t in splits.items():
