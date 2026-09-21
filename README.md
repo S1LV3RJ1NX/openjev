@@ -224,12 +224,16 @@ with exact McNemar:
 |---|---|---|---|
 | intent | **0.979** | 0.941 | 1e-03 |
 | multi-label exact set | **0.909** | 0.822 | 7e-06 |
-| `compound_3`, three intents at once | **0.903** | 0.645 | — |
+| `compound_3`, three intents at once | 0.903 | 0.645 | 0.057, level |
 | scope gate | **0.978** | 0.880 | 4e-10 |
-| oblique clinical risk | **0.966** | 0.793 | 0.06, n=29 |
+| oblique clinical risk | 0.966 | 0.793 | 0.063, level |
 | clinical / abusive / injection gates | — | — | level |
 
-Three wins, four ties, no losses, from 395 examples and an 87 MB adapter.
+Three wins, five ties, no losses, from 395 examples and an 87 MB adapter.
+
+**The comparison is asymmetric and in our favour:** we are fine-tuned on
+this task, Jev is zero-shot on it. What it shows is that a few hundred
+labels outweigh the gap between an open 1.7B model and a closed API.
 
 Also ours regardless of accuracy: full-precision probabilities, where Jev
 quantizes to 0.01 and puts 71.9% of values at a hard zero; determinism,

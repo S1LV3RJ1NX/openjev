@@ -108,35 +108,57 @@ separated in this pair.
 Scaling the audited mixture to 279 tasks took the mean from $17.6\times$
 to $21.9\times$ and moved every task (Figure~\ref{fig:transfer}).
 
-\subsection{Router: with labels, we beat the reference API}
+\subsection{Router: a fine-tuned small model against a zero-shot API}
 \label{sec:res-router}
+
+\paragraph{The comparison is asymmetric, in our favour, and we state it
+before the numbers.} \openjev{} is fine-tuned on 395 labelled examples of
+this task. The reference API is not: it has never seen this task's
+training split, and produces its answers from the schema alone. This is
+not a like-for-like contest, and a reader should discount it accordingly.
+What it establishes is narrower than ``we beat Jev'': \emph{if you can
+label a few hundred examples, a 1.7B open model reaches and passes a
+closed API operating zero-shot on the same task.} That is a claim about
+the value of labels as much as about either model.
 
 \begin{table}[t]
 \centering
 \begin{tabular}{lrrrrrl}
 \toprule
  & \openjev{} & reference & $b_{10}$ & $b_{01}$ & $p$ & winner \\
+ & \emph{fine-tuned} & \emph{zero-shot} & & & & \\
 \midrule
 intent                        & \textbf{0.979} & 0.941 & 14 &  1 & 9.8e-04 & \openjev{} \\
 multi-label exact set         & \textbf{0.909} & 0.822 & 57 & 18 & 7.2e-06 & \openjev{} \\
-\quad \texttt{compound\_3} tier & \textbf{0.903} & 0.645 & -- & -- & -- & \openjev{} \\
 scope gate                    & \textbf{0.978} & 0.880 & 49 &  5 & 3.9e-10 & \openjev{} \\
 clinical gate                 & 0.987 & 0.978 &  7 &  3 & 0.34 & level \\
 abusive gate                  & 0.993 & 0.996 &  2 &  3 & 1.00 & level \\
 injection gate                & 0.993 & 0.996 &  1 &  2 & 1.00 & level \\
-oblique clinical recall       & 0.966 & 0.793 &  5 &  0 & 0.06 & level \\
+\quad \texttt{compound\_3} tier & 0.903 & 0.645 & 11 &  3 & 0.057 & level \\
+oblique clinical recall       & 0.966 & 0.793 &  5 &  0 & 0.063 & level \\
 \bottomrule
 \end{tabular}
 \caption{Rank-16 LoRA on Qwen3-1.7B, 395 training examples, 258 seconds,
-paired on the same 450 test items with exact McNemar. Three wins, four
-ties, no losses. The oblique-clinical tier has $n{=}29$, so zero losses
-floors at $p = 0.0625$ and cannot reach significance.}
+paired on the same 450 test items with exact McNemar. \openjev{} is
+fine-tuned; the reference is zero-shot. Three wins, five ties, no losses.
+The last two rows have $n{=}31$ and $n{=}29$, where even a large margin
+struggles to reach significance: the oblique-clinical tier floors at
+$p = 0.0625$ with zero losses.}
 \label{tab:router}
 \end{table}
 
-The \texttt{compound\_3} row is where the \noul{} primitive earns its
-place: three simultaneous intents in one message, which a single \choice{}
-softmax cannot express at all.
+\paragraph{Two rows that look like wins are not.} The
+\texttt{compound\_3} tier ($0.903$ against $0.645$) and oblique clinical
+recall ($0.966$ against $0.793$) are both large margins that fail the
+significance test, at $p = 0.057$ and $p = 0.063$, because the tiers hold
+31 and 29 items. We report them as level. They are the two tiers we most
+expected to win, which is exactly why they need the test rather than the
+margin.
+
+\texttt{compound\_3} is nonetheless where the \noul{} primitive earns its
+place in design terms: three simultaneous intents in one message, which a
+single \choice{} softmax cannot express at all, whatever the $p$-value on
+31 items says.
 
 \paragraph{The smallest configuration is the best one.}
 

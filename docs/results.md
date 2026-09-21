@@ -340,7 +340,12 @@ majority-class baseline, which is not skill either.
 Rank-16 adapters on Qwen3-1.7B, 395 training examples, 258 seconds. Paired
 on the same 450 items, exact McNemar.
 
-| | OpenJev | Jev | b10 | b01 | p | winner |
+OpenJev is fine-tuned on this task's 395 training examples; Jev is
+zero-shot on it. The comparison is asymmetric and in our favour, so what
+it shows is that a few hundred labels outweigh the gap between an open
+1.7B model and a closed API, not that the models are equal.
+
+| | OpenJev (fine-tuned) | Jev (zero-shot) | b10 | b01 | p | winner |
 |---|---|---|---|---|---|---|
 | intent | **0.979** | 0.941 | 14 | 1 | 9.8e-04 | **OpenJev** |
 | multi-label exact set | **0.909** | 0.822 | 57 | 18 | 7.2e-06 | **OpenJev** |
@@ -348,9 +353,16 @@ on the same 450 items, exact McNemar.
 | `G_clinical` | 0.987 | 0.978 | 7 | 3 | 0.34 | level |
 | `G_abusive` | 0.993 | 0.996 | 2 | 3 | 1.00 | level |
 | `G_injection` | 0.993 | 0.996 | 1 | 2 | 1.00 | level |
-| `clinical_oblique` recall | 0.966 | 0.793 | 5 | 0 | 0.06 | level |
+| `compound_3` tier | 0.903 | 0.645 | 11 | 3 | 0.057 | level |
+| `clinical_oblique` recall | 0.966 | 0.793 | 5 | 0 | 0.063 | level |
 
-**Three wins, four ties, no losses.**
+**Three wins, five ties, no losses.**
+
+Two rows that look like wins are not. `compound_3` (0.903 against 0.645)
+and oblique clinical recall (0.966 against 0.793) are large margins that
+fail significance at p = 0.057 and p = 0.063, because those tiers hold 31
+and 29 items. They are the two we most expected to win, which is why they
+needed the test rather than the margin.
 
 By tier on the multi-label set, which is where the reference API was
 weakest. `compound_3` is three separate intents in one message:
