@@ -16,9 +16,22 @@ from openjev.schema import (
     question_from_dict,
 )
 
+
+def __getattr__(name: str):
+    # DecisionModel pulls in torch and transformers. Importing it lazily keeps
+    # `from openjev import Task` usable in the dataset-building venv, which
+    # deliberately has neither.
+    if name == "DecisionModel":
+        from openjev.infer import DecisionModel
+
+        return DecisionModel
+    raise AttributeError(f"module 'openjev' has no attribute {name!r}")
+
+
 __all__ = [
     "Answer",
     "Choice",
+    "DecisionModel",
     "Example",
     "Noul",
     "Question",

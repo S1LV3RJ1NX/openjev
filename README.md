@@ -83,9 +83,13 @@ forward pass over a shared state**, so asking twenty costs about the same as
 asking one.
 
 ```python
-from openjev import Choice, Score, Noul
+from openjev import DecisionModel, Choice, Score, Noul
 
-result = model.predict(
+# A Hub repo id, a local directory, or a path to model.pt. The backbone,
+# prompt format and fitted temperatures all travel inside the checkpoint.
+model = DecisionModel.from_pretrained("s1lv3rj1nx/openjev-router-healthcare")
+
+result = model.answer(
     state="I need a refill on my thyroid tablets, and are you open on Sunday?",
     questions={
         "intent":      Choice(instructions="What is this about?",
@@ -97,11 +101,22 @@ result = model.predict(
     },
 )
 
-result["intent"].probabilities      # {"refill": 0.71, "store_hours": 0.24, ...}
+result["intent"].label              # "refill"
+result["intent"].probabilities      # {"refill": 0.87, "store_hours": 0.09, ...}
 result["intent"].confidence         # chance-corrected, comparable across menus
-result["urgency"].score             # 1.30 — the expected level, not the argmax
+result["urgency"].score             # 1.30, the expected level, not the argmax
 result["urgency"].is_unimodal       # False means that 1.30 describes nothing
 result["needs_human"].probabilities["true"]
+```
+
+Many states at once, same shared-prefix trick, one batch:
+
+```python
+flags = model.answer_batch(
+    ["when do you close today", "my chest hurts badly"],
+    {"clinical": Noul(instructions="Does this describe a clinical symptom?")},
+)
+[f["clinical"].probabilities["true"] for f in flags]   # [0.002, 1.000]
 ```
 
 | primitive | returns | use for |
