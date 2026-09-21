@@ -30,7 +30,7 @@ intervals over examples; paired comparisons use exact McNemar.
 
 # What worked
 
-## 1. The general checkpoint is worth +27 points to a specialist
+## 1. The general checkpoint is worth +36 points to a specialist
 
 **The project's central claim, and the strongest result here.** Same router
 task, same 395 training examples, same 6 epochs, same 38 seconds. Only the
@@ -226,7 +226,36 @@ floor, so the accuracy gain is not significant; only the collapse is fixed.
 `helpsteer` doubles, 0.110 to 0.222, but lands exactly on its 0.233
 majority-class baseline, which is not skill either.
 
-## 8. The contamination guard caught a real leak
+## 8. Encoder and decoder tie on the mean and disagree on everything else
+
+Both backbones trained on the same `mixture_ord2` with the same
+augmentations, both landing at **17.6x chance**. The average hides the
+result.
+
+| held-out task | K | encoder | decoder + head |
+|---|---|---|---|
+| clinc_oos | 151 | 0.518 | **0.528** |
+| banking77 | 77 | 0.278 | **0.343** |
+| massive_intent | 60 | **0.298** | 0.185 |
+| ag_news | 4 | 0.408 | **0.640** |
+| sst5 (`score`) | 5 | **0.308** | 0.232 |
+| civil_comments (`noul`) | 2 | 0.528 | 0.507 |
+| helpsteer (`score`) | 5 | **0.222** | 0.185 |
+| tasks above chance | | **5 of 7** | 4 of 7 |
+| held-in control | | **1.4–2.3x** | 1.0–1.3x |
+
+The encoder is the better all-rounder and clears chance on one more task, so
+it is what we publish. The decoder is stronger where menus are large.
+
+**The held-in row is the strange one.** The decoder sits near chance on
+tasks it was *trained* on while transferring as well as the encoder to tasks
+it was not. Its head is 4.2M parameters on a frozen 1.7B backbone, so most
+of what it does at evaluation is the backbone's pretrained ability rather
+than anything the head learned. The encoder, training end to end, actually
+fits its mixture. Neither is wrong, but only the encoder's held-in number
+does the job a control is there to do.
+
+## 9. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:
@@ -310,11 +339,13 @@ hypothesis is worth retesting once there is real ordinal data to train on.
 skewed high (58/122/140/140/140), points at something systematic rather
 than at scarcity.
 
-## The `G_pharmacy` gate is degenerate and cannot be rescued
+## The `G_pharmacy` gate stays the weakest of the four
 
-FPR **0.783** after the general init, essentially unchanged from 0.826. It
-predicts positive on almost everything because the slice is 427 positive to 23
-negative. No starting checkpoint fixes a gate with 23 negative examples.
+The slice is 427 positive to 23 negative, and it still over-fires: FPR
+0.652, down from 0.826 from scratch and 0.783 under the first general
+checkpoint. Good enough to beat Jev on the gate overall (0.947 against
+0.880, p = 3e-04) but not a solved gate, and 23 negatives is not enough data
+to fix one properly.
 
 ## A partially loaded model reported a plausible number
 
@@ -325,11 +356,15 @@ result. It was wrong. `eval_heldout.py` built `OpenJevDecoder` without
 scorer tensors and scored the untrained readout. Loading the head correctly
 gives 16.2x on the same checkpoint.
 
-Two guards caught it and one nearly did not. The harness sanity task fell to
-0.333, exactly chance, and printed its warning. The held-in control sat at
-1.0–1.2x on tasks the model had been trained on, which cannot happen if the
-model loaded. But the mismatch itself printed only a warning and the script
-carried on to produce a full, well-formatted results table.
+One guard caught it. The harness sanity task fell to 0.333, exactly chance,
+and printed its warning. The mismatch itself printed only a warning and the
+script carried on to produce a full, well-formatted results table.
+
+We first also credited the held-in control, which sat at 1.0–1.2x on tasks
+the model had been trained on. That reasoning was wrong: result 8 shows the
+decoder's held-in control reads 1.0–1.3x when it loads perfectly, because a
+4.2M head on a frozen backbone barely fits its own training mixture. The
+control would not have caught this, and on the decoder path it cannot.
 
 Both loaders now raise instead of warning, because a warning above a complete
 table gets read as a footnote. Checkpoints also record the backbone, whether
@@ -337,6 +372,18 @@ the head exists, and the preamble and option template, since the same weights
 scored under a different prompt are a different system. A separate guard
 refuses to overwrite a checkpoint of a different architecture, after a
 decoder run silently replaced the encoder checkpoint that result 1 depends on.
+
+## Autocast hid a dtype bug until evaluation
+
+The decoder head is float32 on a bf16 backbone. Under `torch.autocast` that
+mixes silently, so a 58-minute training run completed normally and then
+every held-out task failed at evaluation with `expected scalar type BFloat16
+but found Float`. The weights were fine and the run did not need repeating,
+but the failure landed after the expensive part rather than in the first
+second.
+
+The head now casts to its own dtype explicitly instead of relying on an
+ambient autocast context.
 
 ## Noise robustness is a dead end
 
@@ -356,6 +403,8 @@ not evidence.
 | Banking77 zero-shot 0.325 (25x chance) | measured at n=40; at n=200 it is 0.205 |
 | "OpenJev beats Jev at oblique clinical detection" | 5-0 on items but p = 0.0625 at n=29 |
 | `G_pharmacy` 0.942 vs Jev's 0.880, our best gate | class imbalance; our FPR is 0.783 |
+| "`G_pharmacy` cannot be rescued by any checkpoint" | a better one took FPR to 0.652 and the gate to a win |
+| "The held-in control would have caught the dropped head" | the decoder reads 1.0–1.3x there even when it loads |
 | "The encoder cannot generalize" | true of a 61-task mixture, not the architecture |
 | "The warm start is the cheap lever" | it gives nothing; the data stage does the work |
 | Precision recoverable by inverting `confidence` | real but ≤0.018 and no extra threshold granularity |

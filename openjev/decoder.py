@@ -129,7 +129,13 @@ class OpenJevDecoder(nn.Module):
         if self.scorer is not None:
             # Residual: zero at initialisation, so this starts as the exact
             # zero-shot model.
-            logits = logits + self.scorer(markers).squeeze(-1).float()
+            #
+            # The head is float32 while the backbone runs in bf16. Under
+            # autocast that mixes silently, so training worked and evaluation
+            # outside autocast raised. Match the head's dtype explicitly
+            # rather than depending on an ambient context.
+            head_dtype = next(self.scorer.parameters()).dtype
+            logits = logits + self.scorer(markers.to(head_dtype)).squeeze(-1).float()
 
         lp = grouped_log_softmax(logits, batch["marker_group"], int(batch["n_groups"]))
         return OpenJevOutput(log_probs=lp, marker_group=batch["marker_group"])
