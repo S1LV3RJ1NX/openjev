@@ -102,8 +102,9 @@ while descriptions that merely restated the label name were worth nothing
 uv run python scripts/train.py --task tasks/my_task --epochs 6 --bs 8
 
 # B — start from the general checkpoint. Same data, same time, +36 points.
+hf download s1lv3rj1nx/openjev-encoder-general model.pt --local-dir checkpoints/general
 uv run python scripts/train.py --task tasks/my_task \
-    --init-from checkpoints/mixture_ord2/model.pt --epochs 6 --bs 8
+    --init-from checkpoints/general/model.pt --epochs 6 --bs 8
 ```
 
 Recipe B is the project's central claim and it is measured: intent
@@ -161,6 +162,7 @@ buys nothing and a plain classifier is simpler.
 
 | | |
 |---|---|
+| [Model on the Hub](https://huggingface.co/s1lv3rj1nx/openjev-encoder-general) | The general checkpoint, 17.6x chance on held-out schemas |
 | [Dataset format](docs/dataset-format.md) | The spec, a template, and the mistakes we made |
 | [Results](docs/results.md) | Every measurement, what worked and what did not |
 | [Architecture](docs/architecture.md) | The design, with diagrams, and why each choice |
