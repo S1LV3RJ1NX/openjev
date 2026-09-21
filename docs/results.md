@@ -416,6 +416,75 @@ and trained in 72 minutes; the decoder is 1.7B and untrained. A fair
 comparison needs the decoder's calibration head trained on the same mixture,
 which has not been run.
 
+## The central claim, tested: does a general checkpoint make a specialist cheap?
+
+This is the project's whole argument, and until now it was an assertion. Same
+router task, same 395 training examples, same 6 epochs, same 38 seconds. The
+only difference is the starting weights.
+
+```bash
+uv run python scripts/train.py --task tasks/healthcare_router \
+    --init-from checkpoints/mixture_big/model.pt --epochs 6 --bs 8
+```
+
+| | from raw ModernBERT | from the general checkpoint | Jev |
+|---|---|---|---|
+| intent, lenient | 0.544 | **0.817** | 0.909 |
+| intent, strict | 0.544 | **0.817** | 0.941 |
+| multi-label exact set | 0.453 | **0.718** | 0.822 |
+| multi-label F1 | 0.554 | **0.816** | 0.890 |
+| `G_clinical` recall | 0.898 | **0.991** | 0.926 |
+| `G_clinical` FPR | 0.047 | **0.035** | 0.006 |
+| `clinical_oblique` recall | 0.931 | **0.966** | 0.793 |
+| `G_abusive` recall | 0.000 | **0.429** | 0.714 |
+| `G_injection` recall | 0.125 | **0.750** | 0.917 |
+
+Paired McNemar, general-init against from-scratch on the same items:
+
+```
+intent choice          0.817 vs 0.544   b10=108  b01=16   p = 6.0e-18
+multi-label exact set  0.718 vs 0.453   b10=144  b01=25   p = 1.6e-21
+```
+
+**108 items fixed against 16 broken.** The claim holds, and it is the strongest
+result in this repository. A specialist trained on 395 examples from a general
+checkpoint beats one trained on the same 395 examples from a raw encoder by 27
+points, and the two gates that had completely failed to learn — `G_abusive` at
+0.000 and `G_injection` at 0.125 — now reach 0.429 and 0.750 from the same
+handful of positives.
+
+### Against Jev, after the general init
+
+```
+intent choice                    0.817 vs 0.941   p = 1.0e-07   behind
+multi-label exact set            0.718 vs 0.822   p = 3.2e-05   behind
+G_clinical correctness           0.971 vs 0.978   p = 0.63      level
+clinical_oblique recall          0.966 vs 0.793   p = 0.0625    see below
+```
+
+`G_clinical` correctness is now **statistically indistinguishable from Jev**.
+Intent and multi-label remain significantly behind.
+
+### A tier that cannot prove its own result
+
+Oblique-clinical recall is 0.966 against 0.793, winning 5 items and losing 0.
+That is p = 0.0625. With n = 29 and zero losses, **5 wins is the best possible
+outcome and still cannot reach p < 0.05** — the exact test floors at
+2 × 2⁻⁵ = 0.0625. Two independently trained checkpoints have now both won this
+tier cleanly, 4-0 and 5-0, and neither can be called significant.
+
+That is a flaw in our dataset, not in the model. The tier that motivated the
+entire safety argument is too small to ever settle it, and the fix is more
+`clinical_oblique` items, not more training. Recorded here so the number is
+never quoted as a win.
+
+### The `G_pharmacy` gate is still degenerate
+
+FPR 0.783, essentially unchanged. It predicts positive on almost everything
+because the slice is 427 positive against 23 negative. The general init did
+not fix it and was never going to: no starting point rescues a gate with 23
+negative examples.
+
 ## Not yet measured
 
 - Held-out schema transfer, which is the number that matters for the zero-shot
