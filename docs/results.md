@@ -78,6 +78,32 @@ across all 83 ingested tasks. The three runs before this one got *worse*
 (17.6x → 15.3x → 13.4x) by trading away `choice` tasks; this one restored
 the count to 234 and added scale on top.
 
+## Benchmark transfer is not deployment-ready zero-shot
+
+The general checkpoint scores 21.9x chance across the held-out suite. Run it
+on the healthcare router with no fine-tuning, and:
+
+| | general checkpoint, zero-shot | same, fine-tuned | Jev, zero-shot |
+|---|---|---|---|
+| intent | 0.601 | 0.902 | **0.941** |
+| multi-label exact set | 0.427 | 0.789 | **0.822** |
+| `G_clinical` recall | **0.111** | 0.991 | 0.926 |
+
+Intent at 0.601 is well above chance for a six-way menu, so the transfer is
+real. It is also 34 points behind the reference API, and the clinical safety
+gate fires on **one in nine** of the cases it should catch, which is not a
+gate at all.
+
+**This is the caveat that matters for anyone reading the 21.9x number.**
+Clearing chance on academic benchmarks with clean label sets is a weaker
+claim than working on a deployment task you have no labels for, and the two
+come apart sharply here. Safety gates in particular appear to need task
+supervision: there is no useful zero-shot version of "catch obliquely-worded
+clinical risk at a controlled false-positive rate".
+
+Measured with `scripts/eval_router.py` on `checkpoints_final`, which was
+trained on the 279-task mixture and never on the router.
+
 ## At a glance
 
 ![OpenJev against Jev on the router](plots/comparison_router.png)

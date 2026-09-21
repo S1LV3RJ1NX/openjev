@@ -276,6 +276,7 @@ for, not on the task you actually care about.
 
 | id | question | result | verdict |
 |---|---|---|---|
+| G-F1 | General checkpoint zero-shot on the router | intent 0.601 against 0.941; `G_clinical` recall **0.111** | **benchmark transfer is not deployment-ready** |
 | M-E1 | Does argmax accuracy describe a binary task? | AUROC 0.714 against accuracy 0.515 | **no, report both** |
 | M-E2 | Do `noul` option descriptions help? | dropping them: 0.63 → 0.712 AUROC | **they hurt here** |
 | M-E3 | Do `choice` descriptions help? | +5 points if discriminative, nothing if restating the label (p = 0.75) | content-dependent |
@@ -290,7 +291,6 @@ for, not on the task you actually care about.
 |---|---|---|
 | G-C3 | LoRA decoder on the mixture | the deciding experiment |
 | S-D6 | Task adapter from a general adapter | the LoRA form of S-D1's +36 points |
-| G-F1 | General checkpoint zero-shot on the router | transfer on a task someone cares about |
 | G-F2 | ModernBERT-large | is the encoder gap capacity or data? |
 | G-F3 | Few-shot demonstrations in the preamble | untested lever on the decoder path |
 
