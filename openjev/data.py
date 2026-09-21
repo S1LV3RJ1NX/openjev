@@ -149,6 +149,18 @@ class TaskDataset(Dataset):
                 out[qid] = q  # score is ordinal and noul is fixed; order is meaning
         return out
 
+    def _subsample(self, q: Question, gold, cap: int) -> Question:
+        """Cut a choice menu down to `cap` options, never dropping the gold."""
+        if not isinstance(q, Choice) or len(q.criteria) <= cap:
+            return q
+        keys = [k for k in q.criteria if k != gold]
+        self.rng.shuffle(keys)
+        keep = keys[: max(1, cap - 1)]
+        if gold in q.criteria:
+            keep.append(gold)
+        self.rng.shuffle(keep)
+        return Choice(instructions=q.instructions, criteria={k: q.criteria[k] for k in keep})
+
     def __getitem__(self, i: int) -> Sample:
         ex = self.task.examples[i]
         # Padding a menu can push the sequence over the context budget. An
@@ -163,8 +175,30 @@ class TaskDataset(Dataset):
             except ValueError:
                 continue
         else:
+            # Even the unaugmented menu does not fit. This is real: a
+            # 174-option task rendered with a per-option template can exceed
+            # the budget on its own. Subsample the menu, always keeping the
+            # gold option, and halve until it fits. Training on a subsampled
+            # menu is still a valid example — the correct answer is present
+            # and the model still has to pick it out.
             qs = {k: v for k, v in self.task.questions.items() if k in ex.answers}
-            packed = self.packer.pack(ex.state, qs)
+            for qid, menu in (ex.criteria or {}).items():
+                if qid in qs and menu:
+                    qs[qid] = Choice(instructions=qs[qid].instructions, criteria=dict(menu))
+            cap = 64
+            while True:
+                trimmed = {
+                    qid: self._subsample(q, ex.answers.get(qid), cap)
+                    for qid, q in qs.items()
+                }
+                try:
+                    packed = self.packer.pack(ex.state, trimmed)
+                    qs = trimmed
+                    break
+                except ValueError:
+                    cap //= 2
+                    if cap < 2:
+                        raise
         packed.labels = {qid: option_labels(q) for qid, q in qs.items()}  # type: ignore[attr-defined]
         targets = {}
         for qid, q in qs.items():
