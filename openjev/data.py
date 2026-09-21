@@ -187,6 +187,7 @@ class TaskDataset(Dataset):
         distractor_prob: float = 0.0,
         max_options: int = 128,
         scale_prob: float = 0.0,
+        noul_prob: float = 0.0,
     ):
         self.task = task
         self.packer = packer
@@ -205,6 +206,7 @@ class TaskDataset(Dataset):
         self.distractor_prob = distractor_prob
         self.max_options = max_options
         self.scale_prob = scale_prob
+        self.noul_prob = noul_prob
 
     def _pad_menu(self, q: Choice, shrink: int = 0) -> Choice:
         if not self.distractors or self.rng.random() >= self.distractor_prob:
@@ -255,9 +257,30 @@ class TaskDataset(Dataset):
             levels = list(self.rng.choice(alts))
         return Score(instructions=q.instructions, criteria=levels), gold
 
+    def _as_noul(self, q: Choice, gold) -> tuple[Noul, bool] | None:
+        """Turn "which of these?" into "is it this one?".
+
+        `noul` is the primitive the mixture is poorest in — 13 tasks against
+        128 `choice` — and a held-out binary task sits at exactly chance,
+        predicting one class for every input. Choice data answers the question
+        already: if the gold is `refill`, then "is this a refill?" is true and
+        "is this a store-hours question?" is false. No labels are invented,
+        and asking about the gold half the time keeps the classes balanced.
+        """
+        labels = list(q.criteria)
+        if gold not in labels or len(labels) < 2:
+            return None
+        if self.rng.random() < 0.5:
+            pick, ans = gold, True
+        else:
+            pick, ans = self.rng.choice([l for l in labels if l != gold]), False
+        desc = str(q.criteria[pick] or pick).strip()
+        stem = q.instructions.strip().rstrip("?.")
+        return Noul(instructions=f'{stem}. Specifically, does "{desc}" apply?'), ans
+
     def _questions_for(
         self, ex: Example, shrink: int = 0
-    ) -> tuple[dict[str, Question], dict[str, int]]:
+    ) -> tuple[dict[str, Question], dict[str, int | bool]]:
         """Resolved questions, plus golds that augmentation moved."""
         qs = {k: v for k, v in self.task.questions.items() if k in ex.answers}
         # A per-example menu replaces the task-level one for that question.
@@ -270,9 +293,14 @@ class TaskDataset(Dataset):
         if not self.shuffle_options:
             return qs, {}
         out: dict[str, Question] = {}
-        golds: dict[str, int] = {}
+        golds: dict[str, int | bool] = {}
         for qid, q in qs.items():
             if isinstance(q, Choice):
+                if self.noul_prob and self.rng.random() < self.noul_prob:
+                    conv = self._as_noul(q, ex.answers.get(qid))
+                    if conv is not None:
+                        out[qid], golds[qid] = conv
+                        continue
                 q = self._pad_menu(q, shrink)
                 keys = list(q.criteria)
                 self.rng.shuffle(keys)

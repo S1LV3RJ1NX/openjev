@@ -140,6 +140,8 @@ def main() -> None:
     ap.add_argument("--max-options", type=int, default=128)
     ap.add_argument("--scale-prob", type=float, default=0.0,
                     help="probability of rewording or coarsening an ordinal scale")
+    ap.add_argument("--noul-prob", type=float, default=0.0,
+                    help="probability of recasting a choice question as a yes/no one")
     ap.add_argument("--decoder", action="store_true",
                     help="causal LM backbone with yes/no readout")
     ap.add_argument("--freeze-backbone", action="store_true",
@@ -214,6 +216,7 @@ def main() -> None:
                     t, packer, shuffle_options=True, seed=i,
                     distractors=uniq, distractor_prob=args.distractor_prob,
                     max_options=args.max_options, scale_prob=args.scale_prob,
+                    noul_prob=args.noul_prob,
                 )
                 for i, t in enumerate(tasks)
             ]

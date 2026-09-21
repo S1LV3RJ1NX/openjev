@@ -76,6 +76,46 @@ def test_no_reword_can_silently_change_length():
                 assert scale_family(v) is not None, (fam, v)
 
 
+def _bare_dataset(seed=0):
+    """A TaskDataset shell, so the augmentation can be tested without a model."""
+    import random
+
+    from openjev.data import TaskDataset
+
+    ds = TaskDataset.__new__(TaskDataset)
+    ds.rng = random.Random(seed)
+    return ds
+
+
+def test_noul_conversion_asks_about_the_gold_exactly_when_the_answer_is_yes():
+    from openjev.schema import Choice
+
+    q = Choice(
+        instructions="Which topic is this?",
+        criteria={"refill": "dispense another fill", "hours": "when the store is open",
+                  "vaccine": "booking a shot"},
+    )
+    ds = _bare_dataset()
+    yes = 0
+    for _ in range(600):
+        nq, ans = ds._as_noul(q, "refill")
+        assert ("dispense another fill" in nq.instructions) == ans, nq.instructions
+        yes += ans
+    # Balanced, or the model learns a constant answer -- which is the exact
+    # failure this augmentation exists to fix.
+    assert 0.4 < yes / 600 < 0.6, yes / 600
+
+
+def test_noul_conversion_refuses_what_it_cannot_label():
+    from openjev.schema import Choice
+
+    ds = _bare_dataset()
+    q = Choice(instructions="Which?", criteria={"a": "first", "b": "second"})
+    assert ds._as_noul(q, "not-a-label") is None
+    assert ds._as_noul(q, None) is None
+    assert ds._as_noul(Choice(instructions="Which?", criteria={"a": "only"}), "a") is None
+
+
 if __name__ == "__main__":
     import traceback
 
