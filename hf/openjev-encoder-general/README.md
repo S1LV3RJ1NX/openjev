@@ -42,17 +42,17 @@ task, 95% CI over examples). Harness sanity 1.000; held-in control 1.4–2.3x,
 so a chance-level row below is a real failure to transfer and not a loading
 bug.
 
-| task | K | accuracy | 95% CI | x chance |
-|---|---|---|---|---|
-| clinc_oos | 151 | 0.518 | [0.483, 0.558] | **78.3x** |
-| banking77 | 77 | 0.278 | [0.243, 0.315] | **21.4x** |
-| massive_intent | 60 | 0.298 | [0.263, 0.333] | **17.9x** |
-| ag_news | 4 | 0.408 | [0.367, 0.450] | 1.6x |
-| sst5 (`score`) | 5 | 0.308 | [0.272, 0.345] | 1.5x |
-| civil_comments (`noul`) | 2 | 0.528 | [0.490, 0.572] | 1.1x |
-| helpsteer (`score`) | 5 | 0.222 | [0.188, 0.252] | 1.1x |
+| task | K | chance | accuracy | 95% CI | x chance |
+|---|---|---|---|---|---|
+| clinc_oos | 151 | 0.007 | 0.628 | [0.587, 0.672] | **94.9x** |
+| massive_intent | 60 | 0.017 | 0.473 | [0.430, 0.512] | **28.4x** |
+| banking77 | 77 | 0.013 | 0.290 | [0.255, 0.323] | **22.3x** |
+| ag_news | 4 | 0.250 | 0.735 | [0.698, 0.772] | 2.9x |
+| sst5 (`score`) | 5 | 0.200 | 0.412 | [0.373, 0.452] | 2.1x |
+| civil_comments (`noul`) | 2 | 0.500 | 0.683 | [0.648, 0.718] | 1.4x |
+| helpsteer (`score`) | 5 | 0.200 | 0.262 | [0.225, 0.297] | 1.3x |
 
-Mean 17.6x chance.
+**Mean 21.9x chance, and every interval excludes its chance floor.**
 
 **Fine-tuned on a healthcare routing task**, 395 examples, 38 seconds, paired
 against a commercial typed-decision API on the same 450 items with exact
@@ -68,11 +68,16 @@ McNemar:
 
 ## Limitations, stated plainly
 
-**The `score` and `noul` primitives do not transfer.** The last three rows of
-the held-out table sit at chance, and their confidence intervals contain the
-chance floor. `choice` transfers well and the other two do not, because the
-training mixture is 121 `choice` questions against 13 `noul` and 9 `score`.
-Fine-tune on your own labels if you need those two.
+**One task only beats chance, not the trivial baseline.** Chance is not
+always the right floor: a skewed task can be beaten by always predicting its
+most common label. `civil_comments` beats that baseline outright (0.683
+against 0.500, p < 1e-15), but `helpsteer` sits on the line, 0.262 against a
+0.233 majority baseline at p = 0.050. Six of seven are unambiguous; that one
+is above chance and level with predicting the most common level.
+
+**The mixture is lopsided.** 234 `choice` tasks against 34 `noul` and 11
+`score`, so `choice` transfers best and the ordinal primitive is weakest.
+That is a property of the training data, not the architecture.
 
 **This is not a zero-shot replacement for a commercial API.** On Banking77
 never having seen it, this scores 0.278 against roughly 0.820 for one. The
@@ -85,7 +90,8 @@ the repo rather than quietly dropped.
 ## Training
 
 - Base: `answerdotai/ModernBERT-base`
-- 143 tasks, 192,462 rows, assembled from `tasksource`, one epoch
+- 279 tasks, 323,466 rows, assembled from `tasksource`, one epoch, audited
+  to zero errors and verified to pack before training
 - Label-space augmentation (p=0.5, menus padded up to 120 options), which is
   what makes K=77 and K=151 work at all — without it those score a literal
   0.000
