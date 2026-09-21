@@ -298,7 +298,36 @@ it is riding on. We did not tune either beyond one setting, so read this as
 It also makes the deployment story work. 87 MB per use case means one
 backbone can serve many routers; 3.4 GB per use case means it cannot.
 
-## 9. Fine-tuned end-to-end, the decoder draws level with Jev
+## 9. An unmerged LoRA adapter costs 2x at inference, for nothing
+
+The adapter is an extra matmul per target module at every layer. Left
+unmerged it doubles latency; folded into the base weights it nearly
+disappears.
+
+Measured on the same checkpoints, back to back, while a training run shared
+the GPU. Absolute numbers are inflated by that contention, so read the
+ratios, not the milliseconds:
+
+| | p50 | p95 | vs encoder |
+|---|---|---|---|
+| encoder, 150M | 37.7 ms | 50.9 ms | — |
+| decoder LoRA, unmerged | 74.0 ms | 110.5 ms | 1.96x |
+| decoder LoRA, merged | **40.4 ms** | **55.9 ms** | **1.07x** |
+
+So the honest answer to "is the decoder too slow for a router" is: merged,
+no. Seven percent over an encoder a tenth its size, for eight points of
+intent accuracy and a win over Jev.
+
+`DecisionModel` merges on load so this cannot be paid by accident, and
+`merge_adapter()` is exposed for anyone building their own serving path.
+
+**A bug this surfaced.** Adding LoRA introduced `self._base = self.lm`,
+which is an `nn.Module` attribute assignment and therefore registered the
+backbone a second time, writing every tensor into the state dict twice. It
+is a property now. Checkpoints already written with the duplicates still
+load, since the real keys were always present under their own names.
+
+## 10. Fine-tuned end-to-end, the decoder draws level with Jev
 
 Paired on the same 450 items, exact McNemar. The encoder loses intent and
 the injection gate; the decoder loses nothing.
@@ -341,7 +370,7 @@ That was the wrong evidence for the recommendation, because the path this
 project recommends is fine-tuning, and no fine-tuned comparison had been run.
 Latency had never been measured at all.
 
-## 10. Encoder and decoder tie zero-shot and disagree on everything else
+## 11. Encoder and decoder tie zero-shot and disagree on everything else
 
 Both backbones trained on the same `mixture_ord2` with the same
 augmentations, both landing at **17.6x chance**. The average hides the
@@ -370,7 +399,7 @@ than anything the head learned. The encoder, training end to end, actually
 fits its mixture. Neither is wrong, but only the encoder's held-in number
 does the job a control is there to do.
 
-## 11. The contamination guard caught a real leak
+## 12. The contamination guard caught a real leak
 
 `tasksource` contains most common benchmarks, not always under a recognisable
 name. Verified with `scripts/verify_heldout_lineage.py`:
