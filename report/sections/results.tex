@@ -8,26 +8,31 @@ Before any task training, we score the held-out suite using only the
 output format and a pretrained backbone.
 
 \begin{center}
-\begin{tabular}{lr}
+\begin{tabular}{llr}
 \toprule
-configuration & held-out mean \\
+backbone & configuration & held-out mean \\
 \midrule
-Pretrained masked-LM head at the marker (base) & 0.7$\times$ chance \\
-Same, larger encoder & 2.2$\times$ chance \\
-Causal backbone, state and options concatenated & 0.8$\times$ chance \\
-\quad + each option framed as a yes/no question & 2.9$\times$ chance \\
-\quad + a preamble stating the task & \textbf{11.5$\times$ chance} \\
-\quad \emph{control:} shorten the option framing & \emph{halves the mean} \\
+encoder, 150M   & pretrained masked-LM head at the marker & 0.7$\times$ chance \\
+encoder, 395M   & same readout, larger model              & 2.2$\times$ chance \\
+\midrule
+decoder, 1.7B   & state and options concatenated plainly  & 0.8$\times$ chance \\
+decoder, 1.7B   & \quad + each option framed as yes/no    & 2.9$\times$ chance \\
+decoder, 1.7B   & \quad + a preamble stating the task     & \textbf{11.5$\times$ chance} \\
+decoder, 1.7B   & \quad \emph{control:} shortened framing & 5.7$\times$ chance \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-A strong bidirectional encoder with a clever output format scores
-\emph{below chance}. The format makes zero-shot scoring possible; it does
-not make it present. The last row is the control that matters: shortening
-the framing to \texttt{\{opt\}\textbackslash ncorrect? answer} halves the
-mean, so the gain is the format doing work rather than an incidental
-wording choice.
+The two halves of the table are different backbones and are not directly
+comparable; each is internally consistent. Within the encoder rows, a
+strong bidirectional model with a clever output format scores \emph{below
+chance} and its larger sibling barely clears it. Within the decoder rows,
+the format is worth an order of magnitude.
+
+The last row is the control that matters: shortening the framing to
+\texttt{\{opt\}\textbackslash ncorrect? answer} roughly halves the mean,
+so the gain is the format doing work rather than an incidental wording
+choice.
 
 The same sensitivity appears in option rendering. On the held-out binary
 task, scoring the two \noul{} descriptions rather than bare polarity costs

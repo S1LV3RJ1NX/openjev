@@ -19,13 +19,15 @@ a 279-task, 323{,}466-row training mixture.
 architecture does not generalize on its own. A strong bidirectional encoder
 with this exact output format, untrained, scores \textbf{0.7$\times$
 chance} on held-out schemas, and a 61-task training mixture leaves it at
-0.9$\times$. Generalization is a property of the training data, and
-usefully, part of it can be manufactured: padding training menus with
-borrowed distractor labels moves a 77-way held-out menu from a literal
-$0.000$ to $0.205$, because a model that has never seen a large menu
-collapses onto one label when handed one. Scaling and auditing the mixture
-to 279 tasks reaches \textbf{21.9$\times$ chance}, with all seven held-out
-tasks clearing their floor and a 151-way menu at 94.9$\times$.
+0.9$\times$. Generalization is instead a property of the training data.
+Padding training menus with borrowed distractor labels, together with a
+mixture rebuild in the same change, moves a 77-way held-out menu from a
+literal $0.000$ to $0.205$; a model that has never seen a large menu
+collapses onto one label when handed one, though we did not separate the
+two interventions and so cannot attribute the gain cleanly. Scaling and
+auditing the mixture to 279 tasks reaches \textbf{21.9$\times$ chance},
+with all seven held-out tasks clearing their floor and a 151-way menu at
+94.9$\times$.
 
 \paragraph{Against Jev, the result splits cleanly on one axis: labels.}
 Given 395 labelled examples and 258 seconds, a rank-16 LoRA adapter on

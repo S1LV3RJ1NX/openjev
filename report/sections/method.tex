@@ -19,7 +19,8 @@ is a threshold on it.
 \subsection{Packing}
 
 We write the state once, then each question and its options after it, as a
-single token sequence (Figure~\ref{fig:packing}). Each option is followed
+single token sequence (Figure~\ref{fig:packing}); which positions may
+then attend to which is Figure~\ref{fig:mask}. Each option is followed
 (or preceded, depending on backbone) by a \emph{marker} token, and the
 model's output for that option is read at the marker position.
 
@@ -52,21 +53,42 @@ change the answer to question 1.}
 
 \subsection{Block-diagonal attention}
 
-Let $A(t,u)$ be $1$ if position $t$ may attend to position $u$. We impose
+Let $A(t,u) \in \{0,1\}$ indicate whether query position $t$ may attend to
+key position $u$. We impose
 \begin{equation}
-  A(t,u) = \mathbb{1}\big[\, b(u) = 0 \;\lor\; b(u) = b(t) \,\big]
-  \;\wedge\; C(t,u),
+  A(t,u) \;=\; \underbrace{\mathbb{1}\big[\, b(u) = 0 \;\lor\; b(u) = b(t)
+  \,\big]}_{\text{our rule}} \cdot \underbrace{C(t,u)}_{\text{backbone's own}},
   \label{eq:mask}
 \end{equation}
-where $C$ is the backbone's own constraint: all-ones for a bidirectional
-encoder, and the causal mask $\mathbb{1}[u \le t]$ for a decoder.
+where $C(t,u) = 1$ for a bidirectional encoder and $C(t,u) = \mathbb{1}[u
+\le t]$ for a causal decoder. Both factors are indicators, so the product
+is the conjunction.
 
-The first clause is what makes the shared prefix legitimate: every question
-sees the full state. The second is what makes the result well defined:
-without it, question 2 attends to question 1 and an answer becomes a
+The first factor is what makes the shared prefix legitimate: every question
+sees the full state. The second is what makes the result well defined.
+Without it, question 2 attends to question 1 and an answer becomes a
 function of which other questions happened to be asked in the same call.
-On a causal backbone, the state already precedes every question, so the
-mask's only work is isolating the question blocks from each other.
+On a causal backbone the state already precedes every question, so the
+rule's only remaining work is isolating question blocks from each other.
+Figure~\ref{fig:mask} shows both cases.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/attention_mask.png}
+\caption{The mask of Eq.~\ref{eq:mask} for a packed sequence with a shared
+state and three questions. Blue is attention to the shared prefix, orange
+is attention within a question's own block, grey is blocked. No question
+can see another, so its answer does not depend on what else was asked.
+Right: the same rule composed with causality on a decoder backbone.}
+\label{fig:mask}
+\end{figure}
+
+\paragraph{Memory.} The mask is $O(n^2)$ in sequence length, which is the
+usual attention cost and not specific to this design, but it does bound
+how many questions fit in one call. At our 2048-token budget a
+ten-question router with 24 options packs comfortably; a 151-option menu
+rendered with long descriptions does not, and the implementation degrades
+by subsampling the menu (always keeping the gold) rather than failing.
 
 \subsection{Readout and grouped normalisation}
 
@@ -91,8 +113,24 @@ normalised \emph{within} each question rather than globally:
   \label{eq:grouped}
 \end{equation}
 This is a segmented softmax over a ragged partition of the flat marker
-array; the training loss is the sum of per-question cross-entropies against
-the gold marker.
+array. Writing $y_i$ for the index of the gold option of question $q_i$,
+and $\mathcal{A}$ for the questions this example actually answers (a row
+may supervise only some of them), the loss is
+\begin{equation}
+  \mathcal{L} \;=\; -\frac{1}{|\mathcal{A}|}
+  \sum_{i \in \mathcal{A}} \log p\big(o_{i,y_i} \mid s, q_i\big).
+  \label{eq:loss}
+\end{equation}
+
+\paragraph{A worked example.} Suppose one packed sequence holds $q_1$ with
+$K_1{=}3$ and $q_2$ with $K_2{=}2$, so the flat marker array has five
+entries with scores $z = [2.0,\,1.0,\,0.5,\;\;0.2,\,1.4]$ and the
+partition $\mathcal{M}_1 = \{1,2,3\}$, $\mathcal{M}_2 = \{4,5\}$. A global
+softmax over all five would make $q_1$'s options compete with $q_2$'s,
+which is meaningless. Grouped, we get $p_1 \approx [0.63, 0.23, 0.14]$ and
+$p_2 \approx [0.23, 0.77]$, each summing to one. If the golds are
+$y_1{=}1$ and $y_2{=}2$, then $\mathcal{L} = -\tfrac{1}{2}(\log 0.63 +
+\log 0.77) \approx 0.36$.
 
 \begin{algorithm}[t]
 \caption{Forward pass for one packed instance}
@@ -144,3 +182,12 @@ question is its own options. Measured on the ten-question router with a
 $74$\,ms for ten: \textbf{ten questions cost 6\% more than one}. The
 reference API shows the same signature, $392$\,ms against $407$\,ms, which
 is the evidence that it shares this design.
+
+\paragraph{On the two sets of latency numbers in this paper.} The figures
+here ($69$ and $74$\,ms) were taken while a training run shared the GPU;
+those in \S\ref{sec:res-latency} ($37.7$ to $55.9$\,ms) were taken under
+lighter load. Absolute values are therefore not comparable across the two
+sections and only the within-section ratios are meaningful. We report both
+rather than the flattering one, and neither is a throughput measurement:
+everything here is batch size 1, which is the interactive case. Sustained
+throughput under load is not measured in this work.
