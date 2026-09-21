@@ -64,13 +64,21 @@ def main() -> None:
                 break
 
             # --- contradictory golds ---------------------------------------
-            groups: dict[str, set] = collections.defaultdict(set)
+            # Keyed on state *and* menu: with per-example criteria the same
+            # state under different options legitimately has a different
+            # answer, and treating those as contradictions would delete
+            # correct data from every MultipleChoice task.
+            def key(e):
+                menu = tuple(sorted((e.criteria or {}).get(qid, {}))) if e.criteria else ()
+                return (norm(e.state), menu)
+
+            groups: dict[tuple, set] = collections.defaultdict(set)
             for e in t.examples:
-                groups[norm(e.state)].add(str(e.answers.get(qid)))
+                groups[key(e)].add(str(e.answers.get(qid)))
             bad = {k for k, v in groups.items() if len(v) > 1}
             if bad:
                 before = len(t.examples)
-                t.examples = [e for e in t.examples if norm(e.state) not in bad]
+                t.examples = [e for e in t.examples if key(e) not in bad]
                 removed = before - len(t.examples)
                 dropped_rows += removed
                 notes.append(f"{d.name}/{s}: dropped {removed} contradictory rows")

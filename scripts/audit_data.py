@@ -78,8 +78,18 @@ def audit_task(path: Path, deep: bool) -> list[tuple[str, str]]:
                         break
 
             # --- class balance -------------------------------------------
+            # Only meaningful for a fixed menu. With per-example criteria the
+            # answer text is often unique per row by construction, and
+            # counting it reported 76 "minority classes" on tasks that have
+            # no classes at all. Position balance is what matters there, and
+            # the ingester checks that.
+            per_example = any(e.criteria for e in answered[:50])
             dist = collections.Counter(str(e.answers[qid]) for e in answered)
-            if len(dist) == 1:
+            if per_example:
+                dist = collections.Counter()
+            if not dist:
+                pass  # per-example menu, checked at ingestion instead
+            elif len(dist) == 1:
                 out.append((ERROR, f"{s}/{qid}: one class only, teaches nothing"))
             else:
                 worst, n_worst = min(dist.items(), key=lambda kv: kv[1])
@@ -133,9 +143,14 @@ def audit_task(path: Path, deep: bool) -> list[tuple[str, str]]:
 
     for s, t in splits.items():
         qid0 = next(iter(t.questions), None)
-        groups: dict[str, list] = collections.defaultdict(list)
+        groups: dict[tuple, list] = collections.defaultdict(list)
         for e in t.examples:
-            groups[norm(str(e.state))].append(e.answers.get(qid0))
+            # Key on the menu as well as the state. With per-example criteria
+            # the same state legitimately carries a different gold when it is
+            # offered different options, and ignoring that flagged 1,500
+            # perfectly good rows on a preference dataset as contradictory.
+            menu = tuple(sorted((e.criteria or {}).get(qid0, {}))) if e.criteria else ()
+            groups[(norm(str(e.state)), menu)].append(e.answers.get(qid0))
         dupes = sum(len(v) - 1 for v in groups.values() if len(v) > 1)
         # A repeated state is only a fault if its labels disagree, which makes
         # those items unanswerable however good the model is.

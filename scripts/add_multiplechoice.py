@@ -172,6 +172,8 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=261)
     ap.add_argument("--throttle", type=float, default=1.0)
     ap.add_argument("--retries", type=int, default=4)
+    ap.add_argument("--refetch", action="store_true",
+                    help="re-download tasks already present")
     args = ap.parse_args()
 
     import tasksource
@@ -191,6 +193,12 @@ def main() -> None:
         # reach disk in a training mixture.
         if find_leaks([tid]):
             excluded.append(tid)
+            continue
+        # Resume: a retry pass exists to pick up what the Hub quota refused
+        # last time, and re-fetching what already landed spends the same
+        # budget the failures are waiting for.
+        if not args.refetch and (out / safe_name(tid) / "task.json").exists():
+            skipped += 1
             continue
         try:
             dd = load_with_backoff(tasksource, tid, args.max_rows, args.retries)
