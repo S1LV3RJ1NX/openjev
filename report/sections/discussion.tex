@@ -250,15 +250,11 @@ read as real on this evidence. The large effects (a literal $0.000$
 becoming $0.205$; $0.666$ against $0.979$) are far outside any plausible
 seed noise; the small ones are not.
 
-\paragraph{The obvious baseline is missing.} We do not compare against
-$m$ independent single-question classifiers, which is the natural
-alternative to packing and the first thing a careful engineer would try.
-Packing's advantage should be cost rather than accuracy, since separate
-classifiers have strictly more capacity per question, and our claim is
-about answering ten questions for the price of one. But we did not
-measure it, so the accuracy side of that trade is unquantified here. Nor
-do we compare against a general-purpose LLM with constrained decoding,
-which is what most teams would reach for today.
+\paragraph{One baseline is still missing.} We do not compare against a
+general-purpose LLM with constrained decoding, which is what many teams
+would reach for today. The other obvious baseline, $m$ independent
+single-question classifiers, is measured in
+\S\ref{sec:res-separate} and we were wrong about which way it would go.
 
 \paragraph{Two tiers we expected to win are statistically level.} The
 \texttt{compound\_3} tier and oblique clinical recall show large margins

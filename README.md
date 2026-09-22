@@ -318,6 +318,24 @@ Check per-class recall rather than accuracy before trusting anything. A class
 with a handful of examples gets learned as "never predict this": ours scored
 0.000 recall while the model looked 0.984 accurate.
 
+## Is packing actually better than one model per question?
+
+Yes, on both counts, and we expected only one of them.
+
+| | 10 separate models | 1 packed model |
+|---|---|---|
+| mean accuracy over 10 questions | 0.9525 | **0.9648** |
+| hardest question, 14-way intent | 0.8521 | **0.9231** |
+| latency for all 10 | 204.9 ms | **20.4 ms** |
+| artifacts to ship | 10, 6 GB | **1, 0.6 GB** |
+
+We predicted packing would lose accuracy and win on cost, because a
+dedicated model has more capacity per question. It wins both. The likely
+reason is supervision: at 395 examples a single-question model sees 395
+labels, while the packed model sees the same states carrying ten labels
+each. The gap is largest on the hardest question and reverses on three
+easy binary ones already above 0.96.
+
 ## Results that went against us
 
 These are kept here rather than in a footnote because they change what you

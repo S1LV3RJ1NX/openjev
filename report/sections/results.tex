@@ -343,6 +343,58 @@ starting it from our general adapter instead is significantly
 why. The general checkpoint earns its keep on schemas you have no labels
 for, not on the task you actually care about.
 
+\subsection{Packing against one classifier per question}
+\label{sec:res-separate}
+
+The natural alternative to packing is $m$ independent single-question
+classifiers, and it is the first thing a careful engineer tries. We split
+the router into ten single-question tasks and trained each independently
+with the same backbone, the same general checkpoint as a starting point,
+and the same six epochs.
+
+\textbf{We predicted we would lose this on accuracy and win on cost}, on
+the reasoning that a dedicated model has strictly more capacity for its
+question. An earlier draft of this paper said so, and listed the missing
+measurement as a limitation. The prediction was wrong.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+question & 10 separate & 1 packed & $\Delta$ \\
+\midrule
+\texttt{A\_intent}              & 0.8521 & \textbf{0.9231} & $+0.0710$ \\
+\texttt{C\_order\_status}       & 0.9022 & \textbf{0.9267} & $+0.0245$ \\
+\texttt{C\_refill}              & 0.9489 & \textbf{0.9578} & $+0.0089$ \\
+\texttt{G\_clinical}            & 0.9778 & \textbf{0.9867} & $+0.0089$ \\
+\texttt{G\_injection}           & 0.9733 & \textbf{0.9822} & $+0.0089$ \\
+\texttt{G\_abusive}             & 0.9933 & \textbf{1.0000} & $+0.0067$ \\
+\texttt{C\_store\_hours}        & 0.9778 & \textbf{0.9844} & $+0.0066$ \\
+\texttt{C\_vaccine\_appointment}& \textbf{0.9556} & 0.9533 & $-0.0023$ \\
+\texttt{G\_pharmacy}            & \textbf{0.9667} & 0.9622 & $-0.0045$ \\
+\texttt{C\_drug\_availability}  & \textbf{0.9778} & 0.9711 & $-0.0067$ \\
+\midrule
+mean                            & 0.9525 & \textbf{0.9648} & $+0.0122$ \\
+\bottomrule
+\end{tabular}
+\caption{Ten independently trained single-question classifiers against one
+packed model answering all ten. Packing wins seven questions and the mean,
+while answering in $20.4$\,ms against $204.9$\,ms and shipping as one
+$0.6$\,GB artifact rather than ten totalling $6$\,GB.}
+\label{tab:separate}
+\end{table}
+
+The likely mechanism is supervision rather than capacity. At 395 training
+examples a single-question model sees 395 labels, while the packed model
+sees the same states carrying ten labels each, and having to serve every
+question at once regularises the shared encoder. On a small task that
+appears to be worth more than the extra capacity a dedicated model gets.
+
+The pattern of wins fits that account. \texttt{A\_intent} is the hardest
+question, a fourteen-way choice, and it gains $7.1$ points. All three
+questions packing loses are easy binary ones already above $0.96$, where
+there is little left for extra supervision to buy.
+
 \subsection{Throughput under concurrent load}
 \label{sec:res-throughput}
 

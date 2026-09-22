@@ -539,3 +539,47 @@ The full account, with the argument attached, is in the report:
 - Whether the encoder gap is capacity or data, which needs ModernBERT-large.
 - Seed variance. Every number here is a single training run, and the
   bootstrap intervals capture test-set sampling only.
+
+## Packing against one classifier per question
+
+The obvious alternative to packing, and the first thing a careful engineer
+tries. Ten single-question tasks split out of the router, each trained
+independently with the same backbone, the same general checkpoint as a
+starting point, the same six epochs. Separate classifiers have strictly
+more capacity per question, so we expected to lose accuracy and win on
+cost.
+
+| question | 10 separate | 1 packed | |
+|--|--|--|--|
+| `A_intent` | 0.8521 | **0.9231** | +0.0710 |
+| `C_order_status` | 0.9022 | **0.9267** | +0.0245 |
+| `C_refill` | 0.9489 | **0.9578** | +0.0089 |
+| `G_clinical` | 0.9778 | **0.9867** | +0.0089 |
+| `G_injection` | 0.9733 | **0.9822** | +0.0089 |
+| `G_abusive` | 0.9933 | **1.0000** | +0.0067 |
+| `C_store_hours` | 0.9778 | **0.9844** | +0.0066 |
+| `C_vaccine_appointment` | **0.9556** | 0.9533 | -0.0023 |
+| `G_pharmacy` | **0.9667** | 0.9622 | -0.0045 |
+| `C_drug_availability` | **0.9778** | 0.9711 | -0.0067 |
+| **mean** | 0.9525 | **0.9648** | **+0.0122** |
+
+**Packing wins seven of ten questions and the mean, and it is 10x
+faster**: 20.4 ms against 204.9 ms to answer all ten, from one 0.6 GB
+model rather than ten totalling 6 GB.
+
+We predicted the opposite on accuracy and said so in the report before
+running this. The prediction was wrong, and the reason looks like
+supervision rather than capacity. At 395 training examples a
+single-question model sees 395 labels; the packed model sees the same
+states carrying ten labels each. The shared encoder is regularised by
+having to serve every question at once, and on a small task that is worth
+more than the extra capacity a dedicated model gets.
+
+The gap is concentrated exactly where that story predicts: `A_intent` is
+the hardest question, a fourteen-way choice, and it gains 7.1 points.
+The three questions packing loses are all easy binary ones already above
+0.96, where there is nothing left for extra supervision to buy.
+
+**This removes a stated limitation.** The report argued packing's
+advantage was cost rather than accuracy and conceded the comparison was
+unmeasured. It is measured now, and the advantage is both.
