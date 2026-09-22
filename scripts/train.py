@@ -195,6 +195,9 @@ def main() -> None:
     ap.add_argument("--max-bs", type=int, default=64)
     ap.add_argument("--sanity-at", type=int, default=0,
                     help="step at which to abort if a trivial task is at chance")
+    ap.add_argument("--sanity-every", type=int, default=0,
+                    help="re-check periodically; one early check misses a run "
+                         "that degrades after the warmup ends")
     ap.add_argument("--distractor-prob", type=float, default=0.0,
                     help="probability of padding a choice menu with borrowed labels")
     ap.add_argument("--max-options", type=int, default=128)
@@ -471,7 +474,9 @@ def main() -> None:
             # while and then scores exactly chance at the end, which cost us
             # a seven hour run once. Check the trivial task early, when the
             # answer is still cheap.
-            if args.sanity_at and step == args.sanity_at:
+            due = (args.sanity_at and step == args.sanity_at) or (
+                args.sanity_every and step % args.sanity_every == 0)
+            if due:
                 acc = harness_sanity(model, packer, device)
                 print(f"  sanity check at step {step}: {acc:.3f} "
                       f"(chance 0.333, healthy is near 1.0)")
@@ -488,7 +493,7 @@ def main() -> None:
                 # examples. That is worse than being slow, and it is invisible
                 # in the loss curve.
                 rate = oom / max(1, oom + step)
-                if rate > 0.05:
+                if rate > 0.05 and step <= max(args.sanity_at, 1):
                     raise SystemExit(
                         f"\nAborting: {oom} batches skipped for out-of-memory "
                         f"against {step} completed, a {rate:.0%} skip rate.\n"

@@ -136,8 +136,8 @@ and about opening hours at once, and a softmax cannot say so.
 **You have no labels and a schema you invented today.** Use the general LoRA
 adapter zero-shot. It reaches 29.6x chance across seven held-out tasks,
 including 0.702 on a 151-way menu. If you can send your data to an API, Jev is
-the better zero-shot model: 0.820 on Banking77 against our 0.605, so they are
-21 points ahead. Reasons to use ours anyway: the data never leaves your
+the better zero-shot model on every one of those seven tasks: 38.3x chance
+against our 29.6x, winning five and tying two. Reasons to use ours anyway: the data never leaves your
 network, you get full-precision probabilities rather than values quantized to
 0.01, and you get determinism, which Jev does not offer.
 
@@ -292,10 +292,12 @@ should do.
   Qwen3, p = 0.012. This is the opposite of the encoder result, where the
   same move was worth +36 points. Base Qwen3 already reads menus, so the
   mixture adds interference rather than capability.
-- **Zero-shot is still behind the commercial API.** 0.605 against 0.820 on
-  Banking77, which is 21 points. That was 48 points against the encoder, so
-  the gap narrowed and did not close. No claim of zero-shot parity is made
-  anywhere in this repo.
+- **Zero-shot is behind the commercial API on every task we measured.** We
+  spent most of this project comparing on Banking77 alone and calling it a
+  21-point gap. Running Jev over the full held-out suite shows it wins five
+  of seven and ties the other two, 38.3x chance against our 29.6x. The
+  per-item predictions are in `baselines/` so you can check it. No claim of
+  zero-shot parity is made anywhere in this repo.
 
 ## Where you come in
 

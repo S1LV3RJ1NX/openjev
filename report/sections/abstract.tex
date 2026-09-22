@@ -3,7 +3,7 @@ route this message to one of 77 intents, flag whether it mentions clinical
 risk, rate its urgency. Jev, a commercial API from TypeSafe, makes exactly
 this the primitive, and does it well: it answers many typed questions about
 one input in a single call, and on a 77-way intent task it has never seen
-it scores roughly $0.820$. This paper asks what it takes to build an open
+it scores roughly $0.863$. This paper asks what it takes to build an open
 equivalent, and reports honestly where that succeeds and where it does not.
 
 \paragraph{What we built.} \openjev{} encodes the state once as a shared
@@ -69,10 +69,13 @@ adapter from our general checkpoint rather than from base weights makes
 it \emph{worse} ($0.953$, $p=0.012$), reversing a $+36$ point gain from
 the same intervention on the encoder: staged fine-tuning pays only when
 the base model cannot perform the task form at all. Without labels the
-picture inverts: $0.605$ on Banking77 against Jev's $0.820$, twenty-one
-points behind, and applied zero-shot to the routing task the decoder
-scores intent $0.467$ against the encoder's $0.601$, so the benchmark
-ordering does not survive contact with a deployment task.
+picture inverts. Measured over the whole held-out suite rather than the
+single task we had been quoting, Jev wins five of seven and ties two,
+$38.3\times$ chance against our $29.6\times$, including $0.938$ against
+$0.702$ on the 151-way menu. Applied zero-shot to the routing task the
+decoder scores intent $0.467$ against the encoder's $0.601$, so the
+benchmark ordering does not survive contact with a deployment task
+either.
 
 \paragraph{Takeaway.} Use Jev, or something like it, when you need typed
 decisions on a schema you have no labels for; that capability is real and

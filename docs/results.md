@@ -29,9 +29,9 @@ seconds.
 
 | | OpenJev | Jev | verdict |
 |--|--|--|--|
-| Held-out suite, 7 tasks never trained on | **29.6x chance** | not measured | 0.9x at the start |
-| Held-out CLINC, K=151, never seen it | **0.702** | not measured | 106x chance |
-| Banking77, never seen it | 0.605 | **0.820** | Jev, by 21 points |
+| Held-out suite, 7 tasks never trained on | 29.6x chance | **38.3x chance** | **Jev**, on all 7 |
+| Held-out CLINC, K=151, never seen it | 0.702 | **0.938** | **Jev** |
+| Banking77, never seen it | 0.605 | **0.863** | **Jev** |
 | Router intent, fine-tuned | **0.979** | 0.941 | **OpenJev**, p = 9.8e-04 |
 | Router multi-label exact set, fine-tuned | **0.909** | 0.822 | **OpenJev**, p = 7.2e-06 |
 | `G_pharmacy` scope gate, fine-tuned | **0.978** | 0.880 | **OpenJev**, p = 3.9e-10 |
@@ -44,9 +44,46 @@ in our favour by construction. What it shows is that a few hundred labels
 outweigh the gap between an open 1.7B model and a closed API, not that the
 two models are equal.
 
-On a schema nobody has labelled, Jev still leads. 0.605 against 0.820 on
-Banking77 is a 21-point gap, and this file will say so until a measurement
-says otherwise.
+On a schema nobody has labelled, Jev leads, and not only on Banking77.
+
+## Zero-shot against Jev, all seven held-out tasks
+
+We compared against Jev on Banking77 alone for most of this project and
+described the result as a single 21-point gap. That was the only task we
+had measured them on. Running their API over the whole suite, 600 items
+per task, gives the honest picture.
+
+| task | K | Jev | 95% CI | OpenJev | 95% CI | |
+|--|--|--|--|--|--|--|
+| clinc_oos | 151 | **0.938** | [0.918, 0.958] | 0.702 | [0.667, 0.738] | Jev |
+| ag_news | 4 | **0.880** | [0.853, 0.905] | 0.793 | [0.760, 0.828] | Jev |
+| banking77 | 77 | **0.863** | [0.835, 0.890] | 0.605 | [0.570, 0.642] | Jev |
+| massive_intent | 60 | 0.838 | [0.807, 0.867] | 0.775 | [0.742, 0.807] | level |
+| civil_comments | 2 | 0.748 | [0.713, 0.785] | 0.742 | [0.710, 0.777] | level |
+| sst5 | 5 | **0.560** | [0.522, 0.598] | 0.465 | [0.425, 0.502] | Jev |
+| helpsteer | 5 | **0.415** | [0.378, 0.455] | 0.273 | [0.240, 0.312] | Jev |
+| **mean multiple of chance** | | **38.3x** | | 29.6x | | **Jev** |
+
+**Jev wins five and ties two. It does not lose one.** The two ties are
+`massive_intent` and `civil_comments`, where the intervals overlap.
+
+Their Banking77 here is 0.863 rather than the 0.820 we recorded earlier.
+The service is not deterministic and it changes, so treat both as
+measurements at a point in time rather than a fixed property.
+
+Reproduce it without an API key, from the predictions we shipped:
+
+```bash
+python -c "import json; d=json.load(open('baselines/jev_heldout_suite.json')); print(d['summary'])"
+```
+
+**What this changes and what it does not.** It does not touch the router
+result, where we are fine-tuned and win three with four ties. It does
+correct the framing: the case for OpenJev is not that it approaches a
+commercial API zero-shot, because it does not, on any task we tried. The
+case is that a few hundred labels of your own beat that API on your own
+task, and that you get the weights, determinism and full-precision
+probabilities along the way.
 
 ## Held-out transfer, 7 tasks, 600 rows each
 

@@ -55,13 +55,29 @@ much more.
 
 ## Honest comparison
 
-TypeSafe's Jev scores **0.820** on Banking77 zero-shot. This adapter
-scores **0.605** on the same 600 items, both on the full 77-way menu.
-They are ahead by twenty-one points.
+We measured TypeSafe's Jev on all seven held-out tasks, 600 items each,
+the same items this adapter is scored on.
 
-That gap used to be forty-eight, against our encoder's 0.343. If you want
-the best zero-shot accuracy available and can send data to an API, their
-number is still the better one.
+| task | Jev | this adapter |
+|---|---|---|
+| clinc_oos | **0.938** | 0.702 |
+| ag_news | **0.880** | 0.793 |
+| banking77 | **0.863** | 0.605 |
+| massive_intent | 0.838 | 0.775 (level) |
+| civil_comments | 0.748 | 0.742 (level) |
+| sst5 | **0.560** | 0.465 |
+| helpsteer | **0.415** | 0.273 |
+| mean x chance | **38.3x** | 29.6x |
+
+**They win five and tie two, and lose none.** If you want the best
+zero-shot accuracy available and you can send your data to an API, use
+theirs. This adapter is the answer when the data cannot leave your
+network, when you need determinism or full-precision probabilities, or
+when you have a few hundred labels, which is the case where a task
+adapter beats them outright.
+
+Their per-item predictions ship in the repository under `baselines/` so
+the comparison is checkable without an API key.
 
 ## Quick start
 

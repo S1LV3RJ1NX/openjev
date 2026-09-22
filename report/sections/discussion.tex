@@ -7,11 +7,15 @@ The split is clean and it is about labels. \textbf{Given roughly 400
 labelled examples for your task, a 1.7B model with an 87\,MB adapter beats
 a commercial typed-decision API} on a hardened routing benchmark, runs on
 your own hardware, returns full-precision probabilities, and is
-deterministic. \textbf{Without labels, it is behind and not close}:
-$0.605$ on Banking77 against roughly $0.820$, twenty-one points short.
-On the encoder the same measurement was $0.343$, so changing the backbone
-closed about half of that gap without any new data and left the other
-half open.
+deterministic. \textbf{Without labels, it is behind on every task we
+measured}: across the seven held-out schemas Jev wins five and ties two,
+$38.3\times$ chance against our $29.6\times$, with $0.863$ against
+$0.605$ on Banking77 and $0.938$ against $0.702$ on the 151-way menu. We
+compared on Banking77 alone for most of this work and called it a
+twenty-one point gap; measuring the rest of the suite did not change the
+direction of the result, only our confidence that it is general. On the
+encoder Banking77 was $0.343$, so changing the backbone closed part of
+that gap without new data and left the rest open.
 
 Both halves matter. The first says the capability is not gated behind
 scale or a vendor. The second says the vendor's actual product, working

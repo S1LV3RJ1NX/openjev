@@ -16,6 +16,13 @@
 # sample of 1,800, so 4096 never binds and anything larger only costs memory
 # that batching can use instead.
 #
+# The learning rate stays at 2e-4, the value the shipped run used. Token
+# budgeting changes how examples are grouped, not how many: the shipped run
+# averaged 8 examples per step and this averages 8.7, so there is no larger
+# batch to scale the rate for. Raising it to 5e-4 on that mistaken reasoning
+# produced a run whose loss improved to 1.69 during warmup and then degraded
+# to a plateau near 3.1 the moment the schedule reached its peak.
+#
 # The budget is set by memory, not by compute. The block-diagonal mask is
 # handed to SDPA as an explicit tensor, which drops it off the flash path and
 # materialises attention scores in every layer, so memory runs out while the
@@ -35,7 +42,7 @@ cd "$(dirname "$0")/.."
 LEN="${1:-4096}"
 BUDGET="${2:-4096}"
 OPTS="${3:-160}"
-LR="${4:-5e-4}"
+LR="${4:-2e-4}"
 
 exec ./.venv/bin/python -u scripts/train.py \
   --mixture tasks/mixture_final \
@@ -44,7 +51,7 @@ exec ./.venv/bin/python -u scripts/train.py \
   --token-budget "$BUDGET" --max-bs 24 --mask-budget 12000000 \
   --distractor-prob 0.5 --max-options "$OPTS" \
   --scale-prob 0.15 --noul-prob 0.15 \
-  --sanity-at 300 \
+  --sanity-at 300 --sanity-every 2000 \
   --out checkpoints_dec8k \
   --preamble "You judge whether a candidate answer is correct for a question about an input.
 

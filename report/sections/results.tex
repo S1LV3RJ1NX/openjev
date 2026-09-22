@@ -51,8 +51,10 @@ it. On the binary task we also report ranking rather than argmax alone,
 where \texttt{civil\_comments} reaches AUROC $0.828$.
 
 \textbf{Banking77 zero-shot rises from $0.343$ to $0.605$} against the
-commercial reference's $0.820$. That closes about half the gap and leaves
-twenty-one points. It is not parity and we do not claim it.
+commercial reference's $0.863$. That closes part of the gap and leaves
+most of it. It is not parity and we do not claim it;
+Section~\ref{sec:res-jev-zeroshot} measures the same comparison on all
+seven tasks.
 
 \paragraph{These numbers replace an earlier, inflated set.} Auditing our
 own results against a clean clone of the public repository exposed a
@@ -100,6 +102,53 @@ tasks, retained here because a plot of only the best run would imply
 progress that did not happen.}
 \label{fig:transfer}
 \end{figure}
+
+\subsection{Zero-shot against the commercial reference, on all seven
+tasks}
+\label{sec:res-jev-zeroshot}
+
+For most of this work we compared against Jev on Banking77 alone, because
+it was the only task we had measured them on, and reported the result as
+a single twenty-one point gap. Table~\ref{tab:jevsuite} runs their API
+over the whole held-out suite, 600 items per task, on the same items we
+score ourselves on.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrcccl}
+\toprule
+task & $K$ & Jev & 95\% CI & \openjev{} & \\
+\midrule
+\texttt{clinc\_oos}      & 151 & \textbf{0.938} & [0.918, 0.958] & 0.702 & Jev \\
+\texttt{ag\_news}        &   4 & \textbf{0.880} & [0.853, 0.905] & 0.793 & Jev \\
+\texttt{banking77}       &  77 & \textbf{0.863} & [0.835, 0.890] & 0.605 & Jev \\
+\texttt{massive\_intent} &  60 & 0.838 & [0.807, 0.867] & 0.775 & level \\
+\texttt{civil\_comments} &   2 & 0.748 & [0.713, 0.785] & 0.742 & level \\
+\texttt{sst5}            &   5 & \textbf{0.560} & [0.522, 0.598] & 0.465 & Jev \\
+\texttt{helpsteer}       &   5 & \textbf{0.415} & [0.378, 0.455] & 0.273 & Jev \\
+\midrule
+\multicolumn{2}{l}{mean multiple of chance} & \textbf{38.3} & & 29.6 & Jev \\
+\bottomrule
+\end{tabular}
+\caption{Zero-shot on schemas neither system was trained on. Jev wins
+five and ties two, where a tie means the intervals overlap. It does not
+lose one. Their per-item predictions ship in the repository so the
+comparison is checkable without an API key.}
+\label{tab:jevsuite}
+\end{table}
+
+Widening the comparison did not change its direction, only our confidence
+that the direction is general. It also moved their Banking77 number from
+$0.820$ to $0.863$; the service is neither deterministic nor static, so
+both are measurements at a point in time rather than properties of the
+product.
+
+This is the sharpest statement of what this paper does and does not
+claim. \textbf{An open 1.7B model with 87\,MB of adapters does not
+approach a commercial typed-decision API zero-shot, on any task we
+tried.} The case for building one rests on the other half of the result:
+a few hundred labels of your own task reverse the ordering, which
+Section~\ref{sec:res-router} quantifies.
 
 \subsection{The output format makes zero-shot scoring possible, not
 present}

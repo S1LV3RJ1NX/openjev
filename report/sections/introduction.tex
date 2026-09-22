@@ -64,11 +64,12 @@ taking on faith:
     engineering result and it is what convinced us the architecture in
     \S\ref{sec:method} was worth building.
   \item \textbf{Its zero-shot ability is the genuinely hard part, and it
-    is far ahead of ours.} On Banking77, a 77-way intent task it has never
-    been trained on by us, it scores roughly $0.820$. Our best equivalent,
-    the LoRA decoder, reaches $0.605$, twenty-one points behind; our
-    encoder reaches $0.343$. After considerable effort we did not close
-    this gap, and
+    is ahead of ours on every task we measured.} Across the seven
+    held-out schemas it wins five and ties two, $38.3\times$ chance
+    against our $29.6\times$. On Banking77, a 77-way intent task, it
+    scores $0.863$ where our best equivalent, the LoRA decoder, reaches
+    $0.605$; our encoder reaches $0.343$. After considerable effort we
+    did not close this gap, and
     \S\ref{sec:res-deployment} shows the gap is wider still on a realistic
     deployment task. If you need typed decisions on a schema you have no
     labels for, Jev is the better tool and this paper does not argue
