@@ -583,3 +583,47 @@ The three questions packing loses are all easy binary ones already above
 **This removes a stated limitation.** The report argued packing's
 advantage was cost rather than accuracy and conceded the comparison was
 unmeasured. It is measured now, and the advantage is both.
+
+## Against Laya, the closest open-source system
+
+A reader asked the obvious question we had not answered. We deliberately
+did not read Laya's modelling code while designing ours, so that
+converging on a similar design would be evidence rather than copying.
+That justified excluding them from the design. It did not justify
+excluding them from the evaluation.
+
+`convaiinnovations/laya`, the `typed-decisions` checkpoint, run through
+our harness on the same 600 items per task.
+
+| task | K | Laya | OpenJev decoder | OpenJev encoder | Jev |
+|--|--|--|--|--|--|
+| clinc_oos | 151 | 0.408 | **0.702** | 0.382 | 0.938 |
+| massive_intent | 60 | 0.377 | **0.775** | 0.473 | 0.838 |
+| banking77 | 77 | 0.370 | **0.605** | 0.343 | 0.863 |
+| sst5 | 5 | 0.308 | **0.465** | 0.412 | 0.560 |
+| ag_news | 4 | **0.918** | 0.793 | 0.735 | 0.880 |
+| civil_comments | 2 | 0.730 | 0.742 | 0.683 | 0.748 |
+| helpsteer | 5 | 0.262 | 0.273 | 0.262 | 0.415 |
+| **mean x chance** | | **17.2x** | **29.6x** | **17.2x** | **38.3x** |
+
+Our decoder wins four, ties two, loses one. Our encoder lands at exactly
+Laya's 17.2x, which is a coincidence rather than a finding.
+
+**Their one win is the number we trust least, and it is theirs.** Laya
+scores 0.918 on `ag_news` while scoring 0.31 to 0.41 on four other tasks,
+and beats Jev there. A single task far above a system's own average, and
+above a stronger system, is what training contamination looks like. We
+cannot check it, because Laya's training mixture is not public.
+
+That uncertainty is symmetric and worth stating in both directions.
+**Our suite is held out from our training, not from theirs.** If Laya
+trained on any of these tasks, every Laya number here is flattered and
+our margin is conservative. If they did not, the comparison is clean and
+they simply have an unusually strong `ag_news`. We do not know which, and
+neither does any reader, so we are not going to imply the first while
+reporting the second.
+
+Reproduce with `jev-reverse-engineering/17_laya_on_heldout_suite.py`. We
+compared against their published checkpoint, which is one configuration
+and not necessarily the best their method can do, the same courtesy we
+would want applied to ours.
