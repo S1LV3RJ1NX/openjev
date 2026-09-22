@@ -259,3 +259,35 @@ random stream made an example's menu depend on what had been drawn before
 it. And training now aborts on a trivial-task check and on an
 out-of-memory skip rate above 5%, both of which fired during development
 and would have saved us a seven hour run had they existed earlier.
+
+## S-D7: fine-tuning the large-menu adapter on the router
+
+Completes the task-specific matrix. All four paths, same 395 examples,
+same six epochs, same hyperparameters, only the starting weights differ.
+
+| starting point | intent | |
+|--|--|--|
+| encoder, from base ModernBERT | 0.544 | |
+| encoder, from the general encoder checkpoint | 0.899 | **+36 points** |
+| decoder, from the shipped general adapter | 0.953 | |
+| decoder, from the large-menu general adapter | 0.9615 | |
+| **decoder, from base Qwen3** | **0.979** | **best** |
+| Jev, zero-shot on the same items | 0.941 | |
+
+**The two backbones want opposite things, and that is the finding.** The
+encoder gains 36 points from a general checkpoint; the decoder loses
+between 1.8 and 2.6 points by starting anywhere other than base. The
+large-menu adapter is a slightly better starting point than the shipped
+one (0.9615 against 0.953) and both are worse than no starting point at
+all.
+
+The explanation we believe: the encoder has to learn what a menu even is
+from 395 examples, so a general checkpoint supplies a capability it
+lacks. Base Qwen3 already reads menus from pretraining, so a general
+adapter supplies nothing new and its 279-task specialisation acts as
+interference on a narrow fourteen-intent problem.
+
+**Practical rule.** Stage your fine-tuning when the base model cannot
+perform the task form at all. Train from base once it can. On the decoder
+path that means the general adapter is for zero-shot use, where there is
+no task data by definition, and is the wrong place to start when there is.

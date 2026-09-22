@@ -181,6 +181,15 @@ where you have labels, for long states asked many questions at once, for
 regulated data that cannot leave your network, and for anything that needs a
 real probability to threshold on.
 
+## All four comparisons in one place
+
+![encoder, decoder and Jev compared on transfer, accuracy, latency and throughput](docs/plots/comparison.png)
+
+The answer differs by question, which is why there is no single headline
+number. They are better with no labels. We are better with a few hundred. On
+serving cost it is not close. Every figure is measured and sourced in
+[`docs/results.md`](docs/results.md).
+
 ## What it does on schemas it never trained on
 
 Seven held-out tasks, none in the training mixture, contamination enforced by
