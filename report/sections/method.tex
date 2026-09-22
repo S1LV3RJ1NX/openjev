@@ -108,6 +108,18 @@ constraint.}
 \label{fig:mask}
 \end{figure}
 
+\paragraph{The isolation is measured, not assumed.} A block-diagonal mask
+is easy to write and easy to get subtly wrong, and a wrong one fails
+silently: questions leak into each other and the model still returns
+plausible answers. We tested it adversarially. Adding ten sibling
+questions that explicitly assert the answer to the target question moved
+the target's probability vector by $0.0022$ mean absolute deviation,
+against a replication noise floor of $0.0029$ measured by re-running the
+identical input. The perturbation is smaller than the noise, with zero
+argmax flips in thirty trials. One question cannot prompt-inject another,
+which is the property the mask exists to provide and the one a packed
+design is most likely to lose.
+
 \paragraph{Memory.} The mask is $O(n^2)$ in sequence length, which is the
 usual attention cost and not specific to this design, but it does bound
 how many questions fit in one call. At our 2048-token budget a
@@ -253,6 +265,35 @@ question is its own options. Measured on the ten-question router with a
 $74$\,ms for ten: \textbf{ten questions cost 6\% more than one}. The
 reference API shows the same signature, $392$\,ms against $407$\,ms, which
 is the evidence that it shares this design.
+
+\paragraph{Against the obvious alternative.} The alternative to packing is
+one sequence per question, each carrying its own copy of the state, run as
+a batch. Table~\ref{tab:packing} measures both on ModernBERT-base at 50
+questions.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+state & packed tok & naive tok & packed & naive & speedup \\
+\midrule
+$\sim$90 tok   &   713 &  3{,}800 &  9.6\,ms &   9.6\,ms & 1.00$\times$ \\
+$\sim$700 tok  & 1{,}133 & 24{,}800 &  9.7\,ms &  51.7\,ms & \textbf{5.33$\times$} \\
+$\sim$2.8k tok & 2{,}573 & 96{,}800 & 11.0\,ms & 263.5\,ms & \textbf{23.98$\times$} \\
+\bottomrule
+\end{tabular}
+\caption{Packing against one sequence per question, median of ten runs
+after warmup, batch size 1. The saving is in the state, so it grows with
+state length and is nothing at all when the state is short.}
+\label{tab:packing}
+\end{table}
+
+The honest reading is the first row. \textbf{At short states packing buys
+nothing}, because $9.6$\,ms is a fixed-overhead floor that both paths hit.
+The technique pays when the state is long enough that re-encoding it
+dominates, which is the regime this design targets and not a universal
+claim. Latency is also flat in question count: at a 700-token state, one
+question and fifty both take $9.6$\,ms.
 
 \paragraph{On the two sets of latency numbers in this paper.} The figures
 here ($69$ and $74$\,ms) were taken while a training run shared the GPU;

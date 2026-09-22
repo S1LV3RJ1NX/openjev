@@ -285,7 +285,9 @@ copy of the state, run as a batch.
 Latency is flat in question count: at a 700-token state, 1 and 50 questions
 both take 9.6 ms. **At short states packing buys nothing**, because 9.6 ms
 is a fixed-overhead floor and both paths hit it. Reproduce with
-[`scripts/bench_packing.py`](../scripts/bench_packing.py).
+[`scripts/bench_packing.py`](../scripts/bench_packing.py). This table is
+also in the technical report, which is where the argument for packing is
+made.
 
 ### Encoder against decoder latency at batch 1
 
