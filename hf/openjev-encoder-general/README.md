@@ -44,15 +44,22 @@ bug.
 
 | task | K | chance | accuracy | 95% CI | x chance |
 |---|---|---|---|---|---|
-| clinc_oos | 151 | 0.007 | 0.628 | [0.587, 0.672] | **94.9x** |
+| clinc_oos | 151 | 0.007 | 0.382 | [0.342, 0.420] | **57.6x** |
 | massive_intent | 60 | 0.017 | 0.473 | [0.430, 0.512] | **28.4x** |
-| banking77 | 77 | 0.013 | 0.290 | [0.255, 0.323] | **22.3x** |
+| banking77 | 77 | 0.013 | 0.343 | [0.305, 0.382] | **26.4x** |
 | ag_news | 4 | 0.250 | 0.735 | [0.698, 0.772] | 2.9x |
 | sst5 (`score`) | 5 | 0.200 | 0.412 | [0.373, 0.452] | 2.1x |
 | civil_comments (`noul`) | 2 | 0.500 | 0.683 | [0.648, 0.718] | 1.4x |
 | helpsteer (`score`) | 5 | 0.200 | 0.262 | [0.225, 0.297] | 1.3x |
 
-**Mean 21.9x chance, and every interval excludes its chance floor.**
+**Mean 17.2x chance, and every interval excludes its chance floor.**
+
+An earlier version of this card reported 21.9x, with clinc_oos at 0.628
+and banking77 at 0.290. Those are withdrawn. The packer drops options to
+fit the context budget while the multiple of chance was still computed
+against 1/K, so a model choosing between 64 options was credited as
+though it had chosen between 151. The figures above are scored at each
+task's full menu.
 
 ![held-out transfer across mixture generations](heldout_transfer.png)
 
@@ -87,8 +94,10 @@ is above chance and level with predicting the most common level.
 That is a property of the training data, not the architecture.
 
 **This is not a zero-shot replacement for a commercial API.** On Banking77
-never having seen it, this scores 0.278 against roughly 0.820 for one. The
-gap closes only with task-specific fine-tuning.
+never having seen it, this scores 0.343 against roughly 0.820 for one. The
+gap closes only with task-specific fine-tuning. Our LoRA decoder reaches
+0.605 on the same items, so if zero-shot accuracy is what you need and
+latency is not binding, start there instead.
 
 **Two augmentations were tried on the ordinal gap and one failed.** Ordinal
 scale augmentation was a measured null result and is documented as such in
@@ -116,6 +125,13 @@ hf download s1lv3rj1nx/openjev-encoder-general model.pt --local-dir checkpoints/
 uv run python scripts/train.py --task tasks/your_task \
     --init-from checkpoints/general/model.pt --epochs 6 --bs 8
 ```
+
+Starting from this checkpoint rather than from scratch was worth **+36
+points** on a 395-example task, so it is the right move on the encoder
+path. It does not carry over to the decoder path: a LoRA adapter
+initialised from our general adapter scored 0.953 against 0.979 from base
+weights (p = 0.012). Stage your fine-tuning when the base model cannot do
+the task form at all, and train from base once it can.
 
 The checkpoint is a plain `torch.save` dict holding `state_dict`, `backbone`,
 the fitted per-question `temperatures`, and the mixture it was trained on. It

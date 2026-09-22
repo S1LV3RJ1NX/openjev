@@ -23,6 +23,7 @@ from transformers import AutoTokenizer
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from openjev import Task  # noqa: E402
+from openjev.infer import DEFAULT_DECODER_TEMPLATE  # noqa: E402
 from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
 from openjev.ckpt import load_into, lora_rank, wants_head  # noqa: E402
@@ -110,8 +111,10 @@ def main() -> None:
     # marker sits after the option text and the task preamble is part of the
     # format. Reading those off the checkpoint keeps eval and training in step.
     is_decoder = bool(ck.get("decoder")) or args.decoder
+    # The packer formats this with `opt` alone, so a `{q}` placeholder raises
+    # KeyError on every call. Keep it identical to what training used.
     template = ck.get("option_template") or (
-        "\nQuestion: {q}\nIs the answer: {opt}\nAnswer" if is_decoder else None
+        DEFAULT_DECODER_TEMPLATE if is_decoder else None
     )
     packer = Packer(
         tok, max_len=args.max_len, max_state_len=args.max_len // 2,

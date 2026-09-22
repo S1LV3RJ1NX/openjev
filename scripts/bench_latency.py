@@ -4,8 +4,11 @@ Accuracy decides whether a router is usable; latency decides whether it is
 affordable. The decoder is 1.7B parameters against the encoder's 149M and we
 had compared only accuracy, which is the wrong basis for choosing a default.
 
-    uv run python scripts/bench_latency.py --ckpt checkpoints_v2/healthcare_router
-    uv run python scripts/bench_latency.py --ckpt checkpoints_dec2/mixture_ord2 --decoder
+    uv run python scripts/bench_latency.py --ckpt checkpoints/healthcare_router
+
+Encoder or decoder is read from the checkpoint's own metadata, so there is no
+flag for it. A LoRA adapter is merged on load, which is the configuration you
+should be timing: unmerged it costs 1.96x for nothing.
 
 Reports the median rather than the mean: one slow first batch should not be
 allowed to describe the steady state, and a router's p50 and p95 are what a

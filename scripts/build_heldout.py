@@ -7,10 +7,10 @@
 What this script is for
 -----------------------
 `docs/evaluation.md` commits us to holding out *entire question schemas*,
-never random rows, and `docs/04-open-questions.md` records that the training
-mixture will come from `tasksource`, which contains Banking77, AG News, all
-seven Civil Comments configs and all five HelpSteer configs. Left alone, our
-held-out numbers would be contaminated by default rather than by mistake.
+never random rows. The training mixture comes from `tasksource`, which contains
+Banking77, AG News, all seven Civil Comments configs and all five HelpSteer
+configs. Left alone, our held-out numbers would be contaminated by default
+rather than by mistake.
 
 So every task carries a `holdout_of` list naming every alias of its source we
 could find, `tasks/heldout/manifest.json` carries the union of those lists, and

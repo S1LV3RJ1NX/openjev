@@ -22,15 +22,20 @@ contradictory.
 \begin{center}
 \begin{tabular}{lll}
 \toprule
- & encoder & decoder \\
+ & decoder \emph{(primary)} & encoder \emph{(alternative)} \\
 \midrule
-model & \texttt{ModernBERT-base} & \texttt{Qwen3-1.7B} \\
-parameters & 150M & 1{,}725M \\
-attention & bidirectional & causal + block-diagonal \\
-readout & linear at marker & $\text{logit}(\texttt{yes}) - \text{logit}(\texttt{no})$ \\
+model & \texttt{Qwen3-1.7B} & \texttt{ModernBERT-base} \\
+parameters & 1{,}725M & 150M \\
+attention & causal + block-diagonal & bidirectional + block-diagonal \\
+readout & $\text{logit}(\texttt{yes}) - \text{logit}(\texttt{no})$ & linear at marker \\
+adaptation & LoRA $r{=}16$, merged & full fine-tune \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+Every result is reported on both backbones wherever we ran both, because
+the comparison between them is itself one of the experiments. Where only
+one figure is given, it is the decoder.
 
 ``Decoder'' names the attention pattern, not the usage: nothing is
 generated token by token, and inference is a single forward pass with a
@@ -38,13 +43,13 @@ parallel read at marker positions.
 
 \subsection{Training configurations}
 
-Study G uses one epoch over the mixture, batch 16 (encoder) or 8
-(decoder), context 2048, label-space augmentation at $\pi{=}0.5$ with cap
+Study G uses one epoch over the mixture, batch 8 (decoder) or 16
+(encoder), context 2048, label-space augmentation at $\pi{=}0.5$ with cap
 $M{=}120$. Study S uses six epochs over 395 examples. Four adaptation
-regimes are compared in \S\ref{sec:res-router}: encoder full fine-tune,
-decoder full fine-tune, decoder head-only, and decoder LoRA ($r{=}16$,
+regimes are compared in \S\ref{sec:res-router}: decoder LoRA ($r{=}16$,
 $\alpha{=}32$, on all attention and MLP projections, $\text{lr}=2\times
-10^{-4}$).
+10^{-4}$), decoder head-only, decoder full fine-tune, and encoder full
+fine-tune.
 
 \subsection{Metrics}
 
@@ -65,7 +70,15 @@ result rather than a transfer result.
 \paragraph{Chance is not always the right floor.} A skewed task can be
 beaten by always predicting its most common label. Where that baseline
 exceeds $1/K$ we test against it explicitly, which changes one of our
-conclusions (\S\ref{sec:res-heldout}).
+conclusions about the encoder (\S\ref{sec:abl-encoder}) and leaves one
+decoder result thinner than its multiple of chance suggests
+(\S\ref{sec:res-heldout}).
+
+\paragraph{Scoring at the menu the model was shown.} A multiple of chance
+is only meaningful against the option set actually presented. Our
+evaluator now records the menu after packing, scores against that, and
+names any task whose menu was clipped. It did not always do this, and
+\S\ref{sec:res-heldout} reports what that cost us.
 
 \paragraph{Paired comparison.} Against the reference system we use exact
 McNemar on the same items, reporting $b_{10}$ (we are right, they are not)

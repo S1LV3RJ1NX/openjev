@@ -8,7 +8,7 @@ trained on a question schema still answer it well?**
 out *entire question schemas*,
 never random rows, and names zero-shot transfer to unseen schemas as the thing
 we are least likely to get for free. This is the instrument for finding out.
-`docs/04-open-questions.md` records the risk that makes it fragile: the
+One risk makes this suite fragile: the
 training mixture comes from `tasksource`, which contains Banking77, AG News,
 Rotten Tomatoes, all seven Civil Comments configs and all five HelpSteer
 configs. Without enforcement the default state of a mixture is contaminated,

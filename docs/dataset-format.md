@@ -11,7 +11,7 @@ tasks/my_task/
 ```
 
 If you would rather not write JSON, `scripts/make_task.py` builds this from a
-CSV — see [From a CSV](#from-a-csv) at the bottom.
+CSV: see [From a CSV](#from-a-csv) at the bottom.
 
 ## Template
 
@@ -50,7 +50,7 @@ Copy this and edit. It is a complete, valid task.
 }
 ```
 
-**`train.jsonl`** — one JSON object per line, no commas between lines:
+**`train.jsonl`**, one JSON object per line, no commas between lines:
 
 ```json
 {"state": "I was charged twice for March.", "answers": {"intent": "billing", "urgency": 1, "needs_human": false}, "meta": {"tier": "single"}}
@@ -66,7 +66,7 @@ uv run python -c "from openjev import Task; t=Task.load('tasks/my_task','train')
 ## The three question types
 
 | type | `criteria` | gold value in `answers` |
-|---|---|---|
+|--|--|--|
 | `choice` | `{label: description}` | the label string, e.g. `"billing"` |
 | `score` | `[level0, level1, ...]` ordered | the level **index**, e.g. `2` |
 | `noul` | omit, or `{"true": ..., "false": ...}` | `true` / `false` |
@@ -84,7 +84,7 @@ not supervise it, which is how partially-annotated data stays usable.
 ### Multi-label: use `noul` per label, not `choice`
 
 A message can be about a refill *and* opening hours. A `choice` softmax cannot
-say so — it must pick one.
+say so, because it must pick one.
 
 ```json
 "questions": {
@@ -94,7 +94,7 @@ say so — it must pick one.
 ```
 
 Measured: on three-intent messages a single `choice` scores 0.581 while the
-per-label nouls reach F1 0.955. A cheap trick if you want both — ask the
+per-label nouls reach F1 0.955. A cheap trick if you want both: ask the
 `choice` *and* the nouls in the same call (it costs one forward pass) and use
 the choice's **second-highest probability** as a signal that more than one
 intent is present. That detector scores AUROC 0.924.
@@ -144,7 +144,7 @@ tiers at ceiling; they could not distinguish any two models. Build items hard
 enough to have headroom, and treat saturated slices as regression floors.
 
 **Minority classes need enough examples to learn from.** Our `G_abusive` gate
-had 7 positives against 443 negatives and learned to never fire — 0.000 recall
+had 7 positives against 443 negatives and learned to never fire, at 0.000 recall
 while scoring 0.984 "accuracy". Check per-class counts before trusting any
 aggregate.
 
@@ -165,5 +165,5 @@ uv run python scripts/make_task.py --csv mydata.csv \
 ```
 
 That writes `tasks/my_task/` with an 80/10/10 split, a `choice` question built
-from the distinct labels, and placeholder descriptions for you to fill in —
+from the distinct labels, and placeholder descriptions for you to fill in,
 which is the part actually worth your time.

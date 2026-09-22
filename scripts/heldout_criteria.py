@@ -8,9 +8,9 @@ Every string in this file was written from one of exactly two sources:
   `scripts/build_heldout.py --dump-train`).
 
 **No test split was read while writing any of this.** That is not a stylistic
-note. `docs/04-open-questions.md` records that discriminative option text is
-worth about +5.1 accuracy points on Banking77, so a description contaminated by
-a test label would inflate the held-out number by a margin larger than most of
+note. `docs/dataset-format.md` records that discriminative option text is worth
+about +5.1 accuracy points on Banking77, so a description contaminated by a
+test label would inflate the held-out number by a margin larger than most of
 the effects this project cares about.
 
 Where two labels are near-twins the description says what *separates* them

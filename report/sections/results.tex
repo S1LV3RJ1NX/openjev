@@ -1,125 +1,58 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{The architecture does not generalize on its own}
-\label{sec:res-architecture}
-
-Before any task training, we score the held-out suite using only the
-output format and a pretrained backbone.
-
-\begin{center}
-\begin{tabular}{llr}
-\toprule
-backbone & configuration & held-out mean \\
-\midrule
-encoder, 150M   & pretrained masked-LM head at the marker & 0.7$\times$ chance \\
-encoder, 395M   & same readout, larger model              & 2.2$\times$ chance \\
-\midrule
-decoder, 1.7B   & state and options concatenated plainly  & 0.8$\times$ chance \\
-decoder, 1.7B   & \quad + each option framed as yes/no    & 2.9$\times$ chance \\
-decoder, 1.7B   & \quad + a preamble stating the task     & \textbf{11.5$\times$ chance} \\
-decoder, 1.7B   & \quad \emph{control:} shortened framing & 5.7$\times$ chance \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The two halves of the table are different backbones and are not directly
-comparable; each is internally consistent. Within the encoder rows, a
-strong bidirectional model with a clever output format scores \emph{below
-chance} and its larger sibling barely clears it. Within the decoder rows,
-the format is worth an order of magnitude.
-
-The last row is the control that matters: shortening the framing to
-\texttt{\{opt\}\textbackslash ncorrect? answer} roughly halves the mean,
-so the gain is the format doing work rather than an incidental wording
-choice.
-
-The same sensitivity appears in option rendering. On the held-out binary
-task, scoring the two \noul{} descriptions rather than bare polarity costs
-AUROC $0.63$ against $0.712$, because the descriptions restate one
-judgement from opposite sides and a model scoring both measures their
-overlap.
-
-\subsection{Held-out transfer}
+\subsection{Held-out transfer, and the backbone ablation it settles}
 \label{sec:res-heldout}
 
-Table~\ref{tab:heldout} gives the final encoder trained on the audited
-279-task mixture. Harness sanity $1.000$.
+Table~\ref{tab:heldout} is the central result of Study G: the LoRA decoder
+trained on the audited 279-task mixture, evaluated on seven public tasks
+it was never trained on, every task scored at its full advertised menu.
+The encoder column is the same mixture, the same augmentation, the same
+evaluation items, and the same harness, with only the backbone and its
+readout changed. Harness sanity $1.000$; held-in control $0.847$ to
+$0.980$ accuracy, $1.7$ to $2.0\times$ chance, on five tasks the model was
+trained on, so a weak held-out number here would be a transfer result
+rather than a bug.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{lrrrcr}
+\begin{tabular}{lrrrcrr}
 \toprule
-task & $K$ & chance & accuracy & 95\% CI & $\times$ chance \\
+task & $K$ & chance & accuracy & 95\% CI & $\times$ chance & encoder \\
 \midrule
-\texttt{clinc\_oos}      & 151 & 0.007 & 0.382 & [0.342, 0.420] & \textbf{57.6} \\
-\texttt{massive\_intent} &  60 & 0.017 & 0.473 & [0.430, 0.512] & \textbf{28.4} \\
-\texttt{banking77}       &  77 & 0.013 & 0.343 & [0.305, 0.382] & \textbf{26.4} \\
-\texttt{ag\_news}        &   4 & 0.250 & 0.735 & [0.698, 0.772] & 2.9 \\
-\texttt{sst5}            &   5 & 0.200 & 0.412 & [0.373, 0.452] & 2.1 \\
-\texttt{civil\_comments} &   2 & 0.500 & 0.683 & [0.648, 0.718] & 1.4 \\
-\texttt{helpsteer}       &   5 & 0.200 & 0.262 & [0.225, 0.297] & 1.3 \\
+\texttt{clinc\_oos}      & 151 & 0.007 & \textbf{0.702} & [0.667, 0.738] & \textbf{106.0} & 0.382 \\
+\texttt{massive\_intent} &  60 & 0.017 & \textbf{0.775} & [0.742, 0.807] & \textbf{46.5}  & 0.473 \\
+\texttt{banking77}       &  77 & 0.013 & \textbf{0.605} & [0.570, 0.642] & \textbf{46.6}  & 0.343 \\
+\texttt{ag\_news}        &   4 & 0.250 & 0.793 & [0.760, 0.828] & 3.2  & 0.735 \\
+\texttt{sst5}            &   5 & 0.200 & 0.465 & [0.425, 0.502] & 2.3  & 0.412 \\
+\texttt{civil\_comments} &   2 & 0.500 & 0.742 & [0.710, 0.777] & 1.5  & 0.683 \\
+\texttt{helpsteer}       &   5 & 0.200 & 0.273 & [0.240, 0.312] & 1.4  & 0.262 \\
 \midrule
-\multicolumn{5}{l}{mean multiple of chance} & \textbf{17.2} \\
+\multicolumn{5}{l}{mean multiple of chance} & \textbf{29.6} & 17.2 \\
 \bottomrule
 \end{tabular}
-\caption{Held-out transfer for the encoder, 600 rows per task, never
-trained on, every task scored at its full advertised menu. The suite
-began this work at 0.9$\times$ chance. Every interval excludes its chance
-floor. An earlier draft reported $21.9\times$ here from an in-training
-evaluator run against a superseded version of the suite; these figures
-come from \texttt{eval\_heldout.py} on the published checkpoint and the
-published suite, and reproduce from a clean clone.}
+\caption{Held-out transfer for the rank-16 LoRA decoder, 600 rows per
+task, never trained on, every task scored at its full advertised menu.
+The final column is the encoder variant on identical data and identical
+items (\S\ref{sec:abl-encoder}). Every task improves, and every interval
+excludes its chance floor. The suite began this work at 0.9$\times$
+chance.}
 \label{tab:heldout}
 \end{table}
 
-\paragraph{One task is weaker than the table implies.} Against the
-majority-class baseline rather than $1/K$, \texttt{civil\_comments} wins
-outright ($0.683$ vs $0.500$, $p<10^{-15}$) but \texttt{helpsteer} sits on
-the line: $0.262$ against a $0.233$ baseline, $p = 0.050$. Six of seven
-are unambiguous; the seventh beats chance while only matching the trivial
-baseline. The decoder of Section~\ref{sec:res-declora} removes this
-caveat.
-
-\subsection{A LoRA decoder transfers substantially better}
-\label{sec:res-declora}
-
-The same mixture, the same augmentation, rank-16 adapters on
-Qwen3-1.7B instead of the encoder. This was the experiment our
-pre-registered ablation plan named as deciding the architecture, and it
-decides it clearly. Harness sanity $1.000$; held-in control
-$1.5$--$2.5\times$, against the encoder's $1.1$--$2.3\times$.
-
-\begin{table}[t]
-\centering
-\begin{tabular}{lrrcrr}
-\toprule
-task & $K$ & accuracy & 95\% CI & $\times$ chance & encoder \\
-\midrule
-\texttt{clinc\_oos}      & 151 & \textbf{0.702} & [0.667, 0.738] & \textbf{106.0} & 0.382 \\
-\texttt{massive\_intent} &  60 & \textbf{0.775} & [0.742, 0.807] & \textbf{46.5}  & 0.473 \\
-\texttt{banking77}       &  77 & \textbf{0.605} & [0.570, 0.642] & \textbf{46.6}  & 0.343 \\
-\texttt{ag\_news}        &   4 & 0.793 & [0.760, 0.828] & 3.2  & 0.735 \\
-\texttt{sst5}            &   5 & 0.465 & [0.425, 0.502] & 2.3  & 0.412 \\
-\texttt{civil\_comments} &   2 & 0.742 & [0.710, 0.777] & 1.5  & 0.683 \\
-\texttt{helpsteer}       &   5 & 0.273 & [0.240, 0.312] & 1.4  & 0.262 \\
-\midrule
-\multicolumn{4}{l}{mean multiple of chance} & \textbf{29.6} & 17.2 \\
-\bottomrule
-\end{tabular}
-\caption{Held-out transfer, LoRA decoder against the encoder on identical
-data and identical items, every task scored at its full advertised menu.
-Every task improves.}
-\label{tab:declora}
-\end{table}
-
-Two results matter here beyond the mean. First, \textbf{every task now
+Three things in the table matter beyond the mean. The high-cardinality
+end is where the gap is widest: a 151-way menu at $0.702$ against
+$0.382$, and a 77-way at $0.605$ against $0.343$. \textbf{Every task
 beats its majority-class baseline}, not merely $1/K$, which the encoder
-did not manage: \texttt{helpsteer} reaches $0.273$ against $0.233$,
-although only at $p = 0.010$, and that margin is thin enough that a
-change in sampling could erase it. Second, \textbf{Banking77 zero-shot
-rises from $0.343$ to $0.605$} against the commercial reference's
-$0.820$, closing about half the gap and leaving twenty-one points.
+did not manage: \texttt{civil\_comments} and \texttt{sst5} clear theirs at
+$p<10^{-15}$, and \texttt{helpsteer} reaches $0.273$ against $0.233$ at
+$p = 0.010$, a margin thin enough that a change in sampling could erase
+it. On the binary task we also report ranking rather than argmax alone,
+where \texttt{civil\_comments} reaches AUROC $0.828$.
+
+\textbf{Banking77 zero-shot rises from $0.343$ to $0.605$} against the
+commercial reference's $0.820$. That closes about half the gap and leaves
+twenty-one points. It is not parity and we do not claim it.
 
 \paragraph{These numbers replace an earlier, inflated set.} Auditing our
 own results against a clean clone of the public repository exposed a
@@ -129,28 +62,33 @@ always retaining the gold option, and our evaluation runs passed
 64 of its 151 options and \texttt{banking77} presented 64 of 77, while
 the multiple of chance was still computed against $1/151$ and $1/77$. The
 accuracies were real; the multiples credited the model for a discrimination
-it never performed. We previously reported $32.8\times$ for this model
+it never performed. We previously reported $32.8\times$ for the decoder
 and $21.9\times$ for the encoder; the corrected figures are
 $29.6\times$ and $17.2\times$, Banking77 falls from $0.737$ to $0.605$,
 and \texttt{clinc\_oos} from $0.783$ to $0.702$. Correcting it took two
 attempts: at $4096$ tokens banking77's 77 options fit but
 \texttt{clinc\_oos} is still clipped to 64, because the decoder's
 per-option template costs tokens the encoder's does not, and the full
-151-way menu needs $6144$. The encoder figure additionally came from an in-training
-evaluator on a superseded version of the suite and did not reproduce.
-\texttt{eval\_heldout.py} now records the menu the model actually saw,
-scores against that, prints $K\rightarrow k$ when they differ, and names
-every truncated task in a closing warning.
+151-way menu needs $6144$. The encoder figure additionally came from an
+in-training evaluator on a superseded version of the suite and did not
+reproduce. \texttt{eval\_heldout.py} now records the menu the model
+actually saw, scores against that, prints $K\rightarrow k$ when they
+differ, and names every truncated task in a closing warning.
 
 \paragraph{The architecture decision.} Our ablation registry fixed three
 possible outcomes before this run so that the choice could not be
 rationalised afterwards. Latency does not separate the backbones once the
-adapter is merged ($1.07\times$, Section~\ref{sec:res-latency}), and a
+adapter is merged ($1.07\times$, \S\ref{sec:res-latency}), and a
 1.7B model fits a consumer GPU, so zero-shot transfer was the deciding
-axis. The decoder takes it by eleven multiples of chance. We therefore
-recommend the LoRA decoder as the default artifact and retain the encoder
-for deployments where p95 latency binds (20\,ms against 56\,ms) or where
-a 0.6\,GB footprint outweighs nine points of zero-shot accuracy.
+axis. The decoder takes it on all seven tasks and on the mean,
+$17.2\times$ to $29.6\times$. \textbf{We therefore make the merged LoRA
+decoder the default artifact}, and retain the encoder as the documented
+alternative for the two deployments where it still wins: a p95 latency
+budget it meets at $20$\,ms and the decoder does not at $56$\,ms, and a
+$0.6$\,GB footprint against $3.4$\,GB. \S\ref{sec:when-backbone} states
+that choice as a rule. The encoder's own held-out results, and the
+findings that only its presence made visible, are in
+\S\ref{sec:abl-encoder} and \S\ref{sec:abl-sd6}.
 
 \begin{figure}[t]
 \centering
@@ -162,6 +100,52 @@ tasks, retained here because a plot of only the best run would imply
 progress that did not happen.}
 \label{fig:transfer}
 \end{figure}
+
+\subsection{The output format makes zero-shot scoring possible, not
+present}
+\label{sec:res-architecture}
+
+Before any task training, we score the held-out suite using only the
+output format and a pretrained backbone.
+
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+backbone & configuration & held-out mean \\
+\midrule
+decoder, 1.7B   & state and options concatenated plainly  & 0.8$\times$ chance \\
+decoder, 1.7B   & \quad + each option framed as yes/no    & 2.9$\times$ chance \\
+decoder, 1.7B   & \quad + a preamble stating the task     & \textbf{11.5$\times$ chance} \\
+decoder, 1.7B   & \quad \emph{control:} shortened framing & 5.7$\times$ chance \\
+\midrule
+encoder, 150M   & pretrained masked-LM head at the marker & 0.7$\times$ chance \\
+encoder, 395M   & same readout, larger model              & 2.2$\times$ chance \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two halves of the table are different backbones and are not directly
+comparable; each is internally consistent. Within the decoder rows, the
+format is worth an order of magnitude, and the last decoder row is the
+control that matters: shortening the framing to
+\texttt{\{opt\}\textbackslash ncorrect? answer} roughly halves the mean,
+so the gain is the format doing work rather than an incidental wording
+choice.
+
+Within the encoder rows, a strong bidirectional model with the same
+output format scores \emph{below chance}, and its larger sibling barely
+clears it. This is the negative result that organises the rest of the
+paper. Nothing about scoring options at marker positions confers
+generalization, on either backbone: $11.5\times$ from prompt framing
+alone is a long way from the $29.6\times$ that training produces, and
+$0.7\times$ is worse than guessing. What the format buys is a well-formed
+output and a cheap one, not an ability.
+
+The same sensitivity appears in option rendering. On the held-out binary
+task, scoring the two \noul{} descriptions rather than bare polarity costs
+AUROC $0.63$ against $0.712$, because the descriptions restate one
+judgement from opposite sides and a model scoring both measures their
+overlap.
 
 \subsection{What produced the transfer}
 \label{sec:res-data}
@@ -189,6 +173,12 @@ separated in this pair.
 Scaling the audited mixture to 279 tasks took the mean from $17.6\times$
 to $17.2\times$ and moved every task (Figure~\ref{fig:transfer}).
 
+Both of those measurements were made on the encoder, before the backbone
+was settled. We did not repeat the augmentation ablation on the decoder,
+so the effect size is an encoder effect size; the decoder was trained on
+the post-augmentation mixture throughout and we cannot say from this work
+how much of its $29.6\times$ the augmentation is responsible for.
+
 \subsection{Router: a fine-tuned small model against a zero-shot API}
 \label{sec:res-router}
 
@@ -211,30 +201,40 @@ the value of labels as much as about either model.
 \midrule
 intent                        & \textbf{0.979} & 0.941 & 14 &  1 & 9.8e-04 & \openjev{} \\
 multi-label exact set         & \textbf{0.909} & 0.822 & 57 & 18 & 7.2e-06 & \openjev{} \\
-scope gate                    & \textbf{0.978} & 0.880 & 49 &  5 & 3.9e-10 & \openjev{} \\
+pharmacy scope gate           & \textbf{0.978} & 0.880 & 49 &  5 & 3.9e-10 & \openjev{} \\
 clinical gate                 & 0.987 & 0.978 &  7 &  3 & 0.34 & level \\
 abusive gate                  & 0.993 & 0.996 &  2 &  3 & 1.00 & level \\
 injection gate                & 0.993 & 0.996 &  1 &  2 & 1.00 & level \\
-\quad \texttt{compound\_3} tier & 0.903 & 0.645 & 11 &  3 & 0.057 & level \\
-oblique clinical recall       & 0.966 & 0.793 &  5 &  0 & 0.063 & level \\
+\texttt{compound} exact set   & 1.000 & 0.909 &  2 &  0 & 0.50 & level \\
 \bottomrule
 \end{tabular}
 \caption{Rank-16 LoRA on Qwen3-1.7B, 395 training examples, 258 seconds,
 paired on the same 450 test items with exact McNemar. \openjev{} is
-fine-tuned; the reference is zero-shot. Three wins, five ties, no losses.
-The last two rows have $n{=}31$ and $n{=}29$, where even a large margin
-struggles to reach significance: the oblique-clinical tier floors at
-$p = 0.0625$ with zero losses.}
+fine-tuned; the reference is zero-shot. Three wins, four ties, no losses
+across the seven primary measures.}
 \label{tab:router}
 \end{table}
 
-\paragraph{Two rows that look like wins are not.} The
-\texttt{compound\_3} tier ($0.903$ against $0.645$) and oblique clinical
-recall ($0.966$ against $0.793$) are both large margins that fail the
-significance test, at $p = 0.057$ and $p = 0.063$, because the tiers hold
-31 and 29 items. We report them as level. They are the two tiers we most
-expected to win, which is exactly why they need the test rather than the
-margin.
+\paragraph{Two tier diagnostics that look like wins are not.} Below the
+primary measures, two tiers show large margins and fail the significance
+test:
+
+\begin{center}
+\begin{tabular}{lrrrrrl}
+\toprule
+tier & \openjev{} & reference & $b_{10}$ & $b_{01}$ & $p$ & $n$ \\
+\midrule
+\texttt{compound\_3} exact set & 0.903 & 0.645 & 11 & 3 & 0.057 & 31 \\
+oblique clinical recall        & 0.966 & 0.793 &  5 & 0 & 0.063 & 29 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+We report both as level, because that is what the test says. They are the
+two tiers we most expected to win, which is exactly why they need the test
+rather than the margin, and at 31 and 29 items the oblique-clinical tier
+floors at $p = 0.0625$ even with zero losses. Read them as underpowered
+rather than as parity.
 
 \texttt{compound\_3} is nonetheless where the \noul{} primitive earns its
 place in design terms: three simultaneous intents in one message, which a
@@ -248,10 +248,10 @@ single \choice{} softmax cannot express at all, whatever the $p$-value on
 \toprule
 configuration & intent & trainable & artifact \\
 \midrule
-encoder, all open            & 0.899 & 150M & 0.6 GB \\
-decoder, head only           & 0.666 & 4.2M & 17 MB \\
-decoder, all open            & 0.929 & 1{,}725M & 3.4 GB \\
 \textbf{decoder, LoRA $r{=}16$} & \textbf{0.979} & \textbf{17M} & \textbf{87 MB} \\
+decoder, all open            & 0.929 & 1{,}725M & 3.4 GB \\
+decoder, head only           & 0.666 & 4.2M & 17 MB \\
+encoder, all open            & 0.899 & 150M & 0.6 GB \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -261,39 +261,85 @@ The likely explanation is the learning rate a full fine-tune tolerates:
 $10^{-5}$ over six epochs of 395 examples barely moves a 1.7B model, while
 LoRA at $2\times10^{-4}$ adapts quickly without disturbing the weights it
 rides on. Neither was tuned beyond one setting, so this is ``adapters are
-the right default here'' rather than a tuned optimum.
+the right default here'' rather than a tuned optimum. The encoder row is
+the alternative backbone fully fine-tuned, which is the strongest thing we
+could do with it on this task, and it lands eight points below the
+adapter.
 
-\paragraph{Intermediate-task transfer.} Starting the encoder specialist
-from a general checkpoint rather than raw weights, with identical data and
-schedule, moves intent $0.544 \to 0.899$ and multi-label $0.453 \to 0.789$
+\paragraph{Intermediate-task transfer, which works on one backbone only.}
+Starting the \emph{encoder} specialist from a general checkpoint rather
+than raw weights, with identical data and schedule, moves intent
+$0.544 \to 0.899$ and multi-label $0.453 \to 0.789$
 ($p = 6\mathrm{e}{-18}$). Two safety gates that never fired at all from
 scratch reach $0.857$ and $0.583$ recall. This is the small-target-data
-regime where STILTs predicts the largest gain.
+regime where STILTs~\cite{stilts} predicts the largest gain, and it is one
+of the strongest single interventions in this work.
 
-\paragraph{But the general checkpoint was not needed here.} The $0.979$
-LoRA used no mixture training at all; it started from base Qwen3-1.7B. The
-general checkpoint earns its keep on schemas you have no labels for, not
-on the task you actually care about.
+\paragraph{The same intervention hurts the decoder.} The $0.979$ LoRA
+used no mixture training at all; it started from base Qwen3-1.7B, and
+starting it from our general adapter instead is significantly
+\emph{worse} ($0.953$, $p = 0.012$). \S\ref{sec:abl-sd6} works through
+why. The general checkpoint earns its keep on schemas you have no labels
+for, not on the task you actually care about.
 
-\subsection{Latency}
+\subsection{Latency and footprint}
 \label{sec:res-latency}
+
+Two measurements, taken under different load, so the absolute values are
+not comparable across them. The first is a back-to-back comparison of the
+three serving configurations while a training run shared the GPU, which
+inflates every row equally and leaves the ratios readable:
 
 \begin{center}
 \begin{tabular}{lrrr}
 \toprule
  & p50 & p95 & vs encoder \\
 \midrule
-encoder, 150M             & 37.7 ms & 50.9 ms & -- \\
+encoder, 150M             & 37.7 ms & 50.9 ms & baseline \\
 decoder LoRA, unmerged    & 74.0 ms & 110.5 ms & 1.96$\times$ \\
 decoder LoRA, merged      & \textbf{40.4 ms} & \textbf{55.9 ms} & \textbf{1.07$\times$} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Measured back to back under identical load; read the ratios rather than
-the absolute values. An unmerged adapter costs roughly $2\times$ for
-nothing, since it is an extra matmul per target module at every layer.
-Merged, a model eleven times larger runs 7\% slower.
+\textbf{An unmerged adapter costs roughly $2\times$ for nothing}, since it
+is an extra matmul per target module at every layer and the output is
+identical either way. Merged, a model eleven times larger runs 7\% slower.
+The released loader therefore merges on construction
+(\S\ref{sec:method-lora}), so this cost cannot be paid by accident.
+
+The second measurement is the fine-tuned router at batch size 1, ten
+questions and twenty-four options per state, under lighter load. It is the
+one the deployment recommendation rests on, because the tail is what a
+latency budget is written against:
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+ & decoder, 1{,}725M & encoder, 150M \\
+\midrule
+p95 per state & 56 ms & \textbf{20 ms} \\
+checkpoint on disk & 3.4 GB & \textbf{0.6 GB} \\
+adapter, per additional task & \textbf{87 MB} & 0.6 GB \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The tail, not the median, is where the two backbones separate, and it is
+the only axis on which the encoder is clearly ahead.
+
+\paragraph{The two measurements disagree about how much, and we have not
+settled it.} Under GPU contention the merged decoder's p95 is
+$1.1\times$ the encoder's ($55.9$ against $50.9$\,ms); on the lighter-load
+router it is closer to $2.8\times$ ($56$ against $20$\,ms). The likely
+reading is that contention inflates the encoder's tail far more than the
+decoder's in relative terms, since both are sitting on the same queue, so
+the lighter-load figures are the ones a dedicated deployment would see.
+We did not re-run the merge comparison on an idle GPU to confirm that, so
+anyone with a tail budget in the tens of milliseconds should measure on
+their own hardware rather than take either ratio from us. Everything here
+is batch size 1, which is the interactive case; sustained throughput under
+load is not measured in this work.
 
 \begin{figure}[t]
 \centering
@@ -309,25 +355,42 @@ claim about their model's speed.}
 \subsection{Benchmark transfer is not deployment readiness}
 \label{sec:res-deployment}
 
-The general checkpoint scores $17.2\times$ chance on the held-out suite.
-Applied zero-shot to the routing task:
+The general decoder scores $29.6\times$ chance on the held-out suite and
+the general encoder $17.2\times$. Applied zero-shot to the routing task,
+that ordering reverses:
 
 \begin{center}
 \begin{tabular}{lrrr}
 \toprule
- & zero-shot & fine-tuned & reference, zero-shot \\
+ & decoder & encoder & reference \\
+ & \emph{zero-shot} & \emph{zero-shot} & \emph{zero-shot} \\
 \midrule
-intent                & 0.601 & 0.902 & \textbf{0.941} \\
-multi-label exact set & 0.427 & 0.789 & \textbf{0.822} \\
-clinical gate recall  & \textbf{0.111} & 0.991 & 0.926 \\
+intent               & 0.467 & 0.601 & \textbf{0.941} \\
+clinical gate recall & 0.380 & 0.111 & \textbf{0.926} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Intent at $0.601$ on a six-way menu is genuinely above chance, so the
-transfer is real. It is also 34 points behind the reference, and the
-clinical gate fires on one in nine of the cases it should catch, which is
-not a gate. Clearing chance on academic benchmarks with clean label sets
-is a materially weaker claim than working on a deployment task you have no
-labels for, and the two come apart sharply here. Safety gates in
-particular appear to require task supervision.
+The decoder wins all seven public benchmarks and is worse than the encoder
+on intent for the one task with an operational shape: multi-question
+packing, compound multi-label answers, and gates with recall floors.
+Neither backbone is usable there. Intent at $0.601$ on a six-way menu is
+genuinely above chance, so some transfer is real, but a clinical gate
+firing on one in nine of the cases it should catch is not a gate, and
+$0.380$ is not one either. The decoder's other zero-shot figures on this
+task are no better: multi-label exact set $0.207$, and a pharmacy scope
+gate at $0.440$ recall with a $0.696$ false-positive rate. Fine-tuning on
+395 examples of the task takes the same decoder to intent $0.979$ and
+multi-label exact set $0.909$ (Table~\ref{tab:router}), so what is missing
+zero-shot is task supervision rather than capacity.
+
+We report this because it undercuts the natural reading of our own
+headline result. It does not change the architecture decision, which rests
+on zero-shot transfer where no labels exist and on fine-tuned accuracy
+where they do, and the decoder wins both of those. It does mean that
+clearing chance on academic benchmarks with clean label sets is a
+materially weaker claim than working on a deployment task you have no
+labels for, that the two come apart sharply here, and that nobody should
+read $29.6\times$ as a statement about a system anyone would ship
+unsupervised. Safety gates in particular appear to require task
+supervision.

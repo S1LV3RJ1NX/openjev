@@ -2,8 +2,86 @@
 \label{sec:ablations}
 
 Reporting only what worked would misrepresent both the difficulty and the
-method. Three interventions that sounded right did nothing or actively
-hurt, and one conclusion we published internally was wrong.
+method. This section holds the backbone we did not choose and the
+evidence it produced, three interventions that sounded right and did
+nothing or actively hurt, and one conclusion we published internally and
+then withdrew.
+
+\subsection{The encoder backbone: the alternative, and the control}
+\label{sec:abl-encoder}
+
+The bidirectional encoder was the first backbone we built and it is no
+longer the recommended one. It is kept for two reasons. It is a released
+artifact with a real deployment case (\S\ref{sec:when-backbone}), and it
+is the control that makes several results in this paper legible: an
+intervention that helps one backbone and hurts the other cannot be seen
+with one backbone alone.
+
+Table~\ref{tab:heldout-enc} is the encoder trained on the same audited
+279-task mixture, with the same augmentation, evaluated on the same items
+at full menu size. Harness sanity $1.000$; held-in control $1.1$ to
+$2.3\times$ chance.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrrcr}
+\toprule
+task & $K$ & chance & accuracy & 95\% CI & $\times$ chance \\
+\midrule
+\texttt{clinc\_oos}      & 151 & 0.007 & 0.382 & [0.342, 0.420] & \textbf{57.6} \\
+\texttt{massive\_intent} &  60 & 0.017 & 0.473 & [0.430, 0.512] & \textbf{28.4} \\
+\texttt{banking77}       &  77 & 0.013 & 0.343 & [0.305, 0.382] & \textbf{26.4} \\
+\texttt{ag\_news}        &   4 & 0.250 & 0.735 & [0.698, 0.772] & 2.9 \\
+\texttt{sst5}            &   5 & 0.200 & 0.412 & [0.373, 0.452] & 2.1 \\
+\texttt{civil\_comments} &   2 & 0.500 & 0.683 & [0.648, 0.718] & 1.4 \\
+\texttt{helpsteer}       &   5 & 0.200 & 0.262 & [0.225, 0.297] & 1.3 \\
+\midrule
+\multicolumn{5}{l}{mean multiple of chance} & \textbf{17.2} \\
+\bottomrule
+\end{tabular}
+\caption{Held-out transfer for the encoder, 600 rows per task, never
+trained on, every task scored at its full advertised menu. This is the
+comparison column of Table~\ref{tab:heldout} in full. Every interval
+excludes its chance floor, and the suite began this work at 0.9$\times$
+chance. An earlier draft reported $21.9\times$ here from an in-training
+evaluator run against a superseded version of the suite; these figures
+come from \texttt{eval\_heldout.py} on the published checkpoint and the
+published suite, and reproduce from a clean clone.}
+\label{tab:heldout-enc}
+\end{table}
+
+This is a real result and we do not withdraw it: all seven tasks clear
+their chance floor and a 151-way menu reaches $57.6\times$. It is also
+the weaker of the two backbones on every task, and one task is weaker
+than the table implies. Against the majority-class baseline rather than
+$1/K$, \texttt{civil\_comments} wins outright ($0.683$ against $0.500$,
+$p<10^{-15}$) but \texttt{helpsteer} sits on the line: $0.262$ against a
+$0.233$ baseline, $p = 0.050$. Six of seven are unambiguous; the seventh
+beats chance while only matching the trivial baseline. The decoder
+removes that caveat, though its own \texttt{helpsteer} margin is thin
+($p = 0.010$).
+
+\paragraph{Three findings the encoder is responsible for.} None of these
+survives if you only ever train one backbone.
+
+\begin{itemize}[leftmargin=1.4em,itemsep=0.3em]
+  \item \textbf{The output format confers nothing by itself.} Untrained,
+    with the option-scoring readout and no task training, the encoder
+    scores $0.7\times$ chance, worse than guessing, and its 395M sibling
+    reaches $2.2\times$ (\S\ref{sec:res-architecture}). An untrained
+    decoder reads menus at $11.5\times$, but only because it borrows a
+    pretrained vocabulary head, which is a property of the backbone and
+    not of the architecture. The encoder is what separates those two
+    explanations.
+  \item \textbf{Intermediate-task transfer reverses by backbone.}
+    $+36$ points on the encoder and significantly negative on the
+    decoder, from the identical intervention (\S\ref{sec:abl-sd6}).
+  \item \textbf{Benchmark transfer does not rank models on deployment.}
+    The decoder beats the encoder on all seven public tasks and is worse
+    than it zero-shot on the router (\S\ref{sec:res-deployment}). With
+    one backbone this would have read as a flat statement that zero-shot
+    routing is hard, rather than as a reversal.
+\end{itemize}
 
 \subsection{Interventions that failed}
 
@@ -92,7 +170,7 @@ because they are easy to repeat:
 \end{itemize}
 
 We also credited the held-in control with catching the second bug, and
-that was wrong too: the decoder reads $1.0$--$1.3\times$ on held-in tasks
+that was wrong too: the decoder reads $1.0$ to $1.3\times$ on held-in tasks
 even when it loads perfectly, because a 4.2M head on a frozen backbone
 barely fits its own training mixture. Only the harness sanity task caught
 it.
@@ -103,7 +181,7 @@ decoder}
 
 The clearest illustration that an intervention is not good in itself, only
 good relative to what the base model already does. Initialising the
-router adapter from the general adapter of Section~\ref{sec:res-declora},
+router adapter from the general adapter of \S\ref{sec:res-heldout},
 rather than from base Qwen3, and training identically:
 
 \begin{center}
@@ -141,7 +219,7 @@ train on; it is the wrong starting point when task data does exist.
 
 For completeness, the positive results, ordered by effect size: label-space
 augmentation (\S\ref{sec:res-data}); the decoder backbone over the encoder
-($17.2\times \to 29.6\times$, \S\ref{sec:res-declora}); mixture scale and
+($17.2\times \to 29.6\times$, \S\ref{sec:res-heldout}); mixture scale and
 auditing ($17.6\times \to 17.2\times$); prompt format on a decoder backbone
 ($0.8\times \to 11.5\times$); intermediate-task transfer on the encoder
 only ($+36$ points at 395 target examples, and see

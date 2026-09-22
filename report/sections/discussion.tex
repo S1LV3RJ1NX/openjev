@@ -7,10 +7,11 @@ The split is clean and it is about labels. \textbf{Given roughly 400
 labelled examples for your task, a 1.7B model with an 87\,MB adapter beats
 a commercial typed-decision API} on a hardened routing benchmark, runs on
 your own hardware, returns full-precision probabilities, and is
-deterministic. \textbf{Without labels, it is close but still behind}:
-$0.605$ on Banking77 against roughly $0.820$. That margin was $0.290$
-against $0.820$ on our encoder, and the decoder narrowed a fifty-three
-point deficit to nine without any new data.
+deterministic. \textbf{Without labels, it is behind and not close}:
+$0.605$ on Banking77 against roughly $0.820$, twenty-one points short.
+On the encoder the same measurement was $0.343$, so changing the backbone
+closed about half of that gap without any new data and left the other
+half open.
 
 Both halves matter. The first says the capability is not gated behind
 scale or a vendor. The second says the vendor's actual product, working
@@ -62,13 +63,75 @@ fine-tune needs are already being produced. Raising 40 to 300 converts a
 validation artifact into a training set, and on our measurements that is
 the difference between trailing the reference API and passing it.
 
+\subsection{Which backbone to use}
+\label{sec:when-backbone}
+
+We ship both backbones, so the recommendation needs to be concrete rather
+than a shrug. \textbf{Use the merged LoRA decoder unless one of two
+specific constraints binds.}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+ & decoder, merged LoRA & encoder, fine-tuned & source \\
+\midrule
+held-out suite mean      & \textbf{29.6$\times$} & 17.2$\times$ & \S\ref{sec:res-heldout} \\
+\texttt{clinc\_oos}, $K{=}151$ & \textbf{0.702} & 0.382 & \S\ref{sec:res-heldout} \\
+Banking77 zero-shot      & \textbf{0.605} & 0.343 & \S\ref{sec:res-heldout} \\
+router intent, fine-tuned & \textbf{0.979} & 0.899 & \S\ref{sec:res-router} \\
+p95 per state, batch 1   & 56 ms & \textbf{20 ms} & \S\ref{sec:res-latency} \\
+checkpoint on disk       & 3.4 GB & \textbf{0.6 GB} & \S\ref{sec:res-latency} \\
+cost of a second task    & \textbf{87 MB adapter} & 0.6 GB checkpoint & \S\ref{sec:res-router} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Take the decoder by default.} It is better on all seven
+held-out tasks, better by eight points of intent accuracy on the
+fine-tuned router, and the merged adapter costs $1.07\times$ the
+encoder's median latency, so the size difference mostly does not show up
+in wall time at batch 1. Serving many schemas from one backbone is also
+cheaper on this path, since each additional task is an $87$\,MB adapter
+rather than another $0.6$\,GB of weights.
+
+\paragraph{Take the encoder if the p95 tail is your budget.} The median
+latencies are close; the tails are not, at $56$\,ms against $20$\,ms on
+the router measurement. If your router sits on a request path with a hard
+tail budget in the tens of milliseconds, that is the measurement that
+decides it, and no amount of accuracy recovers a missed deadline. This is
+the weakest recommendation in this subsection: our two latency runs
+disagree on the size of the tail gap ($1.1\times$ under GPU contention
+against $2.8\times$ under lighter load, \S\ref{sec:res-latency}), and we
+did not resolve which is representative. Measure it on your own hardware
+before letting it decide.
+
+\paragraph{Take the encoder if 3.4\,GB does not fit.} A 0.6\,GB
+checkpoint runs on hardware a 3.4\,GB one does not, including CPU-only
+and small-GPU deployments we did not benchmark. This is a hard constraint
+rather than a trade, and where it binds the encoder's $17.2\times$ is
+still a working system.
+
+\paragraph{Two things that should not enter the decision.} Do not leave
+the adapter unmerged to keep the artifact separate at serving time: it
+costs $1.96\times$ latency for output that is identical either way
+(\S\ref{sec:res-latency}). And do not pick the backbone on held-out
+benchmark transfer if your real task looks like our router, because that
+ordering reverses (\S\ref{sec:res-deployment}). If you have labels,
+fine-tune both and measure; it took 258 seconds on the decoder and 38 on
+the encoder.
+
 \subsection{Why the data mattered more than the model}
 
 The most useful finding here is negative: a strong encoder with a clever
-output format scores below chance untrained. Nothing about scoring options
-at marker positions confers generalization. What produced it was the
+output format scores below chance untrained, and an untrained decoder with
+the same format reaches only $11.5\times$ against the $29.6\times$ that
+training produces. Nothing about scoring options at marker positions
+confers generalization on either backbone. What produced it was the
 composition of the training mixture, and in particular a property we could
 manufacture, namely menu-size diversity, rather than one we had to find.
+The backbone swap is worth $17.2\times$ to $29.6\times$ on top of that
+data work, which is a large effect and still the second-largest one in
+this paper.
 
 This has a practical consequence. Our mixture is 234 \choice{} tasks
 against 34 \noul{} and 11 \score{}, and the result pattern follows exactly:
@@ -94,22 +157,22 @@ readout. Rank-consistent objectives~\cite{corn} and adaptive rejection
 boundaries~\cite{adb} are the obvious next step and are not implemented.
 
 \paragraph{Zero-shot on a real task is much worse than on benchmarks, and
-benchmark transfer does not rank models on it.} $17.2\times$ chance on the
-held-out suite coexists with intent $0.601$ and a clinical-gate recall of
-$0.111$ on the routing task. Safety gates in particular appear to need
-task supervision, and we would not deploy any zero-shot gate on this
-evidence.
+benchmark transfer does not rank models on it.} The decoder's
+$29.6\times$ chance on the held-out suite coexists with intent $0.467$ on
+the routing task, a multi-label exact set of $0.207$, and a pharmacy gate
+at $0.440$ recall with a $0.696$ false-positive rate. Safety gates in
+particular appear to need task supervision, and we would not deploy any
+zero-shot gate on this evidence.
 
-The stronger version of this caveat emerged when we ran the same check on
-the decoder. It transfers far better on the benchmark suite
-($29.6\times$ against $17.2\times$, every task improved) and yet does
-\emph{worse} zero-shot on the routing task: intent $0.467$ against the
-encoder's $0.601$, with multi-label exact set $0.207$ and a pharmacy gate
-at $0.440$ recall and $0.696$ false-positive rate. Its clinical-gate
-recall is higher than the encoder's ($0.380$ against $0.111$) and still
-nowhere near usable.
+The stronger version of this caveat is the comparison with the encoder.
+The decoder transfers far better on the benchmark suite ($29.6\times$
+against $17.2\times$, every task improved) and yet is \emph{worse} than
+the encoder zero-shot on the routing task, intent $0.467$ against
+$0.601$. Its clinical-gate recall is the better of the two ($0.380$
+against $0.111$) and still nowhere near usable, so this is a reversal
+between two unusable systems rather than a case for the encoder.
 
-So the ordering that held across seven public benchmarks reverses on the
+The ordering that held across seven public benchmarks reverses on the
 one task with an operational shape: multi-question packing, compound
 multi-label answers, and gates with recall floors. We report this because
 it undercuts the natural reading of our own headline result. Held-out
@@ -177,3 +240,11 @@ keeps questions independent, and above all training data
 whose \emph{shape} matches deployment. Of those three, only the last was
 hard, and it is the one that transfers least from the literature to
 practice.
+
+The system we recommend is a 1.7B decoder with a rank-16 adapter merged
+into it, which is small by current standards and large by the standards
+of the encoder we started from. The encoder is not a failed branch: it
+holds two deployment cases that the decoder does not, and three of the
+findings above exist only because we trained both and compared them. The
+version of this work with one backbone would have been shorter, cheaper,
+and considerably less informative.

@@ -51,6 +51,8 @@ bidirectional: every token sees every other. A \textbf{decoder} is causal:
 a token sees only what came before it, which is what makes text generation
 possible. \textbf{In this paper ``decoder'' names the attention pattern
 only.} We never generate text; we run one forward pass and read scores.
+The decoder is the backbone we recommend; the encoder is the documented
+alternative (\S\ref{sec:when-backbone}).
 
 \item[Forward pass] One run of the model over an input. Our central
 efficiency claim is that $m$ questions cost one forward pass, not $m$.
@@ -133,8 +135,8 @@ different $K$ can be compared on one axis.
 
 \item[Majority-class baseline] Always predicting the most common label.
 On skewed data this beats chance, so it is the stricter floor. One of our
-results passes the chance test and only ties this one
-(\S\ref{sec:res-heldout}).
+encoder results passes the chance test and only ties this one
+(\S\ref{sec:abl-encoder}).
 
 \item[Accuracy, precision, recall] Accuracy is the fraction correct.
 \emph{Recall} is the fraction of true positives found, which is what

@@ -12,15 +12,21 @@ All public and Apache 2.0 unless the underlying data says otherwise.
 \toprule
 artifact & size & link \\
 \midrule
+\textbf{General LoRA adapter} (Study G) & 87 MB &
+  \href{https://huggingface.co/s1lv3rj1nx/openjev-general-lora}{\texttt{s1lv3rj1nx/openjev-general-lora}} \\
+\textbf{Router LoRA adapter} (Study S) & 87 MB &
+  \href{https://huggingface.co/s1lv3rj1nx/openjev-router-lora}{\texttt{s1lv3rj1nx/openjev-router-lora}} \\
 General encoder checkpoint & 0.6 GB &
   \href{https://huggingface.co/s1lv3rj1nx/openjev-encoder-general}{\texttt{s1lv3rj1nx/openjev-encoder-general}} \\
-Router LoRA adapter & 87 MB &
-  \href{https://huggingface.co/s1lv3rj1nx/openjev-router-lora}{\texttt{s1lv3rj1nx/openjev-router-lora}} \\
 Router encoder specialist & 0.6 GB &
   \href{https://huggingface.co/s1lv3rj1nx/openjev-router-healthcare}{\texttt{s1lv3rj1nx/openjev-router-healthcare}} \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+The two adapters are the recommended artifacts and both require
+\texttt{Qwen/Qwen3-1.7B} as their base. The two encoder checkpoints are
+the alternative backbone (\S\ref{sec:when-backbone}) and are standalone.
 
 \paragraph{Datasets.}
 \begin{center}
@@ -40,9 +46,9 @@ Healthcare router & 988 items, 18 tiers &
 \end{center}
 
 \paragraph{Base models} (not ours):
-\href{https://huggingface.co/answerdotai/ModernBERT-base}{\texttt{answerdotai/ModernBERT-base}}~\cite{modernbert}
+\href{https://huggingface.co/Qwen/Qwen3-1.7B}{\texttt{Qwen/Qwen3-1.7B}}~\cite{qwen3}
 and
-\href{https://huggingface.co/Qwen/Qwen3-1.7B}{\texttt{Qwen/Qwen3-1.7B}}~\cite{qwen3}.
+\href{https://huggingface.co/answerdotai/ModernBERT-base}{\texttt{answerdotai/ModernBERT-base}}~\cite{modernbert}.
 The mixture is assembled from
 \href{https://huggingface.co/tasksource}{\texttt{tasksource}}~\cite{tasksource}.
 
@@ -96,8 +102,8 @@ of the product.
  & Study G (mixture) & Study S (router) \\
 \midrule
 epochs & 1 & 6 \\
-batch size & 16 enc / 8 dec & 8 enc / 4 dec \\
-context & 2048 & 2048 enc / 3072 dec \\
+batch size & 8 dec / 16 enc & 4 dec / 8 enc \\
+context & 2048 & 3072 dec / 2048 enc \\
 learning rate & $3\times10^{-5}$ enc & $3\times10^{-5}$ enc, $2\times10^{-4}$ LoRA \\
 label-space aug. $\pi$ & 0.5, cap 120 & off \\
 \noul{} recast $\pi$ & 0.15 & off \\

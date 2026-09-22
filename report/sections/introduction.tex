@@ -65,8 +65,10 @@ taking on faith:
     \S\ref{sec:method} was worth building.
   \item \textbf{Its zero-shot ability is the genuinely hard part, and it
     is far ahead of ours.} On Banking77, a 77-way intent task it has never
-    been trained on by us, it scores roughly $0.820$. Our best equivalent
-    is $0.290$. After considerable effort we did not close this gap, and
+    been trained on by us, it scores roughly $0.820$. Our best equivalent,
+    the LoRA decoder, reaches $0.605$, twenty-one points behind; our
+    encoder reaches $0.343$. After considerable effort we did not close
+    this gap, and
     \S\ref{sec:res-deployment} shows the gap is wider still on a realistic
     deployment task. If you need typed decisions on a schema you have no
     labels for, Jev is the better tool and this paper does not argue
@@ -91,13 +93,30 @@ architecture, which is a recombination of published ideas
 (\S\ref{sec:background}). It is that almost none of the performance comes
 from it.
 
-Three findings organise the paper.
+\paragraph{The anchor system, and the alternative we kept.} Every headline
+number in this paper comes from rank-16 LoRA adapters on a 1.7B decoder
+backbone (Qwen3-1.7B), merged into the frozen weights at load. We also
+built and trained the identical output format on a 150M bidirectional
+encoder (ModernBERT-base), and ran the two against each other on the same
+data and the same evaluation items. The decoder wins every one of the
+seven held-out tasks and takes the suite mean from $17.2\times$ chance to
+$29.6\times$, so the decoder is the recommended artifact. The encoder is
+not discarded. It remains the right choice under a tight p95 latency
+budget or a small footprint (\S\ref{sec:res-latency}), and it is the
+control that makes several findings below legible at all: an intervention
+that helps one backbone and hurts the other is only visible if you have
+both (\S\ref{sec:abl-sd6}).
+
+Four findings organise the paper.
 
 \paragraph{The architecture does not generalize on its own.} A pretrained
 bidirectional encoder, given the option-scoring output format and no task
 training, scores $0.7\times$ chance on held-out schemas, worse than
-guessing. Its larger sibling reaches $2.2\times$. The output format makes
-zero-shot scoring \emph{possible}; it does not make it \emph{present}
+guessing. Its larger sibling reaches $2.2\times$. A pretrained decoder
+given the same format scores $0.8\times$ with options concatenated
+plainly, and $11.5\times$ once each option is framed as a yes/no question
+under a task preamble. The output format makes zero-shot scoring
+\emph{possible}; it does not make it \emph{present}
 (\S\ref{sec:res-architecture}).
 
 \paragraph{Generalization is a property of the training mixture, and some
@@ -108,6 +127,14 @@ labels borrowed from other tasks, which moved a 77-way held-out menu from a
 literal $0.000$ to $0.205$. A model that has never seen a large menu
 collapses onto one label when handed one, and you can manufacture large
 menus without finding datasets that have them (\S\ref{sec:res-data}).
+
+\paragraph{The backbone choice is real, and the benchmarks that settle it
+do not predict deployment.} Holding data and evaluation items fixed, the
+decoder beats the encoder on all seven held-out tasks. Applied zero-shot
+to the routing task, the same decoder is \emph{worse} than the encoder
+(intent $0.467$ against $0.601$). Both are unusable there, so the
+architecture call stands, but $29.6\times$ is a benchmark number and not
+a readiness claim (\S\ref{sec:res-deployment}).
 
 \paragraph{With labels, small models win; without them, they do not.} A
 rank-16 adapter on a 1.7B backbone, trained on 395 examples, beats the
@@ -122,7 +149,13 @@ the honest summary of where this technology stands
   \item An architecture and open implementation for multi-question typed
     decisions in a single forward pass, with latency flat in the number of
     questions (10 questions cost 6\% more than 1) and full-precision
-    calibrated probabilities.
+    calibrated probabilities, released as a merged rank-16 LoRA decoder
+    with a bidirectional-encoder variant of the same format.
+  \item A controlled architecture ablation between the two backbones on
+    identical data and identical items, which the decoder wins on all
+    seven held-out tasks ($17.2\times \to 29.6\times$ chance), together
+    with the latency and footprint measurements that say when the
+    encoder is still the right answer.
   \item \emph{Label-space augmentation}, a training-time intervention that
     manufactures the menu-size diversity a mixture lacks, and which is the
     difference between no transfer and useful transfer at high cardinality.

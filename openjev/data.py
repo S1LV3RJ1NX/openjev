@@ -13,12 +13,14 @@ which is how partially-annotated contributions stay usable.
 
 from __future__ import annotations
 
+import json
 import math
 import random
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Sampler
 
 from .encode import Packed, Packer
 from .schema import Choice, Example, Noul, Question, Score, Task
@@ -202,6 +204,158 @@ class Sample:
     example: Example
 
 
+class TokenBudgetBatches(Sampler):
+    """Batch by token count rather than example count.
+
+    A fixed batch size has to be chosen for the longest sequence in the
+    dataset, and then every short sequence pays for it. Our mixture averages
+    roughly 560 tokens with a long tail past 3,000, so a batch size that
+    survives the tail leaves the GPU almost idle on the body: we measured 39%
+    utilisation and 205W of 400W at micro-batch 2.
+
+    Two budgets, because two different things run out. Activation memory
+    scales with total tokens, and the block-diagonal mask is materialised, so
+    its cost scales with batch x length squared. A batch is closed when either
+    would be exceeded.
+
+    Lengths are estimated, not exact, because option-order shuffling and
+    distractor padding change the packed length on every draw. Estimates can
+    therefore be low, so callers should still handle an occasional
+    out-of-memory by splitting the batch rather than trusting this to be
+    conservative.
+    """
+
+    def __init__(
+        self,
+        lengths: Sequence[int],
+        token_budget: int = 16384,
+        mask_budget: int = 80_000_000,
+        max_size: int = 64,
+        shuffle: bool = True,
+        chunk: int = 4096,
+        seed: int = 0,
+    ) -> None:
+        self.lengths = list(lengths)
+        self.token_budget = token_budget
+        self.mask_budget = mask_budget
+        self.max_size = max_size
+        self.shuffle = shuffle
+        self.chunk = chunk
+        self.epoch = 0
+        self.seed = seed
+        self._batches = self._build()
+
+    def _build(self) -> list[list[int]]:
+        idx = list(range(len(self.lengths)))
+        rng = random.Random(self.seed + self.epoch)
+        if self.shuffle:
+            rng.shuffle(idx)
+        batches: list[list[int]] = []
+        # Sort within a window rather than globally. A global sort would put
+        # every long sequence in the same few steps and make the loss order
+        # correlate with length; a window keeps batches homogeneous enough to
+        # cut padding while leaving the overall order shuffled.
+        for start in range(0, len(idx), self.chunk):
+            window = sorted(idx[start : start + self.chunk], key=lambda i: self.lengths[i])
+            cur: list[int] = []
+            longest = 0
+            for i in window:
+                L = max(longest, self.lengths[i])
+                n = len(cur) + 1
+                if cur and (n * L > self.token_budget or n * L * L > self.mask_budget
+                            or n > self.max_size):
+                    batches.append(cur)
+                    cur, longest = [i], self.lengths[i]
+                else:
+                    cur.append(i)
+                    longest = L
+            if cur:
+                batches.append(cur)
+        if self.shuffle:
+            rng.shuffle(batches)
+        return batches
+
+    def set_epoch(self, epoch: int) -> None:
+        self.epoch = epoch
+        self._batches = self._build()
+
+    def __iter__(self):
+        return iter(self._batches)
+
+    def __len__(self) -> int:
+        return len(self._batches)
+
+
+def estimate_lengths(
+    task: Task,
+    packer: Packer,
+    sample: int = 24,
+    distractor_prob: float = 0.0,
+    max_options: int = 0,
+    distractors: list[tuple[str, str]] | None = None,
+    scale_prob: float = 0.0,
+    noul_prob: float = 0.0,
+    seed: int = 0,
+) -> list[int]:
+    """Cheap per-example length estimates for the batch sampler.
+
+    Packing every row exactly costs about a millisecond each, which is minutes
+    over a large mixture and is wasted anyway because option shuffling changes
+    the result on every draw. Pack a small sample to calibrate characters per
+    token, then scale.
+
+    **Estimate the augmented length, not the base one.** Label-space
+    augmentation pads a menu up to `max_options` on a fraction of draws, so a
+    two-option example can arrive ten times longer than it looks. Estimating
+    the base length packs dozens of apparently short rows into one batch and
+    then blows up when they are drawn: we measured a 72% out-of-memory skip
+    rate that way, which trains the model on whichever rows happen to fit.
+    Assume any augmentable example may reach the cap.
+    """
+    n = len(task.examples)
+    if not n:
+        return []
+    probe = min(sample, n)
+    packed_lens, char_lens = [], []
+    plain = TaskDataset(task, packer, shuffle_options=False)
+    for i in range(probe):
+        try:
+            packed_lens.append(len(plain[i].packed))
+        except Exception:  # noqa: BLE001
+            continue
+        char_lens.append(_char_size(task, task.examples[i]))
+    if not packed_lens:
+        return [512] * n
+    ratio = sum(packed_lens) / max(1, sum(char_lens))
+
+    if not (distractor_prob > 0 and max_options):
+        return [max(16, int(_char_size(task, ex) * ratio)) for ex in task.examples]
+
+    # Ask the dataset what each row will actually become. Augmentation is
+    # seeded per index, so this is the same draw training will make, not an
+    # upper bound: menu size is sampled log-uniformly and the median row keeps
+    # 3 options while the top decile reaches 100, so an upper bound would size
+    # every batch for a case that arises a tenth of the time.
+    aug = TaskDataset(
+        task, packer, shuffle_options=True, seed=seed,
+        distractors=distractors, distractor_prob=distractor_prob,
+        max_options=max_options, scale_prob=scale_prob, noul_prob=noul_prob,
+    )
+    return [max(16, int(aug.planned_chars(i) * ratio)) for i in range(n)]
+
+
+def _char_size(task: Task, ex: Example) -> int:
+    """Characters the packer will see for one example, state plus menu."""
+    state = ex.state if isinstance(ex.state, str) else json.dumps(ex.state)
+    total = len(state)
+    for qid, q in task.questions.items():
+        crit = (ex.criteria or {}).get(qid) or getattr(q, "criteria", None) or {}
+        items = crit.items() if isinstance(crit, dict) else enumerate(crit)
+        for k, v in items:
+            total += len(str(k)) + (len(str(v)) if v else 0)
+    return max(1, total)
+
+
 class TaskDataset(Dataset):
     """Packs on the fly so option-order shuffling is fresh every epoch.
 
@@ -228,6 +382,7 @@ class TaskDataset(Dataset):
         self.packer = packer
         self.shuffle_options = shuffle_options
         self.max_questions = max_questions
+        self.seed = seed
         self.rng = random.Random(seed)
         # Label-space augmentation: pad a menu with labels borrowed from other
         # tasks. The gold answer is unchanged and still correct, so the example
@@ -270,6 +425,29 @@ class TaskDataset(Dataset):
 
     def __len__(self) -> int:
         return len(self.task.examples)
+
+    def planned_chars(self, i: int) -> int:
+        """Characters this row will render to, augmentation included.
+
+        Runs the same augmentation the draw will run, under the same seed, and
+        measures the result without tokenising. That makes the batch sampler's
+        length estimates exact up to the characters-per-token ratio, rather
+        than a worst case that assumes every menu reaches the cap.
+        """
+        self.rng = random.Random(self.seed * 1_000_003 + i)
+        ex = self.task.examples[i]
+        try:
+            qs, _ = self._questions_for(ex, shrink=0)
+        except Exception:  # noqa: BLE001
+            return _char_size(self.task, ex)
+        state = ex.state if isinstance(ex.state, str) else json.dumps(ex.state)
+        total = len(state)
+        for q in qs.values():
+            crit = getattr(q, "criteria", None) or {}
+            items = crit.items() if isinstance(crit, dict) else enumerate(crit)
+            for k, v in items:
+                total += len(str(k)) + (len(str(v)) if v else 0)
+        return max(1, total)
 
     def _vary_scale(self, q: Score, gold) -> tuple[Score, int | None]:
         """Reword or coarsen an ordinal scale, keeping the gold correct."""
@@ -368,6 +546,14 @@ class TaskDataset(Dataset):
 
     def __getitem__(self, i: int) -> Sample:
         ex = self.task.examples[i]
+        # Seed per item rather than drawing from one stream. Augmentation
+        # decides menu size log-uniformly, so the same row can be 3 options on
+        # one draw and 160 on the next, and a length-aware batch sampler
+        # cannot plan around a length it can only guess. Keying the stream to
+        # the index makes the draw reproducible, so the sampler can ask what
+        # this row will actually look like. It also makes a run repeatable
+        # example by example, which a shared stream never was.
+        self.rng = random.Random(self.seed * 1_000_003 + i)
         # Padding a menu can push the sequence over the context budget. An
         # augmentation that kills a multi-hour run is worse than no
         # augmentation, so back off to progressively smaller menus and, in

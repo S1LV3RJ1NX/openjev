@@ -12,8 +12,24 @@ isolates questions from one another with block-diagonal attention, and
 normalises scores within each question's own option set. Ten questions
 therefore cost one forward pass and 6\% more latency than one, and the
 output is a calibrated probability over a closed menu rather than generated
-text. We release the code, three checkpoints, and three datasets including
-a 279-task, 323{,}466-row training mixture.
+text. The system we recommend, and the one every headline number here
+refers to, is rank-16 LoRA adapters on a 1.7B decoder backbone, merged
+into the frozen weights at load. A 150M bidirectional encoder runs the
+identical format and is retained as the documented alternative and as the
+control in our architecture ablation. We release the code, two adapters,
+two encoder checkpoints, and three datasets including a 279-task,
+323{,}466-row training mixture.
+
+\paragraph{Held-out transfer.} On seven public tasks never trained on,
+600 rows each, every task scored at its full advertised menu, the LoRA
+decoder reaches \textbf{29.6$\times$ chance}: a 151-way menu at $0.702$
+($106.0\times$), a 60-way at $0.775$, a 77-way at $0.605$, and every task
+clearing both $1/K$ and its majority-class baseline. Trained on identical
+data and scored on identical items, the encoder reaches
+\textbf{17.2$\times$}, loses on all seven tasks, and leaves the ordinal
+one level with its majority baseline. That ablation settles the
+architecture, since merging the adapter removes the latency argument for
+the encoder ($1.07\times$).
 
 \paragraph{The main finding is negative, and it is the useful one.} The
 architecture does not generalize on its own. A strong bidirectional encoder
@@ -24,27 +40,26 @@ Padding training menus with borrowed distractor labels, together with a
 mixture rebuild in the same change, moves a 77-way held-out menu from a
 literal $0.000$ to $0.205$; a model that has never seen a large menu
 collapses onto one label when handed one, though we did not separate the
-two interventions and so cannot attribute the gain cleanly. Scaling and
-auditing the mixture to 279 tasks reaches \textbf{17.2$\times$ chance}
-on an encoder, with all seven held-out tasks clearing their floor and a
-151-way menu at 57.6$\times$. Swapping the encoder for rank-16 LoRA
-adapters on a 1.7B decoder, holding the data fixed, reaches
-\textbf{29.6$\times$}: every task improves, every task also clears its
-majority-class baseline, and a 151-way menu reaches 106$\times$. This
-settles our architecture choice in favour of the decoder, since merging
-the adapter removes the latency argument for the encoder
-($1.07\times$). Both figures are corrections: auditing our own results
-against a clean clone found that at the context budget we had been
-using, the packer silently dropped a 151-option menu to 64 while the
-multiple of chance was still computed against $1/151$, and we report the
-withdrawn numbers alongside the corrected ones.
+two interventions and so cannot attribute the gain cleanly. The backbone
+swap moves the suite from $17.2\times$ to $29.6\times$; the data work is
+the difference between nothing and a working system on either backbone.
+
+\paragraph{Both headline figures are corrections.} Auditing our own results
+against a clean clone found that at the context budget we had been using,
+the packer silently dropped a 151-option menu to 64 while the multiple of
+chance was still computed against $1/151$. The decoder's $32.8\times$
+became $29.6\times$ and the encoder's $21.9\times$ became $17.2\times$,
+Banking77 fell from $0.737$ to $0.605$, and \texttt{clinc\_oos} fell from
+$0.783$ to $0.702$. The encoder figure additionally came from an
+in-training evaluator on a superseded version of the suite and did not
+reproduce. We report the withdrawn numbers alongside the corrected ones.
 
 \paragraph{Against Jev, the result splits cleanly on one axis: labels.}
 Given 395 labelled examples and 258 seconds, a rank-16 LoRA adapter on
 Qwen3-1.7B scores intent $0.979$ against Jev's $0.941$
-($p=1\mathrm{e}{-3}$) and multi-label exact set $0.909$ against $0.822$
-($p=7\mathrm{e}{-6}$) on a hardened healthcare routing benchmark: three
-wins, five statistical ties, no losses. \textbf{The comparison is
+($p=9.8\mathrm{e}{-04}$) and multi-label exact set $0.909$ against $0.822$
+($p=7.2\mathrm{e}{-6}$) on a hardened healthcare routing benchmark: three
+wins, four statistical ties, no losses. \textbf{The comparison is
 asymmetric and in our favour}, since we are fine-tuned on that task and
 Jev is zero-shot on it, so the claim it supports is that a few hundred
 labels are worth more than the gap between an open 1.7B model and a
@@ -54,16 +69,20 @@ adapter from our general checkpoint rather than from base weights makes
 it \emph{worse} ($0.953$, $p=0.012$), reversing a $+36$ point gain from
 the same intervention on the encoder: staged fine-tuning pays only when
 the base model cannot perform the task form at all. Without labels the
-picture inverts: $0.605$ on Banking77 against Jev's $0.820$, and applied
-zero-shot to the routing task our general encoder reaches intent $0.601$
-with a clinical-gate recall of $0.111$, which is not a usable gate.
+picture inverts: $0.605$ on Banking77 against Jev's $0.820$, twenty-one
+points behind, and applied zero-shot to the routing task the decoder
+scores intent $0.467$ against the encoder's $0.601$, so the benchmark
+ordering does not survive contact with a deployment task.
 
 \paragraph{Takeaway.} Use Jev, or something like it, when you need typed
 decisions on a schema you have no labels for; that capability is real and
 we did not reproduce it. Use \openjev{} when you can label a few hundred
 examples of your actual task, want the model on your own hardware, need
 full-precision probabilities and determinism, or need multi-label routing
-where a single choice cannot express the answer. Benchmark transfer and
+where a single choice cannot express the answer. Within \openjev{}, take
+the merged LoRA decoder unless a p95 latency budget near $20$\,ms or a
+$0.6$\,GB footprint rules it out, in which case the encoder is the
+documented fallback at a measured cost in accuracy. Benchmark transfer and
 deployment readiness are not the same thing, and we report the gap between
 them rather than the better number. All claims are reproducible from a
 public repository, with negative and retracted results given the same

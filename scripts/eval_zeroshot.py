@@ -1,12 +1,22 @@
 """Zero-shot evaluation on the held-out suite, with no training at all.
 
-Scores each option by asking the backbone's own masked-LM head what it would
-predict at the option's marker: `logit(yes) - logit(no)`. No new parameters,
-so this measures what the warm start gives us for free, which is the only
-honest way to compare candidate backbones before committing to a data
-pipeline.
+Scores each option at its marker as `logit(yes) - logit(no)`, read from the
+encoder's pretrained masked-LM head or, with --decoder, from the causal
+model's vocabulary logits. No new parameters either way, so this measures
+what the warm start gives for free.
 
     uv run python scripts/eval_zeroshot.py --backbone answerdotai/ModernBERT-base
+    uv run python scripts/eval_zeroshot.py --backbone Qwen/Qwen3-1.7B --decoder
+
+The answer it gave is a negative result, so this is a diagnostic rather than
+a recommended starting point: ModernBERT-base scores 0.7x chance untrained
+and -large 2.2x. The format makes zero-shot possible; it does not make it
+present. The decoder path is worth more, 11.5x chance once the option framing
+and preamble are in place, which is what made it the shipped backbone.
+
+Use this rather than `eval_heldout.py --backbone` for an *untrained* encoder:
+this one reads the pretrained MLM head, while `eval_heldout.py` builds a
+freshly initialised linear scorer that has nothing to say until it is trained.
 """
 
 from __future__ import annotations

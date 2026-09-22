@@ -16,13 +16,35 @@ production router asks ten questions where a benchmark asks one. And
 $p(\cdot)$ must be a usable probability, because the operational decision
 is a threshold on it.
 
+\subsection{The system, and the one variant of it}
+\label{sec:method-system}
+
+The deployed system is a causal decoder backbone, Qwen3-1.7B, adapted with
+rank-16 LoRA and merged into the frozen weights at load. The five
+components below are packing, block-diagonal attention, marker readout,
+grouped log-softmax, and the adapter. Everything in this section describes
+that system.
+
+One component, the backbone, has a second implementation. The same
+packing, the same mask, the same grouped normalisation and the same loss
+run on a 150M bidirectional encoder, ModernBERT-base, with a linear scorer
+in place of the vocabulary-logit readout. We describe that variant
+alongside each component it changes, because it is a released artifact and
+because the architecture ablation in \S\ref{sec:res-heldout} is only
+interpretable if both paths are specified. It is the alternative, not the
+default: its case is latency and footprint (\S\ref{sec:res-latency}), not
+accuracy.
+
 \subsection{Packing}
 
 We write the state once, then each question and its options after it, as a
 single token sequence (Figure~\ref{fig:packing}); which positions may
-then attend to which is Figure~\ref{fig:mask}. Each option is followed
-(or preceded, depending on backbone) by a \emph{marker} token, and the
-model's output for that option is read at the marker position.
+then attend to which is Figure~\ref{fig:mask}. Each option is followed by
+a \emph{marker} token, and the model's output for that option is read at
+the marker position. On a causal backbone the marker must follow the
+option, since it has to have seen it; on the bidirectional encoder
+variant it may equally precede the option, which is how UniMC writes
+it~\cite{unimc}.
 
 Formally, the packed sequence carries a block assignment $b(t) \in
 \{0,1,\dots,m\}$ for each token position $t$, where block $0$ is the shared
@@ -60,17 +82,18 @@ key position $u$. We impose
   \,\big]}_{\text{our rule}} \cdot \underbrace{C(t,u)}_{\text{backbone's own}},
   \label{eq:mask}
 \end{equation}
-where $C(t,u) = 1$ for a bidirectional encoder and $C(t,u) = \mathbb{1}[u
-\le t]$ for a causal decoder. Both factors are indicators, so the product
-is the conjunction.
+where $C(t,u) = \mathbb{1}[u \le t]$ for the causal decoder and $C(t,u) =
+1$ for the bidirectional encoder variant. Both factors are indicators, so
+the product is the conjunction.
 
 The first factor is what makes the shared prefix legitimate: every question
 sees the full state. The second is what makes the result well defined.
 Without it, question 2 attends to question 1 and an answer becomes a
 function of which other questions happened to be asked in the same call.
-On a causal backbone the state already precedes every question, so the
-rule's only remaining work is isolating question blocks from each other.
-Figure~\ref{fig:mask} shows both cases.
+On the decoder the state already precedes every question, so the rule's
+only remaining work is isolating question blocks from each other, and the
+prefix is ordinary left context that a KV cache already knows how to
+reuse. Figure~\ref{fig:mask} shows both cases.
 
 \begin{figure}[t]
 \centering
@@ -79,7 +102,9 @@ Figure~\ref{fig:mask} shows both cases.
 state and three questions. Blue is attention to the shared prefix, orange
 is attention within a question's own block, grey is blocked. No question
 can see another, so its answer does not depend on what else was asked.
-Right: the same rule composed with causality on a decoder backbone.}
+Right, the deployed case: the same rule composed with causality on the
+decoder backbone. Left: the encoder variant, where the rule is the only
+constraint.}
 \label{fig:mask}
 \end{figure}
 
@@ -89,21 +114,32 @@ how many questions fit in one call. At our 2048-token budget a
 ten-question router with 24 options packs comfortably; a 151-option menu
 rendered with long descriptions does not, and the implementation degrades
 by subsampling the menu (always keeping the gold) rather than failing.
+This graceful degradation is also what produced the largest measurement
+fault in this work, because for some time the evaluator scored against the
+menu it had asked for rather than the menu the model was shown
+(\S\ref{sec:res-heldout}). The decoder's per-option template costs more
+tokens than the encoder's, so it clips sooner at a given budget: a full
+151-way menu needs $6144$ tokens on the decoder path.
 
 \subsection{Readout and grouped normalisation}
 
 Let $h_t$ be the final hidden state at marker position $t$, and let
 $\mathcal{M}_i$ be the marker positions of question $q_i$. A scalar score
-is produced per option. For an encoder backbone this is a shared linear
-scorer, $z_t = w^\top h_t + b$. For a decoder backbone it is the difference
-of two vocabulary logits at the marker,
+is produced per option. On the decoder this is the difference of two
+vocabulary logits at the marker,
 \begin{equation}
   z_t = \big[W_{\text{lm}} h_t\big]_{\texttt{yes}} - \big[W_{\text{lm}}
   h_t\big]_{\texttt{no}},
   \label{eq:yesno}
 \end{equation}
 optionally plus a residual head $g(h_t)$ initialised to zero, so that
-training begins at exactly the untrained readout.
+training begins at exactly the untrained readout. Reading through the
+pretrained language-modelling head is what lets an untrained decoder
+score a menu at all, and \S\ref{sec:res-architecture} measures how much
+of the untrained ability that choice is responsible for. On the encoder
+variant there is no vocabulary head to borrow, so the score is a shared
+linear scorer over the marker state, $z_t = w^\top h_t + b$, trained from
+random initialisation.
 
 Because $K_i$ differs across questions packed into one sequence, scores are
 normalised \emph{within} each question rather than globally:
@@ -144,7 +180,7 @@ $y_1{=}1$ and $y_2{=}2$, then $\mathcal{L} = -\tfrac{1}{2}(\log 0.63 +
 \State $H \gets \textproc{Backbone}(x, A)$
   \Comment{one forward pass, all questions}
 \State $z \gets \textproc{Score}(H[\mathcal{M}])$
-  \Comment{linear, or Eq.~\ref{eq:yesno} for a decoder}
+  \Comment{Eq.~\ref{eq:yesno}, or linear for the encoder}
 \ForAll{questions $q_i$}
   \State $p_i \gets \textproc{Softmax}(z[\mathcal{M}_i])$
     \Comment{grouped, Eq.~\ref{eq:grouped}}
@@ -173,6 +209,41 @@ converged on:
     Measured, this costs AUROC $0.63$ against $0.712$
     (\S\ref{sec:res-architecture}).
 \end{itemize}
+
+\subsection{Adapters and merging}
+\label{sec:method-lora}
+
+The decoder is not fine-tuned by opening its weights. We train low-rank
+updates beside them~\cite{lora}: for a frozen projection $W_0 \in
+\mathbb{R}^{d\times k}$, the forward pass computes $W_0 x + \tfrac{\alpha}{r}
+BAx$ with $B \in \mathbb{R}^{d\times r}$, $A \in \mathbb{R}^{r\times k}$
+and $r = 16$, $\alpha = 32$, applied to the query, key, value, output,
+gate, up and down projections at every layer. That is 17M trainable
+parameters against 1{,}725M frozen ones, and an artifact of $87$\,MB
+rather than $3.4$\,GB. \S\ref{sec:res-router} reports that this
+outperforms opening all 1{,}725M parameters on our target task, which is
+not the usual expectation for a parameter-efficient method.
+
+Two consequences matter for the architecture rather than for training.
+
+\paragraph{Merging.} Since $BA$ is linear and sits in parallel with
+$W_0$, a trained adapter can be folded in once, $W \gets W_0 +
+\tfrac{\alpha}{r} BA$, after which inference runs the base graph exactly
+and costs nothing extra. Left unmerged it is an additional matmul per
+target module per layer, which we measure at $1.96\times$ p50 latency
+against $1.07\times$ merged (\S\ref{sec:res-latency}). That is close to a
+doubling of latency for no change in output, so the released loader
+merges on construction and merging is not an optimisation a user has to
+remember. It is also the fact that removes the latency argument for the
+encoder backbone: a model eleven times larger runs 7\% slower once the
+adapter is folded in.
+
+\paragraph{One backbone, many tasks.} Because the adapter is small and
+separable, a single copy of the base weights can serve many typed-decision
+schemas by swapping $87$\,MB. Our general mixture adapter and our router
+adapter are both of this form. They are not composed: \S\ref{sec:abl-sd6}
+reports that initialising the second from the first is measurably worse
+than initialising from base.
 
 \subsection{Cost}
 

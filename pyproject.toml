@@ -5,7 +5,7 @@ description = "Open System One models: typed decisions with calibrated probabili
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
-keywords = ["classification", "calibration", "encoder", "routing", "typed-decisions"]
+keywords = ["classification", "calibration", "lora", "routing", "typed-decisions"]
 dependencies = [
     "accelerate>=1.15.0",
     "hf-transfer>=0.1.9",
@@ -30,7 +30,7 @@ data = [
 train = ["torch>=2.5", "transformers>=4.48", "numpy>=1.26"]
 
 [project.urls]
-Repository = "https://github.com/OWNER/openjev"
+Repository = "https://github.com/S1LV3RJ1NX/openjev"
 
 [build-system]
 requires = ["hatchling"]

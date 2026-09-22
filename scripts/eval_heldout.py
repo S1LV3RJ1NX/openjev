@@ -29,6 +29,7 @@ from openjev import Task  # noqa: E402
 from openjev.data import TaskDataset, collate  # noqa: E402
 from openjev.encode import Packer  # noqa: E402
 from openjev.ckpt import load_into, lora_rank, wants_head  # noqa: E402
+from openjev.infer import DEFAULT_DECODER_TEMPLATE  # noqa: E402
 from openjev.heldout import load_suite  # noqa: E402
 from statistics import median
 
@@ -84,10 +85,17 @@ def main() -> None:
     ap.add_argument("--preamble", default=None)
     ap.add_argument("--template", default=None)
     ap.add_argument("--bs", type=int, default=8)
-    ap.add_argument("--max-len", type=int, default=4096)
+    ap.add_argument("--max-len", type=int, default=6144,
+                    help="6144 is the default because it fits clinc_oos's full "
+                         "151-option menu on the decoder path; below that the "
+                         "packer truncates "
+                         "and the closing warning names which tasks")
     ap.add_argument("--limit", type=int, default=None)
-    ap.add_argument("--mixture", default="tasks/mixture",
-                    help="for the held-in control")
+    ap.add_argument("--mixture", default="tasks/mixture_final",
+                    help="the training mixture, for the held-in control; the "
+                         "control is skipped if this directory does not exist. "
+                         "The mixture is not committed, so build it with "
+                         "scripts/build_mixture.py or fetch it from the Hub")
     args = ap.parse_args()
 
     sys.stdout.reconfigure(line_buffering=True)
@@ -103,14 +111,21 @@ def main() -> None:
     backbone = args.backbone or ck.get("backbone", "answerdotai/ModernBERT-base")
     tok = AutoTokenizer.from_pretrained(backbone)
 
-    template = args.template or (
-        "\nOption: {opt}\nIs this the correct answer to the question? answer"
-        if args.decoder else None
+    # Take the prompt from the checkpoint unless the caller overrides it. A
+    # model scored under a preamble it was not trained with is a different
+    # system, and defaulting to no preamble made that the easy mistake: the
+    # numbers come out low and nothing says why. `eval_router.py` already
+    # read these off the checkpoint, and the two harnesses disagreeing is
+    # how the same weights produced different results depending on which
+    # script you reached for.
+    template = args.template or ck.get("option_template") or (
+        DEFAULT_DECODER_TEMPLATE if args.decoder else None
     )
+    preamble = args.preamble if args.preamble is not None else ck.get("preamble")
     packer = Packer(
         tok, max_len=args.max_len, max_state_len=args.max_len // 2,
         marker=":" if args.decoder else None,
-        marker_after=args.decoder, option_template=template, preamble=args.preamble,
+        marker_after=args.decoder, option_template=template, preamble=preamble,
     )
 
     if args.decoder:
@@ -180,6 +195,13 @@ def main() -> None:
             g, pr, _, _ = score(model, t, packer, device, args.bs, limit=args.limit or 200)
             a = accuracy(pr, g)
             print(f"{p.name[:38]:<40}{K:>5}{len(g):>6}{a:>8.4f}{a * K:>9.1f}x")
+    elif ck.get("state_dict"):
+        # Otherwise the control silently does not run, and a chance-level
+        # held-out result below then has nothing to distinguish a real
+        # transfer failure from a loading bug. Say so rather than print
+        # nothing at all.
+        print(f"\n== HELD-IN CONTROL SKIPPED: '{mix}' does not exist. "
+              f"Pass --mixture <dir> to run it.")
 
     # ---- the actual question ---------------------------------------------
     print(f"\n== HELD-OUT SUITE (schemas never trained on) ==")
@@ -228,9 +250,11 @@ def main() -> None:
         print("   --max-len to score the full menu:")
         for n, K, k in truncated:
             print(f"     {n:<26} K={K} but only {k} options shown")
-        print("AUROC is shown for binary tasks only. Accuracy there depends on "
-              "the 0.5 threshold;\nAUROC does not, so a gap between them is a "
-              "calibration result, not a transfer result.")
+    # A legend for the AUROC column, which is printed whether or not any menu
+    # was truncated.
+    print("\nAUROC is shown for binary tasks only. Accuracy there depends on "
+          "the 0.5 threshold;\nAUROC does not, so a gap between them is a "
+          "calibration result, not a transfer result.")
 
 
 if __name__ == "__main__":
