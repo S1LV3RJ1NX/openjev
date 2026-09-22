@@ -184,6 +184,8 @@ multiple-choice tasks found and fixed.
 |---|---|---|
 | held-out mean | **29.6x chance** | 17.2x |
 | Banking77 zero-shot | **0.605** | 0.343 |
+| throughput, idle H100 | 84 states/s | **655 states/s** |
+| p95 latency, batch 1 | 55.5 ms | **20.3 ms** |
 | p95 latency, batch 1 | 56 ms | **20 ms** |
 | footprint | 3.4 GB | **0.6 GB** |
 

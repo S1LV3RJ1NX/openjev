@@ -35,6 +35,34 @@ Good fit for routing, triage, guardrails and tool selection where you have
 labels, for long states asked many questions at once, and for regulated data
 that cannot leave your network.
 
+## Why pick this over the decoder: throughput
+
+The decoder adapter transfers better zero-shot, 29.6x chance against this
+model's 17.2x, and that is the honest headline. This model wins somewhere
+that often matters more in production.
+
+| batch | this encoder | decoder |
+|---|---|---|
+| 1 | 47.4 states/s at 20.4 ms | 23.2 at 42.9 ms |
+| 8 | 373.9 states/s at 21.0 ms | 77.1 at 105.0 ms |
+| 16 | **654.6 states/s at 24.0 ms** | 77.3 at 206.4 ms |
+| 32 | 532.7 states/s at 36.8 ms | 84.4 at 417.0 ms |
+
+Ten questions per state on an idle H100, so the peak is **6,546 decisions
+per second**, roughly eight times the decoder. It is also 0.6 GB against
+3.4 GB, and its p95 is 20.3 ms against 55.5 ms.
+
+For scale, the commercial API we benchmark against peaks near 47 requests
+per second before its median latency starts climbing. Ours is one process
+with no HTTP layer, queuing or network, so treat it as what the hardware
+can do rather than as a deployment measurement.
+
+Note the knee between batch 16 and 32, where throughput falls and p95
+jumps from 29.4 ms to 209.1 ms. Size your batches below it.
+
+**So: this model for volume and tight tail latency, the decoder for
+accuracy on schemas you have no labels for.**
+
 ## Measured
 
 **Held-out schemas, never trained on** (`scripts/eval_heldout.py`, n=600 per
