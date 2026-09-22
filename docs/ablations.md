@@ -209,3 +209,53 @@ options to fit `max_len` while the multiple of chance was still divided by
 
 Sources the mixture is assembled from are listed per task in its
 `description`, and every held-out task names its aliases in `holdout_of`.
+
+## G-C6: training on bigger menus did not help
+
+The shipped adapter was trained at `--max-len 2048`, which clipped
+label-space augmentation to about 80 options while the held-out suite
+presents up to 151. That is a real train-and-test mismatch, and
+label-space augmentation is the largest single effect this project has
+measured, so extending its range to cover the evaluation was the obvious
+next move.
+
+Retrained at `--max-len 4096` with `--max-options 160`, which produces
+menus up to 175. Everything else held: same mixture, same rank, same
+learning rate, same backbone. Evaluated at full menus.
+
+| task | shipped, menus to 80 | retrained, menus to 175 | |
+|--|--|--|--|
+| `banking77` | 0.605 | 0.663 | level |
+| `clinc_oos` | 0.702 | 0.660 | level |
+| `massive_intent` | 0.775 | **0.670** | **worse** |
+| `ag_news` | 0.793 | 0.808 | level |
+| `sst5` | 0.465 | 0.435 | level |
+| `civil_comments` | 0.742 | 0.682 | level |
+| `helpsteer` | 0.273 | 0.290 | level |
+| **mean x chance** | **29.6x** | 28.5x | |
+
+**Six level, one worse, none better.** The mean moved the wrong way. We
+keep the shipped adapter.
+
+The one result pointing the predicted way is `banking77`, up 5.8 points,
+the largest single move in the table and in exactly the direction the
+hypothesis called for. It is not significant on its own and we are not
+going to promote it by ignoring the six numbers around it, one of which
+is a clear ten-point loss.
+
+**What we think happened.** Menu size was not the binding constraint. The
+model already reached 106x chance on a 151-way menu while having trained
+on nothing larger than 80, so whatever it learned about reading a menu
+generalised past the sizes it saw. Spending capacity on larger menus
+appears to have cost something elsewhere: `massive_intent`, at K=60, is
+the task most likely to be crowded out by padding every menu towards 160
+distractors.
+
+**What the run was still worth.** Training is 2.2x faster on the same
+hardware, because the token-budget sampler took the GPU from 39%
+utilisation and 205W to 100% and 397W. Augmentation is now seeded per
+example index, so a run is reproducible row by row where the old shared
+random stream made an example's menu depend on what had been drawn before
+it. And training now aborts on a trivial-task check and on an
+out-of-memory skip rate above 5%, both of which fired during development
+and would have saved us a seven hour run had they existed earlier.

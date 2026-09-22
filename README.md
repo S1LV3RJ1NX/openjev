@@ -141,6 +141,12 @@ against our 29.6x, winning five and tying two. Reasons to use ours anyway: the d
 network, you get full-precision probabilities rather than values quantized to
 0.01, and you get determinism, which Jev does not offer.
 
+**You are serving high volume.** Use the encoder. On an idle H100 it sustains
+654 states per second, which is 6,546 decisions per second at ten questions
+each, against the decoder's 84. That is roughly 8x, and it is a wider gap than
+the accuracy difference running the other way. For reference, Jev peaks near 47
+requests per second before its median latency climbs.
+
 **You have a few hundred labels.** Train a task adapter, and train it from the
 base weights rather than from the general adapter. This is the case where we
 beat Jev: 395 examples and 258 seconds on one H100 gave three wins, four ties

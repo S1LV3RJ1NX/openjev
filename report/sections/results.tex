@@ -331,6 +331,56 @@ starting it from our general adapter instead is significantly
 why. The general checkpoint earns its keep on schemas you have no labels
 for, not on the task you actually care about.
 
+\subsection{Throughput under concurrent load}
+\label{sec:res-throughput}
+
+Every latency figure in this paper is batch size 1, the interactive case,
+and the reciprocal of a single-request latency is not a throughput
+number. Table~\ref{tab:throughput} sweeps batch size as a stand-in for
+in-flight requests, which is what a server batching arrivals sees.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{encoder} & \multicolumn{2}{c}{decoder} \\
+batch & states/s & p50 & states/s & p50 \\
+\midrule
+ 1 &  47.4 & 20.4\,ms & 23.2 &  42.9\,ms \\
+ 4 & 188.7 & 20.8\,ms & 74.5 &  54.7\,ms \\
+ 8 & 373.9 & 21.0\,ms & 77.1 & 105.0\,ms \\
+16 & \textbf{654.6} & 24.0\,ms & 77.3 & 206.4\,ms \\
+32 & 532.7 & 36.8\,ms & \textbf{84.4} & 417.0\,ms \\
+\bottomrule
+\end{tabular}
+\caption{Sustained throughput, ten questions per state, idle H100, one
+process. Each state answers ten questions, so the encoder's peak is
+6{,}546 decisions per second against the decoder's 844.}
+\label{tab:throughput}
+\end{table}
+
+The reference API peaks near 47 requests per second at 32 in-flight, with
+its median flat around $436$\,ms, and degrades past that: at 64 concurrent
+its median reaches $1{,}106$\,ms while throughput falls to $29.8$/s. On
+that comparison the decoder sustains $84.4$/s at a comparable $417$\,ms,
+and the encoder sustains $654.6$/s at $24$\,ms.
+
+Two caveats, both material. Ours is a single process on one GPU with no
+HTTP layer, no queuing and no network, while theirs is a hosted service
+measured across the internet from India, so this bounds what the hardware
+can do rather than what a productionised OpenJev would serve. And the
+encoder has a knee of its own between batch 16 and 32, where throughput
+falls from $654.6$ to $532.7$ and p95 rises from $29.4$ to $209.1$\,ms,
+the same character as the reference system's knee at a different
+position.
+
+\paragraph{This is the strongest case for the encoder in this paper.} It
+was already the choice when p95 latency binds. It also serves roughly
+eight times the decoder's throughput, and that gap is larger than the
+accuracy gap running the other way. A deployment answering millions of
+decisions a day should read Table~\ref{tab:throughput} before
+Table~\ref{tab:heldout}.
+
 \subsection{Latency and footprint}
 \label{sec:res-latency}
 

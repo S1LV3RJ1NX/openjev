@@ -295,11 +295,11 @@ dominates, which is the regime this design targets and not a universal
 claim. Latency is also flat in question count: at a 700-token state, one
 question and fifty both take $9.6$\,ms.
 
-\paragraph{On the two sets of latency numbers in this paper.} The figures
-here ($69$ and $74$\,ms) were taken while a training run shared the GPU;
-those in \S\ref{sec:res-latency} ($37.7$ to $55.9$\,ms) were taken under
-lighter load. Absolute values are therefore not comparable across the two
-sections and only the within-section ratios are meaningful. We report both
-rather than the flattering one, and neither is a throughput measurement:
-everything here is batch size 1, which is the interactive case. Sustained
-throughput under load is not measured in this work.
+\paragraph{On the two sets of latency numbers in this paper.} An earlier
+draft reported two sets that disagreed, $69$ to $74$\,ms here against
+$37.7$ to $55.9$\,ms in \S\ref{sec:res-latency}, because the first pair
+was taken while a training run shared the GPU. Re-measured on an idle
+device the decoder is $22.7$\,ms at p50 and $55.5$\,ms at p95, matching
+the lighter-load set to within $0.3$\,ms. The contended figures are
+withdrawn and the ratios above are recomputed from the idle
+measurement.

@@ -289,11 +289,57 @@ is a fixed-overhead floor and both paths hit it. Reproduce with
 also in the technical report, which is where the argument for packing is
 made.
 
+### Throughput under concurrent load
+
+Every other latency number here is batch size 1, the interactive case, and
+dividing one by it is not a throughput figure. Batch size below stands in
+for in-flight requests, which is what a server batching arrivals sees.
+Ten questions per state, idle H100, one process.
+
+| batch | encoder states/s | encoder p50 | decoder states/s | decoder p50 |
+|--|--|--|--|--|
+| 1 | 47.4 | 20.4 ms | 23.2 | 42.9 ms |
+| 4 | 188.7 | 20.8 ms | 74.5 | 54.7 ms |
+| 8 | 373.9 | 21.0 ms | 77.1 | 105.0 ms |
+| 16 | **654.6** | 24.0 ms | 77.3 | 206.4 ms |
+| 32 | 532.7 | 36.8 ms | **84.4** | 417.0 ms |
+
+Each state answers ten questions, so the encoder's peak is **6,546
+decisions per second** and the decoder's is 844.
+
+**Against the reference API.** Jev peaks near 47 requests per second at 32
+in-flight, with p50 flat around 436 ms, then degrades: at 64 its p50
+reaches 1,106 ms and throughput falls to 29.8/s. On that comparison the
+decoder does **84.4/s at a comparable 417 ms p50**, and the encoder does
+**654.6/s at 24 ms**, which is roughly 14x the throughput at a
+seventeenth of the latency.
+
+Read that as an upper bound rather than a deployment number. Ours is one
+process on one GPU with no HTTP layer, no queuing and no network; theirs
+is a hosted service measured across the internet. The comparison says
+what the hardware can do, not what a productionised OpenJev would do.
+
+**The encoder has a knee too**, between 16 and 32, where throughput drops
+from 654.6 to 532.7 and p95 jumps from 29.4 ms to 209.1 ms. Same
+character as Jev's knee between 32 and 64 concurrent, just at a different
+place.
+
+**This is the strongest argument for the encoder in the whole project.**
+It was already the choice when p95 latency binds. It is also 8x the
+decoder's throughput, which makes it the choice for anything
+high-volume, and that is a bigger gap than the accuracy difference
+running the other way.
+
 ### Encoder against decoder latency at batch 1
 
-Ten questions and twenty-four options per state, H100, lighter load than
-the merge comparison above, so the two sets are not comparable to each
-other.
+Ten questions and twenty-four options per state, idle H100.
+
+The report previously carried two disagreeing sets of latency numbers,
+one taken while a training run shared the GPU. Re-measured on an idle
+card the decoder is 22.7 ms p50 and 55.5 ms p95, which matches the
+lighter-load set below to within 0.3 ms and confirms the contended
+numbers (69 to 74 ms) were an artifact of sharing the device. The
+contended figures are withdrawn.
 
 | | encoder, 150M | decoder, 1,725M |
 |--|--|--|
