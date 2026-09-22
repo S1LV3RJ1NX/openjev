@@ -102,6 +102,25 @@ def main() -> None:
         t.save(out, split=split)
         print(f"{split:>6}: {len(examples)} rows")
 
+    # Splitting is per class and needs at least ten examples of a label before
+    # it will take any away from training. That is the right call on small
+    # data, but doing it silently hands back a task that cannot be evaluated
+    # or calibrated, and the first sign of trouble would be an evaluation
+    # command printing nothing.
+    if not buckets["test"]:
+        smallest = min(counts.values()) if len(counts) else 0
+        print(
+            f"\n!! No dev or test split was created. The rarest label has "
+            f"{smallest} examples\n"
+            f"   and splitting needs at least 10 per label before it will "
+            f"hold any back.\n"
+            f"   You can train on this, but you cannot measure it and "
+            f"temperature scaling\n"
+            f"   will be skipped. Collect more examples of the rarer labels, "
+            f"or split by\n"
+            f"   hand if you have a held-out set already."
+        )
+
     print(f"\nwritten to {out / args.name}")
     print(f"{len(labels)} labels, {len(df)} rows")
     if thin:

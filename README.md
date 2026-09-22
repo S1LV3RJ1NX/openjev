@@ -193,33 +193,26 @@ serving cost it is not close. Every figure is measured and sourced in
 ## What it does on schemas it never trained on
 
 Seven held-out tasks, none in the training mixture, contamination enforced by
-an automated guard. 600 rows each, every task scored at its full advertised
-menu size.
+an automated guard. 600 rows each, scored at full menu size. The three that
+matter, because choosing among a large menu you have never seen is the
+capability worth having:
 
-| task | K | LoRA decoder | x chance | encoder |
+| task | K | decoder | encoder | Jev |
 |---|---|---|---|---|
-| clinc_oos | 151 | **0.702** | **106.0x** | 0.382 |
-| massive_intent | 60 | **0.775** | **46.5x** | 0.473 |
-| banking77 | 77 | **0.605** | **46.6x** | 0.343 |
-| ag_news | 4 | 0.793 | 3.2x | 0.735 |
-| sst5 | 5 | 0.465 | 2.3x | 0.412 |
-| civil_comments | 2 | 0.742 | 1.5x | 0.683 |
-| helpsteer | 5 | 0.273 | 1.4x | 0.262 |
+| clinc_oos | 151 | 0.702 | 0.382 | **0.938** |
+| massive_intent | 60 | 0.775 | 0.473 | **0.838** |
+| banking77 | 77 | 0.605 | 0.343 | **0.863** |
+| **mean, all 7** | | 29.6x | 17.2x | **38.3x** |
 
-Mean 29.6x chance for the decoder, 17.2x for the encoder. Read the large menus
-first: choosing correctly among 151 intents having never seen the label set is
-the capability that makes this useful. The four-way and five-way rows are the
-honest limit, where the decoder is better than guessing and not much more. On
-`civil_comments` the AUROC is 0.828 against accuracy 0.742, so the ranking is
-better than the decision at a 0.5 threshold and the threshold is worth tuning.
-Intervals, majority-class baselines and the contamination manifest are in the
-[technical report](report/main.pdf).
+Four-way and five-way tasks are the honest limit, better than guessing and not
+much more. Full table, intervals, majority-class baselines and the
+contamination manifest are in [`docs/results.md`](docs/results.md) and the
+[report](report/main.pdf).
 
 ### Jev is ahead here, and what we think that means
 
-We measured Jev on all seven of these tasks, not just Banking77. It wins five
-and ties two, 38.3x chance against our 29.6x. The per-item predictions are in
-[`baselines/`](baselines/) so you can check it without an API key.
+It wins five of the seven and ties two. The per-item predictions are in
+[`baselines/`](baselines/) so you can check that without an API key.
 
 We do not think that means the recipe is wrong, and here is the evidence
 either way.

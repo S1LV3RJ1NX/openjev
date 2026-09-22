@@ -1,0 +1,154 @@
+{"state": "I'm supposed to have a refund but it isn't there", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "As advised by you, i requested seller to refund my money. A week has passed but i haven't got any update from seller. Please track the refund with the seller.", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My card needs to be activated.", "answers": {"intent": "activate_my_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Would you be so kind as to activate my card? Thanks", "answers": {"intent": "activate_my_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How old can one use your service?", "answers": {"intent": "age_limit"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How old does my daughter have to be to open an account?", "answers": {"intent": "age_limit"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "google pay top up did not work", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My google top-up pay is not going through", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What locations can I get money from?", "answers": {"intent": "atm_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What locations allow me to withdraw money?", "answers": {"intent": "atm_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Is there an automatic top up feature?", "answers": {"intent": "automatic_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do I have to manually top up once I'm too low?", "answers": {"intent": "automatic_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My money hasn't been transferred yet.", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How long does it take for money to transfer as my balance hasn't been updated", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I put money in my account a week ago but its still not there, what is happening?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I deposited a check yesterday and im not seeing it posted yet in my account. why is that? can you look into it?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "For some reason, I'm unable to transfer funds.", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why can't I transfer money to a beneficiary", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "A transfer has to be cancelled.", "answers": {"intent": "cancel_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "If I make a mistake can I cancel the transaction?", "answers": {"intent": "cancel_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "When will I get a new card when I order it, and how much will it cost.", "answers": {"intent": "card_about_to_expire"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "After my card expires what should I do?", "answers": {"intent": "card_about_to_expire"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Which establishments will accept my card?", "answers": {"intent": "card_acceptance"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Are there any places that won't take my card?", "answers": {"intent": "card_acceptance"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I track the card you sent me?", "answers": {"intent": "card_arrival"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I was expecting my new card by now.", "answers": {"intent": "card_arrival"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How long will this take to get to me?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can cards be dispatched on a specific date?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I found my card. How can I put it into my app?", "answers": {"intent": "card_linking"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Could I reactivate my card please, I couldn't find it but it turns out it was in my jacket pocket.", "answers": {"intent": "card_linking"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I don't know what's wrong with my card, but it has not worked at multiple places today.", "answers": {"intent": "card_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How come my card doesn't work anymore?", "answers": {"intent": "card_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why am I charged a fee when using my debit or credit card?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Please tell me why I was charged additionally when I used the card.", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "There are a few payments in the app that I didn't make! Does someone else have my card?  What should I do?", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I have a payment I didnt make on my account", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I recently bought something in foreign currency and I am unsure of the exchange rate. Is this rate applied correctly?", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Your exchange rate was off.  I was charged extra on my payment that I made last Saturday.", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I get my card out of the ATM?", "answers": {"intent": "card_swallowed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "An ATM machine didn't return my card.", "answers": {"intent": "card_swallowed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "When I withdrew money from my account the other day, I noticed that there was a fee.  I didn't think that there were any fees for withdrawals...?  How much will I be charged?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "what is this extra charge for a withdrawal?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My account shows that I made a cash withdrawal but I cannot remember doing so!", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I noticed that there is a withdrawal in the app that is not mine.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do I have to change my PIN at a bank?", "answers": {"intent": "change_pin"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can my PIN be changed in any cash machine?", "answers": {"intent": "change_pin"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I think my account has been hacked there are charges on there I don't recognize.", "answers": {"intent": "compromised_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Someone might be using my card.  What should I do?", "answers": {"intent": "compromised_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I was trying to use contactless earlier, but it didn't work.", "answers": {"intent": "contactless_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I troubleshoot my contactless?", "answers": {"intent": "contactless_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Are cards issued to people living in the US?", "answers": {"intent": "country_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "As far as courtries go which ones are supported?", "answers": {"intent": "country_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I use this card all the time so why did it get declined at the store today?", "answers": {"intent": "declined_card_payment"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why would my card payment not work?", "answers": {"intent": "declined_card_payment"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My ATM card isn't working for a withdrawl", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I just had my card get declined at the ATM! I need to get money out but I am unable to.  Why has this happened?", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why are my transfers being declined? It normally works but now it's declining my card. I've tried it a few times but it's still not working.", "answers": {"intent": "declined_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Please help me as my online payment is getting declined since yesterday while i am trying to purchase something online.", "answers": {"intent": "declined_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I notice a transaction a couple of weeks ago in my account, from a seller that I don't recognize. Is there a way we can trace back the information to make sure it was truly something I did?", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Please tell me what this direct debit in my statement is", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What are the restrictions on the virtual cards?", "answers": {"intent": "disposable_card_limits"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Are there any restrictions for the disposable cards?", "answers": {"intent": "disposable_card_limits"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I need to add my new address now that I've moved.", "answers": {"intent": "edit_personal_details"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How can I update my personal information after moving?", "answers": {"intent": "edit_personal_details"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Fees for currency exchange", "answers": {"intent": "exchange_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Are currency exchanges free?", "answers": {"intent": "exchange_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do you determine your exchange rates?", "answers": {"intent": "exchange_rate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What are the exchange rates you assign?", "answers": {"intent": "exchange_rate"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I make a currency exchange?", "answers": {"intent": "exchange_via_app"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I would like to change currency", "answers": {"intent": "exchange_via_app"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My statement is showing I was Charged a dollar and I am not sure why.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why was my account assessed a fee?", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I've been trying to do a transfer multiple times and have failed? Is the system down?", "answers": {"intent": "failed_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why wont the other bank take my money?? Is it not good enough?? There's sufficient funds but I keep getting denied a standard transfer. Ive tried 5 times!", "answers": {"intent": "failed_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How many currencies can I have?", "answers": {"intent": "fiat_currency_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can my account have different types of currency in it.", "answers": {"intent": "fiat_currency_support"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What is the process to create a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Am I able to order a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I find my new pin?", "answers": {"intent": "get_physical_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I do not see the card PIN anywhere?", "answers": {"intent": "get_physical_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can I have a duplicate second card?", "answers": {"intent": "getting_spare_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can I have a third card?", "answers": {"intent": "getting_spare_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I go about getting hold of a virtual card?", "answers": {"intent": "getting_virtual_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I haven't received my virtual card.", "answers": {"intent": "getting_virtual_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Are you able to guide me to my card's location?", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I'm panicking!  I lost my card!  Help!", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I misplaced my phone so I can't use the app! Does this mean I can't use my card?", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My phone was left at a hotel and I can't access the app.", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I get my card?", "answers": {"intent": "order_physical_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "IS there anywhere that a card cannot be delivered?", "answers": {"intent": "order_physical_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Not sure what my password is.", "answers": {"intent": "passcode_forgotten"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How can I go about resetting my passcode?", "answers": {"intent": "passcode_forgotten"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How long does a payment usually show as pending? Is it normal that mine is still pending?", "answers": {"intent": "pending_card_payment"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why haven't I gotten my payment yet?", "answers": {"intent": "pending_card_payment"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My cash withdrawal isnt showing on my account", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I took out money from the ATM and it's still showing as pending?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What's taking my top-up so long?", "answers": {"intent": "pending_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Is there something wrong with my top up I did an hour ago? it's still pending. I need that money, i cant afford to wait or have it come back to me.", "answers": {"intent": "pending_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How long is a transfer in the pending status?", "answers": {"intent": "pending_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why is a transfer I have still pending?", "answers": {"intent": "pending_transfer"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I take a block off my card?", "answers": {"intent": "pin_blocked"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I attempted to enter my pin to many times.", "answers": {"intent": "pin_blocked"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Salary in GBP has been received. Does it need to be configured into another place?", "answers": {"intent": "receiving_money"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do I need to select a preference to receive my salary payments in GBP and, if so, where?", "answers": {"intent": "receiving_money"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I just bought an item and would like to stop payment can you tell me if the item has been sent yet?", "answers": {"intent": "request_refund"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I would like to cancel my previous purchase.", "answers": {"intent": "request_refund"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can you tell me why my card payment was cancelled?", "answers": {"intent": "reverted_card_payment?"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "One of my card payments has reverted", "answers": {"intent": "reverted_card_payment?"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Is American Express supported for adding funds?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What are the currencies and cards that are supported with my account?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I'm dissatisfied with the service and would like to terminate the account.", "answers": {"intent": "terminate_account"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "for god sake, just delete my account i am sick of this", "answers": {"intent": "terminate_account"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Is there a top up fee?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Will I receive all the money sent to my account by SEPA transfer?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do you charge extra for topping up with a debit or credit card?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do I have to pay extra if I use an international card to top up my account?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "can i top up with check?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Is there anyway to use a cheque to top up?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why won't my top up work", "answers": {"intent": "top_up_failed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Hi, My card is getting declined during top-up. As it urgent, could you please resolve this issue, or guide me with other alternatives if any.", "answers": {"intent": "top_up_failed"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Do top-up limits exist?", "answers": {"intent": "top_up_limits"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How often can I top up my account?", "answers": {"intent": "top_up_limits"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I didn't cancel my top-up.", "answers": {"intent": "top_up_reverted"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My top up was reverted. Can you help?", "answers": {"intent": "top_up_reverted"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I add money to my card?", "answers": {"intent": "topping_up_by_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I tried to top off using the card, but the money just disappeared?", "answers": {"intent": "topping_up_by_card"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I have been overcharged.", "answers": {"intent": "transaction_charged_twice"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Looks like my card payment was made twice by mistake. I paid at the store earlier which rejected once, second time it worked. App stays at pending for one of the payments. Can you please remove one of them as it's wrong and clearly was declined?", "answers": {"intent": "transaction_charged_twice"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Transfers are supposed to be free.  I just got a fee tacked on  to something I bought abroad.  Not cool.  Figure out how to remove it.", "answers": {"intent": "transfer_fee_charged"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I made a transfer and was charged an extra fee!", "answers": {"intent": "transfer_fee_charged"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How do I transfer money from one bank account to another?", "answers": {"intent": "transfer_into_account"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I need to add money to my account. Can I do so via bank transfer?", "answers": {"intent": "transfer_into_account"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I transferred some money to my mom 2 days ago and she has not received it. I double checked the information and it looks right. Can you help me?", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I sent a payment, but the person I sent it to says they don't have it", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "When can I use money sent to my account?", "answers": {"intent": "transfer_timing"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How long will a transfer from Europe take?", "answers": {"intent": "transfer_timing"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I'm unable to verify my identity", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My identity verification isn't working", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What documents do I need to get together to verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What has to be done to verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "What do I do to verify my source of funds?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "My source of funds need verification.", "answers": {"intent": "verify_source_of_funds"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can you explain to me the way to verify my top up has gone through?", "answers": {"intent": "verify_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "How to verify top up card?", "answers": {"intent": "verify_top_up"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I can't get my virtual card to work at all", "answers": {"intent": "virtual_card_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why is my disposable card not working?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I hope to get a Visa card", "answers": {"intent": "visa_or_mastercard"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can I have a Visa card?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Can I go ahead and use my account even though my identify hasn't been verified yet?", "answers": {"intent": "why_verify_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "Why does my identity need verification?", "answers": {"intent": "why_verify_identity"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "If the ATM only gave me 10 pounds instead of the 30 I requested, what do I do?", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I didn't get the all the cash i wanted from the atm", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "You applied the wrong exchange rate while I was traveling outside the country.", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}
+{"state": "I made an ATM withdrawal over the holiday and then later realized I was charged an exorbitant fee!  I never would've made this withdrawal if I'd known I'd be charged so much.", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"tier": "dev", "source": "mteb/banking77"}, "criteria": {}}

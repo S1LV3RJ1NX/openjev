@@ -1,0 +1,600 @@
+{"state": "How do I locate my card?", "answers": {"intent": "card_arrival"}, "meta": {"row": 0, "jev_reference_300": false}, "criteria": {}}
+{"state": "I still have not received my new card, I ordered over a week ago.", "answers": {"intent": "card_arrival"}, "meta": {"row": 1, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do you know if there is a tracking number for the new card you sent me?", "answers": {"intent": "card_arrival"}, "meta": {"row": 6, "jev_reference_300": true}, "criteria": {}}
+{"state": "still waiting on that card", "answers": {"intent": "card_arrival"}, "meta": {"row": 8, "jev_reference_300": true}, "criteria": {}}
+{"state": "I still don't have my card after 2 weeks.  What should I do?", "answers": {"intent": "card_arrival"}, "meta": {"row": 12, "jev_reference_300": false}, "criteria": {}}
+{"state": "still waiting on my new card", "answers": {"intent": "card_arrival"}, "meta": {"row": 13, "jev_reference_300": true}, "criteria": {}}
+{"state": "Status of the card I ordered.", "answers": {"intent": "card_arrival"}, "meta": {"row": 21, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'm still waiting for delivery of my new card, why is it taking so long?", "answers": {"intent": "card_arrival"}, "meta": {"row": 27, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I link a card that I already have?", "answers": {"intent": "card_linking"}, "meta": {"row": 44, "jev_reference_300": true}, "criteria": {}}
+{"state": "I have one of your cards already, how do I link it?", "answers": {"intent": "card_linking"}, "meta": {"row": 49, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I link an existing card?", "answers": {"intent": "card_linking"}, "meta": {"row": 51, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I link to my credit card with you?", "answers": {"intent": "card_linking"}, "meta": {"row": 60, "jev_reference_300": false}, "criteria": {}}
+{"state": "I've received my card so now I need to know how to sync it to the app.", "answers": {"intent": "card_linking"}, "meta": {"row": 61, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I reactivate my lost card that I found this morning in my jacket pocket?", "answers": {"intent": "card_linking"}, "meta": {"row": 64, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where do I go if I want to link my new card?", "answers": {"intent": "card_linking"}, "meta": {"row": 70, "jev_reference_300": true}, "criteria": {}}
+{"state": "Could you help me reactivate my card? It was previously lost, but I found it this morning in my jacket.", "answers": {"intent": "card_linking"}, "meta": {"row": 76, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need to know your exchange rates.", "answers": {"intent": "exchange_rate"}, "meta": {"row": 80, "jev_reference_300": false}, "criteria": {}}
+{"state": "Please advise what is the exchange rate", "answers": {"intent": "exchange_rate"}, "meta": {"row": 87, "jev_reference_300": false}, "criteria": {}}
+{"state": "What are the most current exchange rates?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 91, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is the base of the exchange rates?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 100, "jev_reference_300": true}, "criteria": {}}
+{"state": "What do you base your exchange rates on?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 103, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is the exchange rate like?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 107, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do your exchange rates work?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 108, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where did your guys exchange rates come from?", "answers": {"intent": "exchange_rate"}, "meta": {"row": 110, "jev_reference_300": false}, "criteria": {}}
+{"state": "the card payment exchange rate is wrong", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 122, "jev_reference_300": false}, "criteria": {}}
+{"state": "The exchange rate on my purchase is wrong.", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 124, "jev_reference_300": true}, "criteria": {}}
+{"state": "I bought something, but the exchange rate looks wrong.", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 126, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is your exchange rate for my card payment wrong", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 137, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why am I being charged more ?", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 138, "jev_reference_300": true}, "criteria": {}}
+{"state": "The exchange rate given to me wasn't correct, after i purchased an item", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 146, "jev_reference_300": true}, "criteria": {}}
+{"state": "I paid for something in foreign currency but noticed the exchange rate is incorrect.", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 152, "jev_reference_300": true}, "criteria": {}}
+{"state": "I go the wrong exchange rate applied to my purchase in a foreign country.", "answers": {"intent": "card_payment_wrong_exchange_rate"}, "meta": {"row": 159, "jev_reference_300": false}, "criteria": {}}
+{"state": "There is a fee I don't recognize on my statement.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 164, "jev_reference_300": false}, "criteria": {}}
+{"state": "I would like a refund on the extra pound I was charged.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 165, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why does my statement have these extra charges?", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 168, "jev_reference_300": true}, "criteria": {}}
+{"state": "I can see an extra 1\u00a3 charge on my app. Why did you charge me extra?", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 170, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where did this fee come from?", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 173, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need information about an extra \u20ac1 fee in my statement.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 176, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a 1 euro fee on my statement.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 182, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can you help me with a weird charge?  It's a pound charge that never goes away from the statement view on the app I'm using.  It's not described as anything but \"Pending\", and that status has never changed during the last two days.", "answers": {"intent": "extra_charge_on_statement"}, "meta": {"row": 192, "jev_reference_300": true}, "criteria": {}}
+{"state": "My withdrawl is still pending.  Why?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 200, "jev_reference_300": true}, "criteria": {}}
+{"state": "I tried taking money from the ATM but no money came out, but the transaction is still pending? How is this possible?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 206, "jev_reference_300": false}, "criteria": {}}
+{"state": "I got some cash of an ATM earlier but this shows up as pending in the app. How can this be still pending, I've got the cash already?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 207, "jev_reference_300": true}, "criteria": {}}
+{"state": "Hi! I was wondering if you can help me. I used the city centre ATM to get some cash, but the machine declined my card. My account shows that transaction is still pending. I didn't receive the money, so please cancel that transaction.", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 210, "jev_reference_300": true}, "criteria": {}}
+{"state": "Hey, my card was declined at an ATM in the city centre theatre. My account says the transaction is pending, though. I didn't get the money, though, so what does that mean?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 219, "jev_reference_300": false}, "criteria": {}}
+{"state": "I made a withdrawal from my account but it has not posted?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 222, "jev_reference_300": false}, "criteria": {}}
+{"state": "My account was charged for a withdraw I tried to make that was decline.", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 236, "jev_reference_300": false}, "criteria": {}}
+{"state": "What's a pending transaction? My card was declined at an ATM, but my account says it's still pending. Can I cancel the payment?", "answers": {"intent": "pending_cash_withdrawal"}, "meta": {"row": 239, "jev_reference_300": true}, "criteria": {}}
+{"state": "Does your system support multiple currency.", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 243, "jev_reference_300": false}, "criteria": {}}
+{"state": "What currencies can I hold money in?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 244, "jev_reference_300": true}, "criteria": {}}
+{"state": "There is an incoming payment into my account, but it is deactivated. Will they still be processed?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 246, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where can I exchange my money for EUR?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 250, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I exchange to EUR?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 252, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I change currencies to euros?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 255, "jev_reference_300": true}, "criteria": {}}
+{"state": "When considering currency holdings and exchanges, what fiat currencies are supported?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 257, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I hold money in multiple currencies?", "answers": {"intent": "fiat_currency_support"}, "meta": {"row": 273, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need my card quickly", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 289, "jev_reference_300": false}, "criteria": {}}
+{"state": "How fast can you deliver?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 300, "jev_reference_300": false}, "criteria": {}}
+{"state": "Whats the delivery time to the United States?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 303, "jev_reference_300": true}, "criteria": {}}
+{"state": "Send my card as soon as you are able to.", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 305, "jev_reference_300": true}, "criteria": {}}
+{"state": "How long does shipping take to get to a US destination?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 307, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I get my card expedited?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 308, "jev_reference_300": true}, "criteria": {}}
+{"state": "What's the U.S. Delivery time?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 315, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I have it be delivered at a certain time?", "answers": {"intent": "card_delivery_estimate"}, "meta": {"row": 319, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm running out of money, can I  auto top up?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 323, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where is the auto top-up option?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 342, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I have a auto top-up when my account is short?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 343, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I space out how often money is transferred along my travels?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 345, "jev_reference_300": false}, "criteria": {}}
+{"state": "Will it automatically top-up money if there isn't a lot left?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 346, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there any way to Auto top-up?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 353, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is the auto top up function and where can I find that at?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 355, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is there a way to top-up automatically?", "answers": {"intent": "automatic_top_up"}, "meta": {"row": 356, "jev_reference_300": false}, "criteria": {}}
+{"state": "I've tried my card a bunch of times and it never worked.", "answers": {"intent": "card_not_working"}, "meta": {"row": 360, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card broke.", "answers": {"intent": "card_not_working"}, "meta": {"row": 364, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why is my card not working?", "answers": {"intent": "card_not_working"}, "meta": {"row": 366, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can someone assist me by explaining why my card is not working?", "answers": {"intent": "card_not_working"}, "meta": {"row": 371, "jev_reference_300": true}, "criteria": {}}
+{"state": "I think my card is broken", "answers": {"intent": "card_not_working"}, "meta": {"row": 374, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card doesn't work.", "answers": {"intent": "card_not_working"}, "meta": {"row": 378, "jev_reference_300": true}, "criteria": {}}
+{"state": "I broke my card", "answers": {"intent": "card_not_working"}, "meta": {"row": 382, "jev_reference_300": false}, "criteria": {}}
+{"state": "Could it be that I deactivated my card, its not working?", "answers": {"intent": "card_not_working"}, "meta": {"row": 399, "jev_reference_300": true}, "criteria": {}}
+{"state": "How are currencies exchanged?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 406, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I make an exchange from one currency to another?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 408, "jev_reference_300": false}, "criteria": {}}
+{"state": "What currencies will this app exchange?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 428, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can this app help me exchange currencies?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 429, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is there currency exchange on this app?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 432, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I change my currency from USD to EUR?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 433, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I exchange currency?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 435, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I exchange currencies with my account?", "answers": {"intent": "exchange_via_app"}, "meta": {"row": 437, "jev_reference_300": false}, "criteria": {}}
+{"state": "I can't find my card and think it may have been stolen.", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 440, "jev_reference_300": false}, "criteria": {}}
+{"state": "Help! Someone stole my card!", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 447, "jev_reference_300": true}, "criteria": {}}
+{"state": "I think my card was stolen.", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 459, "jev_reference_300": true}, "criteria": {}}
+{"state": "Someone stole my wallet earlier today, not sure exactly when, probably on Piccadilly circus. Can you check if there were any attempts to use the card and obviously block it?", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 460, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can I freeze a stolen card?", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 462, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card got lost.", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 467, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I report my card lost or stolen?", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 469, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card got stolen!", "answers": {"intent": "lost_or_stolen_card"}, "meta": {"row": 477, "jev_reference_300": true}, "criteria": {}}
+{"state": "How old do I have to be to open an account?", "answers": {"intent": "age_limit"}, "meta": {"row": 496, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can my 19 year old daughter open a savings account at the bank?", "answers": {"intent": "age_limit"}, "meta": {"row": 499, "jev_reference_300": false}, "criteria": {}}
+{"state": "How old do you have to be to get an account?", "answers": {"intent": "age_limit"}, "meta": {"row": 500, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is it possible to open an account for my children?", "answers": {"intent": "age_limit"}, "meta": {"row": 504, "jev_reference_300": false}, "criteria": {}}
+{"state": "What are the age requirements for opening an account?", "answers": {"intent": "age_limit"}, "meta": {"row": 508, "jev_reference_300": false}, "criteria": {}}
+{"state": "How old do my kids have to be to use your service?", "answers": {"intent": "age_limit"}, "meta": {"row": 512, "jev_reference_300": true}, "criteria": {}}
+{"state": "How old do my children need to be to open an account?", "answers": {"intent": "age_limit"}, "meta": {"row": 514, "jev_reference_300": true}, "criteria": {}}
+{"state": "How old does my kids need to be to open an account?", "answers": {"intent": "age_limit"}, "meta": {"row": 515, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need help because I drunken blocked my card?", "answers": {"intent": "pin_blocked"}, "meta": {"row": 525, "jev_reference_300": true}, "criteria": {}}
+{"state": "When I put the wrong pin too much, I got blocked, so can you help me unblock my pin", "answers": {"intent": "pin_blocked"}, "meta": {"row": 527, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I unblock a blocked pin number for my account?", "answers": {"intent": "pin_blocked"}, "meta": {"row": 532, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I unblock my card using the app?", "answers": {"intent": "pin_blocked"}, "meta": {"row": 537, "jev_reference_300": false}, "criteria": {}}
+{"state": "My account is blocked, how do I log in now", "answers": {"intent": "pin_blocked"}, "meta": {"row": 541, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why did I get blocked?", "answers": {"intent": "pin_blocked"}, "meta": {"row": 542, "jev_reference_300": false}, "criteria": {}}
+{"state": "I entered the wrong pin too many times and now I am blocked.  Help me unblock!", "answers": {"intent": "pin_blocked"}, "meta": {"row": 545, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I unblock my pin?", "answers": {"intent": "pin_blocked"}, "meta": {"row": 552, "jev_reference_300": false}, "criteria": {}}
+{"state": "Are contactless payments enabled on my new card?", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 559, "jev_reference_300": true}, "criteria": {}}
+{"state": "I couldn't use my contactless this morning, it wasn't accepted.", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 570, "jev_reference_300": true}, "criteria": {}}
+{"state": "What can I do if contactless doesn't work?", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 574, "jev_reference_300": true}, "criteria": {}}
+{"state": "My contactless is not working", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 577, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'm unable to use contactless payments for purchases.", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 580, "jev_reference_300": false}, "criteria": {}}
+{"state": "what is the charges for new card?", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 585, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can I fix a problem where contactless isn't working?", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 593, "jev_reference_300": true}, "criteria": {}}
+{"state": "Should i reinstall the payment app?", "answers": {"intent": "contactless_not_working"}, "meta": {"row": 598, "jev_reference_300": false}, "criteria": {}}
+{"state": "how much do you charge to accept transfers", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 599, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do I have to pay for topping up by transfer?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 606, "jev_reference_300": false}, "criteria": {}}
+{"state": "Are there any sort of fees involved for top of transfers?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 607, "jev_reference_300": false}, "criteria": {}}
+{"state": "Do I have to pay any fees in order to receive money?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 609, "jev_reference_300": false}, "criteria": {}}
+{"state": "If I transfer money from my bank to top-up my account will I be charged?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 615, "jev_reference_300": true}, "criteria": {}}
+{"state": "What are the fees for top-ups?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 617, "jev_reference_300": false}, "criteria": {}}
+{"state": "Will topping up by transfer lead to a charge on my account?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 618, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there a charge for topping up by transfer?", "answers": {"intent": "top_up_by_bank_transfer_charge"}, "meta": {"row": 624, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is going on? My top-up is still pending. I use your system all the time but now it is just showing as pending.", "answers": {"intent": "pending_top_up"}, "meta": {"row": 647, "jev_reference_300": true}, "criteria": {}}
+{"state": "I topped up but it didn't complete", "answers": {"intent": "pending_top_up"}, "meta": {"row": 649, "jev_reference_300": true}, "criteria": {}}
+{"state": "My top up is pending.", "answers": {"intent": "pending_top_up"}, "meta": {"row": 651, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you look into my top up please.  I made it over three hours ago and yet it's still pending.", "answers": {"intent": "pending_top_up"}, "meta": {"row": 652, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you please make my top up go through as soon as possible. I really need the money and it has been pending for an hour already.", "answers": {"intent": "pending_top_up"}, "meta": {"row": 653, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is my top up still pending?", "answers": {"intent": "pending_top_up"}, "meta": {"row": 662, "jev_reference_300": false}, "criteria": {}}
+{"state": "What does it mean when my top up is saying  still pending?", "answers": {"intent": "pending_top_up"}, "meta": {"row": 668, "jev_reference_300": false}, "criteria": {}}
+{"state": "It doesn't look like the top-up completed.", "answers": {"intent": "pending_top_up"}, "meta": {"row": 670, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I cancel my transaction?", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 681, "jev_reference_300": true}, "criteria": {}}
+{"state": "This is URGENT, I typed the wrong payment information for a payment I needed to make and have clicked send, I need to reverse the transaction immediately.", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 693, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I cancel a transfer if is already processed?", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 698, "jev_reference_300": true}, "criteria": {}}
+{"state": "I made a mistake when I did a transfer so now what can I do to fix that?", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 700, "jev_reference_300": true}, "criteria": {}}
+{"state": "I made a mistake with a transaction!", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 703, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do i cancel my transaction?", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 708, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need help cancelling a transaction.", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 715, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I change the amount I made on a payment that I made to the payment is correct.", "answers": {"intent": "cancel_transfer"}, "meta": {"row": 717, "jev_reference_300": false}, "criteria": {}}
+{"state": "How much money can i top up?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 723, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can I tell what the limit is to top-ups?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 730, "jev_reference_300": true}, "criteria": {}}
+{"state": "Tell me if there are any top-up limits?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 735, "jev_reference_300": true}, "criteria": {}}
+{"state": "Are there limits to top-ups?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 743, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is there a maximum amount of top-ups?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 744, "jev_reference_300": false}, "criteria": {}}
+{"state": "Do you have a top-up limit?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 745, "jev_reference_300": true}, "criteria": {}}
+{"state": "How much can I top-up to my card at a time?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 748, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there an amount limit to my top-up?", "answers": {"intent": "top_up_limits"}, "meta": {"row": 752, "jev_reference_300": false}, "criteria": {}}
+{"state": "I don't know if this is an issue with the ATM or my account, but I just tried withdrawing 30 pounds from the ATM I'm at now and it only gave me 10. Is this a glitch or what exactly is going on?", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 759, "jev_reference_300": true}, "criteria": {}}
+{"state": "The amount of cash I received was different than what I requested.", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 767, "jev_reference_300": false}, "criteria": {}}
+{"state": "I did not get as much cash as I requested at the ATM.", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 770, "jev_reference_300": false}, "criteria": {}}
+{"state": "I tried to get $100 but I just got $20", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 778, "jev_reference_300": true}, "criteria": {}}
+{"state": "I didn't get as much cash as I asked for from the ATM, why?", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 788, "jev_reference_300": true}, "criteria": {}}
+{"state": "I tried to take out cash but the amount isn't right, so what do I do?", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 790, "jev_reference_300": false}, "criteria": {}}
+{"state": "The right amount of cash was not sent to me.", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 793, "jev_reference_300": false}, "criteria": {}}
+{"state": "did not receive correct cash upon withdrawal", "answers": {"intent": "wrong_amount_of_cash_received"}, "meta": {"row": 797, "jev_reference_300": true}, "criteria": {}}
+{"state": "I payed with a card and was charged an extra fee", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 799, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why was I charged for card payment?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 805, "jev_reference_300": true}, "criteria": {}}
+{"state": "There is an unauthorized fee.", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 806, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why are there fees for card usage?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 810, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why did I have to pay more when I do it with my card?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 814, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I check somewhere if there will be a fee on my payment or not? Seems you are charging in some cases, what's the pattern there?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 820, "jev_reference_300": true}, "criteria": {}}
+{"state": "I paid with card and I think there was a fee applied.", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 822, "jev_reference_300": false}, "criteria": {}}
+{"state": "What fees apply when using a card?", "answers": {"intent": "card_payment_fee_charged"}, "meta": {"row": 831, "jev_reference_300": true}, "criteria": {}}
+{"state": "I made a money transaction but the recipient can't see it", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 842, "jev_reference_300": false}, "criteria": {}}
+{"state": "How long does it take for a transfer to get to a recipient?", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 844, "jev_reference_300": true}, "criteria": {}}
+{"state": "I sent money.  They haven't received it.", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 857, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm having a problem with a money transfer.  I sent some money to a friend a couple of hours ago, and they haven't received it yet.  Why hasn't it gotten to them? How long do transfers need to go through?", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 860, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where is the transaction I made to a friend?", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 862, "jev_reference_300": true}, "criteria": {}}
+{"state": "How long do transfers need to come through? I sent some money to a friend, she needs it urgently, but seems it's still not there yet after a couple hours.", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 873, "jev_reference_300": false}, "criteria": {}}
+{"state": "How long until my friend receives my transaction?", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 874, "jev_reference_300": true}, "criteria": {}}
+{"state": "I am still awaiting the completion of the transaction.", "answers": {"intent": "transfer_not_received_by_recipient"}, "meta": {"row": 876, "jev_reference_300": false}, "criteria": {}}
+{"state": "To add money to my account, what currencies can I use?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 878, "jev_reference_300": false}, "criteria": {}}
+{"state": "What credit cards are supported?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 894, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do you support all cards and currencies?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 904, "jev_reference_300": true}, "criteria": {}}
+{"state": "What options do I have in regards to payment?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 906, "jev_reference_300": true}, "criteria": {}}
+{"state": "What are all the currencies and cards supported to use this?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 908, "jev_reference_300": false}, "criteria": {}}
+{"state": "What cards and currencies will suffice?", "answers": {"intent": "supported_cards_and_currencies"}, "meta": {"row": 913, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where can I find a virtual card?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 920, "jev_reference_300": true}, "criteria": {}}
+{"state": "what is the virtual card", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 926, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where do I order a virtual card from?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 928, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I get a copy of the card by email?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 943, "jev_reference_300": true}, "criteria": {}}
+{"state": "why do i not have a virtual card", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 945, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I order a virtual card?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 946, "jev_reference_300": true}, "criteria": {}}
+{"state": "I would like a virtual card- where can I purchase one?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 952, "jev_reference_300": false}, "criteria": {}}
+{"state": "When should I receive my virtual card?", "answers": {"intent": "getting_virtual_card"}, "meta": {"row": 953, "jev_reference_300": true}, "criteria": {}}
+{"state": "What stores can I sue my card?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 965, "jev_reference_300": false}, "criteria": {}}
+{"state": "Do you know where my card will be accepted?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 969, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is my card accepted everywhere?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 971, "jev_reference_300": true}, "criteria": {}}
+{"state": "Does this card work everywhere?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 973, "jev_reference_300": false}, "criteria": {}}
+{"state": "Which outlets accept my card?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 976, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where is my card accepted?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 984, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where can I pay with my debit or credit card?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 985, "jev_reference_300": true}, "criteria": {}}
+{"state": "Will filling stations accept my card?", "answers": {"intent": "card_acceptance"}, "meta": {"row": 994, "jev_reference_300": true}, "criteria": {}}
+{"state": "My top-up was cancelled; will I receive a refund?", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 998, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I fix a reverted top up?", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 999, "jev_reference_300": true}, "criteria": {}}
+{"state": "It seems my top up is reverted?", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1003, "jev_reference_300": false}, "criteria": {}}
+{"state": "I got topped up but the application reverted it.", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1010, "jev_reference_300": false}, "criteria": {}}
+{"state": "What happened to my top-up?", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1018, "jev_reference_300": true}, "criteria": {}}
+{"state": "What happened to where my top-up was canceled?", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1022, "jev_reference_300": true}, "criteria": {}}
+{"state": "The app reverted what I topped up.", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1032, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'd like to know why my top-up was canceled please.", "answers": {"intent": "top_up_reverted"}, "meta": {"row": 1037, "jev_reference_300": false}, "criteria": {}}
+{"state": "How come I don't see my deposit in my account yet?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1039, "jev_reference_300": false}, "criteria": {}}
+{"state": "I don't know why the deposit I made a week ago still hasn't showed up, I really need the money now.", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1041, "jev_reference_300": true}, "criteria": {}}
+{"state": "When will I see the cash I deposited this morning as available?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1045, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where is the cash from my cheque I recently deposited?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1047, "jev_reference_300": false}, "criteria": {}}
+{"state": "Are cheques accepted to my account? Mine didn't seem to work.", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1054, "jev_reference_300": true}, "criteria": {}}
+{"state": "I made a deposit of cash and check that has not been added to my balance.", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1063, "jev_reference_300": true}, "criteria": {}}
+{"state": "I submitted a cash deposit to my account but it hasn't posted yet.", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1069, "jev_reference_300": false}, "criteria": {}}
+{"state": "I sent a cheque  a few days ago and nothing has happened to my account yet. Can you please check on this for me?", "answers": {"intent": "balance_not_updated_after_cheque_or_cash_deposit"}, "meta": {"row": 1070, "jev_reference_300": false}, "criteria": {}}
+{"state": "What should I do if I see a payment I didn't make?", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1084, "jev_reference_300": true}, "criteria": {}}
+{"state": "I think my statement has a fraudulent charge", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1099, "jev_reference_300": false}, "criteria": {}}
+{"state": "What should I do to get transactions off of my account if I didn't make them?  My card must have been compromised and I need to freeze it asap!", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1101, "jev_reference_300": true}, "criteria": {}}
+{"state": "I have a payment listed in error.", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1102, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm not familiar with a card payment.", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1104, "jev_reference_300": true}, "criteria": {}}
+{"state": "I have an unauthorized transaction on my statement", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1105, "jev_reference_300": false}, "criteria": {}}
+{"state": "There is a payment in the App that is not mine.", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1106, "jev_reference_300": false}, "criteria": {}}
+{"state": "Somebody used my card to make a purchase", "answers": {"intent": "card_payment_not_recognised"}, "meta": {"row": 1110, "jev_reference_300": false}, "criteria": {}}
+{"state": "How to change my address.", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1119, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I change my information?", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1130, "jev_reference_300": true}, "criteria": {}}
+{"state": "I moved.  Where do I update my details?", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1132, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I modify my details?", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1137, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need help changing my last name on my account.", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1143, "jev_reference_300": false}, "criteria": {}}
+{"state": "how do i change name?", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1145, "jev_reference_300": false}, "criteria": {}}
+{"state": "how to change name", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1148, "jev_reference_300": false}, "criteria": {}}
+{"state": "Should I just wait until the post office sends a change of address form?", "answers": {"intent": "edit_personal_details"}, "meta": {"row": 1153, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why is identity verification mandatory?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1166, "jev_reference_300": false}, "criteria": {}}
+{"state": "How come you need to know my identity?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1175, "jev_reference_300": false}, "criteria": {}}
+{"state": "May I use my account now, even though the identity verification has not gone through yet?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1176, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can i make transactions before identity verification is complete?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1180, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do I really need to verify my identity?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1181, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why do I have to give you all of my identification details?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1182, "jev_reference_300": true}, "criteria": {}}
+{"state": "What other methods are there to verify my identity?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1190, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I use my account if the identity verification is not complete?", "answers": {"intent": "why_verify_identity"}, "meta": {"row": 1193, "jev_reference_300": true}, "criteria": {}}
+{"state": "I am having trouble verifying my identity.", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1201, "jev_reference_300": false}, "criteria": {}}
+{"state": "I am not being recognized by the app.", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1211, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why isn't my ID being verified?", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1212, "jev_reference_300": true}, "criteria": {}}
+{"state": "I cannot prove my own identity.", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1215, "jev_reference_300": false}, "criteria": {}}
+{"state": "The app doesn't recognize me.", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1219, "jev_reference_300": true}, "criteria": {}}
+{"state": "What do i need to verify my id?", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1223, "jev_reference_300": false}, "criteria": {}}
+{"state": "I tried verifying my ID, but it won't let me.", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1224, "jev_reference_300": true}, "criteria": {}}
+{"state": "I am having issues with identity verification", "answers": {"intent": "unable_to_verify_identity"}, "meta": {"row": 1233, "jev_reference_300": true}, "criteria": {}}
+{"state": "Are PIN separately?", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1241, "jev_reference_300": true}, "criteria": {}}
+{"state": "what is my card PIN", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1252, "jev_reference_300": true}, "criteria": {}}
+{"state": "Please help in finding my card PIN, thank you!", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1262, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where can I find my PIN?", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1268, "jev_reference_300": false}, "criteria": {}}
+{"state": "What do I need to do for a PIN?", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1273, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why can't I find my PIN?", "answers": {"intent": "get_physical_card"}, "meta": {"row": 1274, "jev_reference_300": false}, "criteria": {}}
+{"state": "I would prefer a visa card", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1292, "jev_reference_300": true}, "criteria": {}}
+{"state": "May I choose between Visa and Mastercard?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1293, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'd like more information about choosing a Visa or Mastercard.", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1305, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is it possible to have both a Visa and a Mastercard from you?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1307, "jev_reference_300": false}, "criteria": {}}
+{"state": "Do you offer Visa or Mastercard?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1309, "jev_reference_300": true}, "criteria": {}}
+{"state": "Please give me both a visa and a master card.", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1311, "jev_reference_300": false}, "criteria": {}}
+{"state": "What major card payments are accepted?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1313, "jev_reference_300": false}, "criteria": {}}
+{"state": "Do you use Mastercard or Visa?", "answers": {"intent": "visa_or_mastercard"}, "meta": {"row": 1316, "jev_reference_300": true}, "criteria": {}}
+{"state": "WHERE IS MY MONEY I WAS USING MY CARD AND IT DISAPPEARED", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1319, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I top up using my car?", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1324, "jev_reference_300": true}, "criteria": {}}
+{"state": "Will my friend be able to top off my account?", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1337, "jev_reference_300": true}, "criteria": {}}
+{"state": "I tried to use my card to top up but all of the money has disappeared.", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1342, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can someone add money to my account?", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1344, "jev_reference_300": false}, "criteria": {}}
+{"state": "Are my friends able to add funds to my account?", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1346, "jev_reference_300": true}, "criteria": {}}
+{"state": "show me how to top up with my card", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1353, "jev_reference_300": true}, "criteria": {}}
+{"state": "Are my friends able to top up my account?", "answers": {"intent": "topping_up_by_card"}, "meta": {"row": 1357, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I make many disposable cards per day?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1359, "jev_reference_300": true}, "criteria": {}}
+{"state": "What's the most disposable cards I can have?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1364, "jev_reference_300": true}, "criteria": {}}
+{"state": "How many disposable cards can I have?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1366, "jev_reference_300": false}, "criteria": {}}
+{"state": "How many disposable cards per day am I allowed to have?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1368, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is it possible to make several disposable cards in a day?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1380, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you explain the virtual cards limit?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1384, "jev_reference_300": false}, "criteria": {}}
+{"state": "How many times can I use a disposable card?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1391, "jev_reference_300": false}, "criteria": {}}
+{"state": "How many times can I use the disposable virtual card I have?", "answers": {"intent": "disposable_card_limits"}, "meta": {"row": 1397, "jev_reference_300": true}, "criteria": {}}
+{"state": "My card was used without my permission.", "answers": {"intent": "compromised_card"}, "meta": {"row": 1401, "jev_reference_300": false}, "criteria": {}}
+{"state": "Freeze my account it's been hacked.", "answers": {"intent": "compromised_card"}, "meta": {"row": 1403, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I freeze my card using the app?", "answers": {"intent": "compromised_card"}, "meta": {"row": 1419, "jev_reference_300": true}, "criteria": {}}
+{"state": "If I feel someone has my card information, can I get a new card?", "answers": {"intent": "compromised_card"}, "meta": {"row": 1429, "jev_reference_300": false}, "criteria": {}}
+{"state": "What do I do if I think someone managed to get my card information?", "answers": {"intent": "compromised_card"}, "meta": {"row": 1433, "jev_reference_300": true}, "criteria": {}}
+{"state": "What should I do if I think someone is using my card.", "answers": {"intent": "compromised_card"}, "meta": {"row": 1435, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there any nearby ATM's?", "answers": {"intent": "atm_support"}, "meta": {"row": 1445, "jev_reference_300": false}, "criteria": {}}
+{"state": "What ATMs is the card okay to use at?", "answers": {"intent": "atm_support"}, "meta": {"row": 1449, "jev_reference_300": false}, "criteria": {}}
+{"state": "From where can I withdraw?", "answers": {"intent": "atm_support"}, "meta": {"row": 1454, "jev_reference_300": true}, "criteria": {}}
+{"state": "At what ATMS am I able to use the card?", "answers": {"intent": "atm_support"}, "meta": {"row": 1456, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I get cash with this card anywhere?", "answers": {"intent": "atm_support"}, "meta": {"row": 1458, "jev_reference_300": true}, "criteria": {}}
+{"state": "Are there any ATM machines near me?", "answers": {"intent": "atm_support"}, "meta": {"row": 1460, "jev_reference_300": true}, "criteria": {}}
+{"state": "If I have this card, which ATMs can I go to?", "answers": {"intent": "atm_support"}, "meta": {"row": 1464, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where can I find an ATM to use this card?", "answers": {"intent": "atm_support"}, "meta": {"row": 1470, "jev_reference_300": true}, "criteria": {}}
+{"state": "There's a debit on my account that I didn't do.", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1485, "jev_reference_300": true}, "criteria": {}}
+{"state": "Even though it's late, I wanted to see about disputing a charge. I was just looking through my transactions over the past couple of months and noticed a pretty large amount that was not completed by me. Is this possibly something I can still do.", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1489, "jev_reference_300": false}, "criteria": {}}
+{"state": "There was a transaction from two weeks ago from a business that I don't know. I'm fairly certain it wasn't me who made it, but is it an option to trace it to confirm?", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1490, "jev_reference_300": false}, "criteria": {}}
+{"state": "I found a charge for a direct debit that was not made by me.", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1497, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I dispute a payment even if I notice it several weeks after it was made?", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1501, "jev_reference_300": true}, "criteria": {}}
+{"state": "I don't think I made this charge on my debit statement.", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1503, "jev_reference_300": true}, "criteria": {}}
+{"state": "I didn't make this direct debit transaction", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1505, "jev_reference_300": false}, "criteria": {}}
+{"state": "There's a direct debit I wish to dispute", "answers": {"intent": "direct_debit_payment_not_recognised"}, "meta": {"row": 1515, "jev_reference_300": true}, "criteria": {}}
+{"state": "What do I do if I forget my passcode?  Because I did.", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1517, "jev_reference_300": true}, "criteria": {}}
+{"state": "I can't find my password", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1518, "jev_reference_300": false}, "criteria": {}}
+{"state": "Something is wrong with my password.", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1523, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I resent my passcode?", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1532, "jev_reference_300": false}, "criteria": {}}
+{"state": "I do not remember the code, what should I do?", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1538, "jev_reference_300": true}, "criteria": {}}
+{"state": "I forgot my password", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1542, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there a way to reset my passcode?", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1546, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you tell me what to do to reset my passcode?", "answers": {"intent": "passcode_forgotten"}, "meta": {"row": 1555, "jev_reference_300": false}, "criteria": {}}
+{"state": "My withdrawal was cancelled.", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1558, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why did the ATM machine fail to give me a cash withdrawal?", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1576, "jev_reference_300": true}, "criteria": {}}
+{"state": "My ATM transaction was unsuccessful.", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1577, "jev_reference_300": false}, "criteria": {}}
+{"state": "i tried to withdraw money from an atm and i was declined on front of my friends. Why did this happen?", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1587, "jev_reference_300": false}, "criteria": {}}
+{"state": "The cash I tried to draw from the ATM was not approved.", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1595, "jev_reference_300": true}, "criteria": {}}
+{"state": "atm would not give me cash", "answers": {"intent": "declined_cash_withdrawal"}, "meta": {"row": 1596, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is my payment pending?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1598, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why has my payment not gone through?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1602, "jev_reference_300": true}, "criteria": {}}
+{"state": "I recently made a payment, and it is showing up in my account as \"pending\". What does that mean?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1604, "jev_reference_300": false}, "criteria": {}}
+{"state": "I bought some stuff this morning but the payment shows as pending", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1610, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is a payment showing up on my card as pending?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1617, "jev_reference_300": true}, "criteria": {}}
+{"state": "How long do card transactions take to clear?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1619, "jev_reference_300": true}, "criteria": {}}
+{"state": "My card is still pending, I've been waiting a while.", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1628, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a pending payment in my account that I paid a while back ago and it still hasnt gone through. Why would it show pending for so long?", "answers": {"intent": "pending_card_payment"}, "meta": {"row": 1635, "jev_reference_300": false}, "criteria": {}}
+{"state": "If I was mugged and lost everything, how do I access my account and app?", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1641, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm not sure where my phone is, I think someone stole it or it's lost.", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1644, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I used my card even if my phone has been stolen?", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1645, "jev_reference_300": true}, "criteria": {}}
+{"state": "My phone was stolen, what do I do?", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1646, "jev_reference_300": false}, "criteria": {}}
+{"state": "my phone is gone", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1652, "jev_reference_300": true}, "criteria": {}}
+{"state": "my phone was taken! can you place cancel my account so no one uses it", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1654, "jev_reference_300": false}, "criteria": {}}
+{"state": "The hotel called and said I left my phone in the room.", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1657, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there anything I need to do since my phone was stolen?", "answers": {"intent": "lost_or_stolen_phone"}, "meta": {"row": 1671, "jev_reference_300": false}, "criteria": {}}
+{"state": "Get an item refund", "answers": {"intent": "request_refund"}, "meta": {"row": 1679, "jev_reference_300": false}, "criteria": {}}
+{"state": "What do I need to do to get a refund?", "answers": {"intent": "request_refund"}, "meta": {"row": 1693, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need a refund?", "answers": {"intent": "request_refund"}, "meta": {"row": 1694, "jev_reference_300": false}, "criteria": {}}
+{"state": "I bought something but now I would like a refund. How do I do that?", "answers": {"intent": "request_refund"}, "meta": {"row": 1696, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I cancel a previous purchase", "answers": {"intent": "request_refund"}, "meta": {"row": 1699, "jev_reference_300": true}, "criteria": {}}
+{"state": "I would appreciate it if I could get an item refunded", "answers": {"intent": "request_refund"}, "meta": {"row": 1700, "jev_reference_300": true}, "criteria": {}}
+{"state": "Hello! I recently made a purchase and I'm needing to cancel my order and process a refund as soon as possible.", "answers": {"intent": "request_refund"}, "meta": {"row": 1707, "jev_reference_300": true}, "criteria": {}}
+{"state": "What's the refund process?", "answers": {"intent": "request_refund"}, "meta": {"row": 1712, "jev_reference_300": false}, "criteria": {}}
+{"state": "I tried to make a transfer and it was declined. Why?", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1717, "jev_reference_300": false}, "criteria": {}}
+{"state": "why was my transfer declined", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1720, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why do you keep declining my transfers?it was always been working really well so far but when I tried to buy something just now the card got declined . I tried couple of times already  but same thing is happening.", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1722, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why did my transfer decline", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1726, "jev_reference_300": true}, "criteria": {}}
+{"state": "Trouble transferring transaction contact for help", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1734, "jev_reference_300": false}, "criteria": {}}
+{"state": "I tired to move my money, but my transfer was declined.", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1743, "jev_reference_300": false}, "criteria": {}}
+{"state": "Double check your funds may be declined", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1748, "jev_reference_300": true}, "criteria": {}}
+{"state": "My card is being declined online. Could you tell me what might be broken or wrong with the account?", "answers": {"intent": "declined_transfer"}, "meta": {"row": 1753, "jev_reference_300": false}, "criteria": {}}
+{"state": "There's a refund missing from my statement", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1761, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why is my refund missing from my  statement?", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1768, "jev_reference_300": true}, "criteria": {}}
+{"state": "Hi, As suggested by you, i have asked the seller to initiate the refund, it has been a week and i haven't received my money. Please advise.", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1771, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why isn't a recent refund on my statement?", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1774, "jev_reference_300": false}, "criteria": {}}
+{"state": "Did my refund go through? It's not on my statement.", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1779, "jev_reference_300": false}, "criteria": {}}
+{"state": "I requested a refund from a store but it hasn't arrived.", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1781, "jev_reference_300": true}, "criteria": {}}
+{"state": "My refund doesn't seem to be showing on my statement.", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1784, "jev_reference_300": true}, "criteria": {}}
+{"state": "I did what you told me earlier and contacted the seller for a refund directly, but nothing is happening! It's been a week and I still haven't got anything. Please just give me back my money", "answers": {"intent": "Refund_not_showing_up"}, "meta": {"row": 1787, "jev_reference_300": false}, "criteria": {}}
+{"state": "I was trying to purchase something at the store today and my card has been declined.  Why has this happened?", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1800, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why did it decline my payment?", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1803, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why doesn't the card payment work", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1811, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'm really stuck. I don't know why but my card payment has not gone through.", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1812, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why are you declining my payment? Everything was fine.", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1816, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card payment didn't work, can you help?", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1822, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card payment did not complete.", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1831, "jev_reference_300": true}, "criteria": {}}
+{"state": "My card didn't work in one of the shops.", "answers": {"intent": "declined_card_payment"}, "meta": {"row": 1832, "jev_reference_300": true}, "criteria": {}}
+{"state": "I have a pending transfer", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1840, "jev_reference_300": true}, "criteria": {}}
+{"state": "I am waiting for a pending money transfer to process.", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1841, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a transfer that's pending and wanted to know how long it is going to take to process?", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1843, "jev_reference_300": true}, "criteria": {}}
+{"state": "I submitted my transfer but it has been pending for quite a while and I was wondering what takes so long? why hasn't it completed", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1846, "jev_reference_300": true}, "criteria": {}}
+{"state": "How long does a transfer stay pending?", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1853, "jev_reference_300": false}, "criteria": {}}
+{"state": "When will my transfer go through?", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1859, "jev_reference_300": false}, "criteria": {}}
+{"state": "I would like to know why my payment is still pending, can you help?", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1862, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is a money transfer not showing?", "answers": {"intent": "pending_transfer"}, "meta": {"row": 1870, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you remove my account please?", "answers": {"intent": "terminate_account"}, "meta": {"row": 1876, "jev_reference_300": false}, "criteria": {}}
+{"state": "i want to close an account but im not sure about setting up a new one in the future, what do you recommend", "answers": {"intent": "terminate_account"}, "meta": {"row": 1877, "jev_reference_300": true}, "criteria": {}}
+{"state": "unhappy with you, how to delete account", "answers": {"intent": "terminate_account"}, "meta": {"row": 1884, "jev_reference_300": true}, "criteria": {}}
+{"state": "I don't like your company. Delete my account.", "answers": {"intent": "terminate_account"}, "meta": {"row": 1887, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need your help in deleting my account.", "answers": {"intent": "terminate_account"}, "meta": {"row": 1892, "jev_reference_300": true}, "criteria": {}}
+{"state": "Please close my account. I am unsatisfied with your service.", "answers": {"intent": "terminate_account"}, "meta": {"row": 1902, "jev_reference_300": false}, "criteria": {}}
+{"state": "This company sucks! Can you delete my account?", "answers": {"intent": "terminate_account"}, "meta": {"row": 1908, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you help me get rid of my account?", "answers": {"intent": "terminate_account"}, "meta": {"row": 1910, "jev_reference_300": false}, "criteria": {}}
+{"state": "I was retrieving money and my card wouldn't remove.", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1918, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there a way I can get my ATM card back from the machine?", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1922, "jev_reference_300": true}, "criteria": {}}
+{"state": "The ATM machine stole my card.", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1928, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a problem!  The ATM stole my card!", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1939, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why would an ATM swallow my card?", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1940, "jev_reference_300": true}, "criteria": {}}
+{"state": "If my card is trapped in the ATM, what do I do?", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1947, "jev_reference_300": false}, "criteria": {}}
+{"state": "I was taking out funds and was unable to regain my card.", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1949, "jev_reference_300": false}, "criteria": {}}
+{"state": "What should I do with my atm that got stuck?", "answers": {"intent": "card_swallowed"}, "meta": {"row": 1950, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a duplicate payment showing up on the app. How do I stop myself being charged for the thing twice?", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1963, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why was I charged multiple times for the same thing?", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1974, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why am I being charged twice?", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1977, "jev_reference_300": false}, "criteria": {}}
+{"state": "Please check payments on my card. There is a duplicate and I only bought it once.", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1979, "jev_reference_300": true}, "criteria": {}}
+{"state": "More than one time this week, I have been charged more than once for the same transaction. Please correct the issue and refund the duplicate charges.", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1980, "jev_reference_300": false}, "criteria": {}}
+{"state": "Looks like my card payment was duplicated. I went to pay at the store earlier, got declined once,second time it works. App still stays pending for one of the payments. Can you please remove one of them as it's wrong and clearly was declined?", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1989, "jev_reference_300": false}, "criteria": {}}
+{"state": "I have a transaction that shows several times", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1990, "jev_reference_300": false}, "criteria": {}}
+{"state": "I made a payment that got charged twice instead of once.", "answers": {"intent": "transaction_charged_twice"}, "meta": {"row": 1994, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I lookup where funds came from?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2017, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can I view the source of my available funds?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2020, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need to validate the source of my funds.", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2022, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I see where my money comes from?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2026, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I check the source for my funds?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2027, "jev_reference_300": false}, "criteria": {}}
+{"state": "What do I need to do to verify the source of my funds?", "answers": {"intent": "verify_source_of_funds"}, "meta": {"row": 2035, "jev_reference_300": true}, "criteria": {}}
+{"state": "how soon will I see the transfer in my account?", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2039, "jev_reference_300": true}, "criteria": {}}
+{"state": "Will my transfer immediately show up in my account?", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2049, "jev_reference_300": true}, "criteria": {}}
+{"state": "when will i receive a US transfer", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2061, "jev_reference_300": true}, "criteria": {}}
+{"state": "How long does a funds transfer take from one back to another?", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2065, "jev_reference_300": false}, "criteria": {}}
+{"state": "How long does a transfer take from the point it's sent, to the point it arrives in my account?", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2070, "jev_reference_300": false}, "criteria": {}}
+{"state": "How long does a transfer take from china?", "answers": {"intent": "transfer_timing"}, "meta": {"row": 2074, "jev_reference_300": false}, "criteria": {}}
+{"state": "I made a payment but the app reverted the payment.", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2081, "jev_reference_300": false}, "criteria": {}}
+{"state": "Hello, My money went through for my purchase but now I got contacted from the seller noting that they didn't receive it. Then the money was returned to my account and I'm not sure why this occurred. So if you can resolve this issue please.", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2083, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'm not sure why my account has been refunded a payment for an item I've already received about 2 weeks ago. Can you please tell me what is going on?", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2087, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you tell my why my card payment has been reverted.", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2089, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do you know why my card payment was reverted?", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2091, "jev_reference_300": false}, "criteria": {}}
+{"state": "I think my card payment had been return", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2095, "jev_reference_300": true}, "criteria": {}}
+{"state": "I was contacted by a seller with a message that they never received my money. I am 100% sure it was taken from my account so I definitely need this sorted out soon.", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2096, "jev_reference_300": true}, "criteria": {}}
+{"state": "There must be an issue, why has my card been cancelled?", "answers": {"intent": "reverted_card_payment?"}, "meta": {"row": 2101, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where do I change my PIN?", "answers": {"intent": "change_pin"}, "meta": {"row": 2117, "jev_reference_300": true}, "criteria": {}}
+{"state": "How might  I change my PIN?", "answers": {"intent": "change_pin"}, "meta": {"row": 2121, "jev_reference_300": false}, "criteria": {}}
+{"state": "I desperately need to change my PIN, but I'm overseas on vacation right now. How can I do this?", "answers": {"intent": "change_pin"}, "meta": {"row": 2125, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I change my PIN?", "answers": {"intent": "change_pin"}, "meta": {"row": 2140, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need to change my PIN.", "answers": {"intent": "change_pin"}, "meta": {"row": 2141, "jev_reference_300": false}, "criteria": {}}
+{"state": "Help me set up a new PIN?", "answers": {"intent": "change_pin"}, "meta": {"row": 2144, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I update the PIN on my account?", "answers": {"intent": "change_pin"}, "meta": {"row": 2149, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need a new PIN.", "answers": {"intent": "change_pin"}, "meta": {"row": 2150, "jev_reference_300": false}, "criteria": {}}
+{"state": "I was unable to make a transfer to another account.", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2159, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why isn't my transfer not going through? I keep getting an error message.", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2169, "jev_reference_300": false}, "criteria": {}}
+{"state": "The money would not transfer to a beneficiary.", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2175, "jev_reference_300": true}, "criteria": {}}
+{"state": "I couldn't make a transfer to a beneficiary!", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2183, "jev_reference_300": false}, "criteria": {}}
+{"state": "The account transfer I was trying to do failed.", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2186, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why couldn't I do a transfer to a beneficiary?", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2188, "jev_reference_300": true}, "criteria": {}}
+{"state": "why isnt my account allowing transfers", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2192, "jev_reference_300": false}, "criteria": {}}
+{"state": "I want to buy cryptocurrency, but your app doesn't let me. Why?", "answers": {"intent": "beneficiary_not_allowed"}, "meta": {"row": 2193, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why was I charged extra for transferring money?", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2202, "jev_reference_300": true}, "criteria": {}}
+{"state": "I thought transfers were free, why was I charged a fee?", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2216, "jev_reference_300": true}, "criteria": {}}
+{"state": "I sent out money, but was charged extra for transferring. Why?", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2219, "jev_reference_300": true}, "criteria": {}}
+{"state": "There was an extra charge when I made a transfer.", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2221, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need someone to alert me as to what's going on. I had transferred an amount but the receiver is saying that the amount is somewhat less than what I sent over. I now have to make another transfer to make up the difference.", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2222, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why was my transfer charged fees?", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2225, "jev_reference_300": false}, "criteria": {}}
+{"state": "I know that I am able to make transfers for free.  That was something that I valued.  After I bought something online from abroad I noticed that I got charged a fee?  What is this and can it be removed?", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2230, "jev_reference_300": false}, "criteria": {}}
+{"state": "I purchased some makeup through a site in China, and I was under the impression that when I make transfers there is no fee.  Why am I seeing this fee now?  I am not happy about this at all.", "answers": {"intent": "transfer_fee_charged"}, "meta": {"row": 2233, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is there a problem with receiving my salary in GBP?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2241, "jev_reference_300": false}, "criteria": {}}
+{"state": "Salary in GBP has been received, does it need to be configured elsewhere?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2250, "jev_reference_300": true}, "criteria": {}}
+{"state": "What different ways are there for someone to send me money?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2253, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can my friend send me money?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2255, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I use this account to receive my salary?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2263, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I get my salary through this account?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2265, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I get paid in a different currency?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2271, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I get my paycheck through here?", "answers": {"intent": "receiving_money"}, "meta": {"row": 2275, "jev_reference_300": false}, "criteria": {}}
+{"state": "dont understand why transfer failed", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2276, "jev_reference_300": false}, "criteria": {}}
+{"state": "Please help me make a transfer. I keep receiving an error and I'm trying to make the initial mortgage payment for a flat I'm buying. What is the deal here?", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2277, "jev_reference_300": true}, "criteria": {}}
+{"state": "Tell me why my transfer failed!", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2280, "jev_reference_300": true}, "criteria": {}}
+{"state": "how come my transfer didn't work", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2287, "jev_reference_300": false}, "criteria": {}}
+{"state": "My transfer keeps failing and I just want to transfer the money can you please make it work?", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2293, "jev_reference_300": true}, "criteria": {}}
+{"state": "Please help me as i am continuously facing the issue in transferring money to my friends, as all my transactions are getting failed.", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2305, "jev_reference_300": true}, "criteria": {}}
+{"state": "help me with my transfer", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2309, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can you provide a reason as to why my transfer did not work?", "answers": {"intent": "failed_transfer"}, "meta": {"row": 2314, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I do a bank transfer to put additional money in my account because I am out of money?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2316, "jev_reference_300": true}, "criteria": {}}
+{"state": "I would like to use the bank transfer feature, but I can't find it. Can you please give me the details?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2338, "jev_reference_300": false}, "criteria": {}}
+{"state": "CAN YOU EXPLAIN HOW TO TRANSFER MONEY INTO MY  ACCOUNT FOR ME?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2340, "jev_reference_300": false}, "criteria": {}}
+{"state": "I need to bank account transfer from another account into this one, what is the easiest way that can be done, and what information do i need?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2341, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I send my account money through transfer?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2343, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I do an international transfer?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2344, "jev_reference_300": false}, "criteria": {}}
+{"state": "I want to transfer from accounts in order to Top up. What are the steps necessary.", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2346, "jev_reference_300": false}, "criteria": {}}
+{"state": "How does a transfer work?", "answers": {"intent": "transfer_into_account"}, "meta": {"row": 2347, "jev_reference_300": true}, "criteria": {}}
+{"state": "It wants me to verify the top up. Why?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2357, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where can I find the top-up verification code?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2358, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where can I find the verification code on a top-up card?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2366, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is it important to verify a top-up card?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2376, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why do I have to verify the top-up?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2377, "jev_reference_300": true}, "criteria": {}}
+{"state": "I can't find the top-up verification code.", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2379, "jev_reference_300": false}, "criteria": {}}
+{"state": "How is the top-up card verified?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2382, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I verify a top-up?", "answers": {"intent": "verify_top_up"}, "meta": {"row": 2390, "jev_reference_300": true}, "criteria": {}}
+{"state": "Would it be possible to get another card?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2396, "jev_reference_300": true}, "criteria": {}}
+{"state": "How many cards can I have for one account?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2397, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'd like to have another card", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2405, "jev_reference_300": false}, "criteria": {}}
+{"state": "Would I be able to get another card for my account, so I could give one to my daughter?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2410, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is the procedure for getting another card?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2411, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I order extra cards?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2417, "jev_reference_300": false}, "criteria": {}}
+{"state": "Am I allowed to give my daughter one of my cards to use?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2423, "jev_reference_300": true}, "criteria": {}}
+{"state": "If you send me more cards, are there any charges?", "answers": {"intent": "getting_spare_card"}, "meta": {"row": 2430, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can you help me find top up by cash deposit?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2440, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where do I locate topping up with cash.", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2446, "jev_reference_300": true}, "criteria": {}}
+{"state": "What type of deposits do you accept into my account?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2449, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm looking for the option to top up by cheque.", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2453, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where are the options to top up with a cheque on my account?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2457, "jev_reference_300": true}, "criteria": {}}
+{"state": "How can I top up with cash?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2459, "jev_reference_300": false}, "criteria": {}}
+{"state": "Will you accept a cheque to top up my account?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2460, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I send a cheque to do my top ups?", "answers": {"intent": "top_up_by_cash_or_cheque"}, "meta": {"row": 2468, "jev_reference_300": false}, "criteria": {}}
+{"state": "What is the charge for a physical card?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2494, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is a non-electronic card available as well", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2495, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I get a physical card?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2500, "jev_reference_300": false}, "criteria": {}}
+{"state": "Where do I order my card?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2504, "jev_reference_300": false}, "criteria": {}}
+{"state": "How can I get a real-life card of my own?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2508, "jev_reference_300": false}, "criteria": {}}
+{"state": "If I want a physical card, do I have to pay anything?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2510, "jev_reference_300": true}, "criteria": {}}
+{"state": "Where can cards be delivered?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2511, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I get a real card?", "answers": {"intent": "order_physical_card"}, "meta": {"row": 2515, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why doesn't my disposable virtual card work?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2529, "jev_reference_300": false}, "criteria": {}}
+{"state": "For some reason, the virtual card won't work for me.", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2533, "jev_reference_300": true}, "criteria": {}}
+{"state": "My disposable virtual card has been rejected by the merchant earlier today. What should I do?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2534, "jev_reference_300": false}, "criteria": {}}
+{"state": "My virtual card isn't working. What do I do?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2536, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why can't I get my virtual card to work?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2539, "jev_reference_300": false}, "criteria": {}}
+{"state": "My payments from my virtual card keep getting rejected.", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2542, "jev_reference_300": true}, "criteria": {}}
+{"state": "My virtual card won't work.", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2550, "jev_reference_300": true}, "criteria": {}}
+{"state": "I was trying to use my virtual card at a merchant and it was rejected. How can I fix this?", "answers": {"intent": "virtual_card_not_working"}, "meta": {"row": 2553, "jev_reference_300": true}, "criteria": {}}
+{"state": "I took out money from a transaction machine and it exchanged the wrong dollar value amount from another currency!", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2557, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why was the exchange rate wrong when I got cash", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2562, "jev_reference_300": true}, "criteria": {}}
+{"state": "I took out a foreign currency and the exchange rate is wrong.", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2576, "jev_reference_300": true}, "criteria": {}}
+{"state": "There was an error in exchange rate for my cash withdrawal", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2578, "jev_reference_300": false}, "criteria": {}}
+{"state": "I withdrew some cash out of the ATM over the holiday. It seems that I was charged some outrageous fees. I would not have done that had I been aware of these outrageous charges!", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2583, "jev_reference_300": true}, "criteria": {}}
+{"state": "I expected a higher exchange rate when I withdrew money. Can you tell me current exchange rates?", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2587, "jev_reference_300": false}, "criteria": {}}
+{"state": "I took out cash abroad and the exchange rate isn't correct.", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2590, "jev_reference_300": true}, "criteria": {}}
+{"state": "The cash withdrawal exchange rate is not correct.", "answers": {"intent": "wrong_exchange_rate_for_cash_withdrawal"}, "meta": {"row": 2594, "jev_reference_300": false}, "criteria": {}}
+{"state": "What is a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2601, "jev_reference_300": false}, "criteria": {}}
+{"state": "I would like a temporary virtual card", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2602, "jev_reference_300": false}, "criteria": {}}
+{"state": "how does a virtual card work", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2618, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I obtain a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2623, "jev_reference_300": true}, "criteria": {}}
+{"state": "How would you use a disposable card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2624, "jev_reference_300": false}, "criteria": {}}
+{"state": "Hello! I need to order a disposable virtual card. Where can I do that at?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2630, "jev_reference_300": true}, "criteria": {}}
+{"state": "where do I request a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2631, "jev_reference_300": true}, "criteria": {}}
+{"state": "what's the process for getting a disposable virtual card?", "answers": {"intent": "get_disposable_virtual_card"}, "meta": {"row": 2635, "jev_reference_300": true}, "criteria": {}}
+{"state": "So, I tried topping up my card for the today. Unfortunately, it failed. A couple of days back I used it and it works fine. Can you double check and tell me what's going on?", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2639, "jev_reference_300": true}, "criteria": {}}
+{"state": "My top up failed.", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2648, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why was my top-up unsuccessful?", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2652, "jev_reference_300": true}, "criteria": {}}
+{"state": "I topped up but the app did not accept it.", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2655, "jev_reference_300": true}, "criteria": {}}
+{"state": "I think my top up did not work", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2657, "jev_reference_300": false}, "criteria": {}}
+{"state": "How did my top-up fail?", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2661, "jev_reference_300": false}, "criteria": {}}
+{"state": "I tried to top up. Why was it denied?", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2663, "jev_reference_300": false}, "criteria": {}}
+{"state": "What's the deal? My card was just denied for top up. Why is it not going through?", "answers": {"intent": "top_up_failed"}, "meta": {"row": 2664, "jev_reference_300": false}, "criteria": {}}
+{"state": "When will my transfer be available in my account.", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2683, "jev_reference_300": true}, "criteria": {}}
+{"state": "After the transfer, the balance did not update.", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2691, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why is my balance the same?  I processed a transfer.", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2698, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why doesn't it show that I did a balance transfer?", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2705, "jev_reference_300": false}, "criteria": {}}
+{"state": "I made a bank transfer a couple of hours ago from my UK account.  It hasn't appeared, can you check to make sure it went through?", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2706, "jev_reference_300": false}, "criteria": {}}
+{"state": "When will I see my new balance after making my bank transfer?", "answers": {"intent": "balance_not_updated_after_bank_transfer"}, "meta": {"row": 2715, "jev_reference_300": false}, "criteria": {}}
+{"state": "How do I freeze my bank card, as there has been a strange withdrawal?", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2726, "jev_reference_300": false}, "criteria": {}}
+{"state": "I checked the app and saw an extra cash withdrawal that I didn't authorize", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2728, "jev_reference_300": true}, "criteria": {}}
+{"state": "There's a cash withdraw on my statement that I didn't make.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2730, "jev_reference_300": true}, "criteria": {}}
+{"state": "i think someone is using my card to withdraw money. Someone stole my wallet. What can I do? it is urgent.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2731, "jev_reference_300": false}, "criteria": {}}
+{"state": "There is an unauthorized cash withdrawal from my account for 500\u00a3.  I definitely didn't make this withdrawal.  I need your help.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2738, "jev_reference_300": false}, "criteria": {}}
+{"state": "There is a odd withdrawal on my account.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2740, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can anyone help me, I lost my wallet and they've started withdrawing from my account.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2744, "jev_reference_300": false}, "criteria": {}}
+{"state": "There is an ATM withdrawl in the app I don't recognize.", "answers": {"intent": "cash_withdrawal_not_recognised"}, "meta": {"row": 2753, "jev_reference_300": true}, "criteria": {}}
+{"state": "How much more do I have to pay to exchange currencies?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2762, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there a fee for exchanging currencies?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2763, "jev_reference_300": true}, "criteria": {}}
+{"state": "Do I have to pay for exchanging currencies?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2768, "jev_reference_300": false}, "criteria": {}}
+{"state": "Does it cost extra to exchange currencies?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2769, "jev_reference_300": false}, "criteria": {}}
+{"state": "Will I be charged a fee for exchanging foreign currencies?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2771, "jev_reference_300": true}, "criteria": {}}
+{"state": "How much will I pay to exchange foreign currency?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2784, "jev_reference_300": false}, "criteria": {}}
+{"state": "Does it cost money for currency exchange services?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2785, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is the cost for an exchange fee?", "answers": {"intent": "exchange_charge"}, "meta": {"row": 2790, "jev_reference_300": false}, "criteria": {}}
+{"state": "Are there any fees for adding money with an international card?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2797, "jev_reference_300": true}, "criteria": {}}
+{"state": "Will I be charged if I use European bank card for top up?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2815, "jev_reference_300": false}, "criteria": {}}
+{"state": "Is there a fee for topping up", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2818, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is it okay to use a bank card to top up", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2825, "jev_reference_300": true}, "criteria": {}}
+{"state": "Is there a charge or discount if I use a European bank in a top up?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2829, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I top up using an international card", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2831, "jev_reference_300": false}, "criteria": {}}
+{"state": "What are the fees for top ups?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2834, "jev_reference_300": true}, "criteria": {}}
+{"state": "What are the top up charges for US cards?", "answers": {"intent": "top_up_by_card_charge"}, "meta": {"row": 2835, "jev_reference_300": false}, "criteria": {}}
+{"state": "What do I need to do to activate my new card?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2838, "jev_reference_300": false}, "criteria": {}}
+{"state": "How long will it take to activate my new card?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2841, "jev_reference_300": true}, "criteria": {}}
+{"state": "I got my new card where do I go to activate it?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2849, "jev_reference_300": false}, "criteria": {}}
+{"state": "Would like to use my card and need to activate it first.  Can you help me do this?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2850, "jev_reference_300": true}, "criteria": {}}
+{"state": "I have a new card and I want to activate it", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2856, "jev_reference_300": false}, "criteria": {}}
+{"state": "When will my card be activated?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2861, "jev_reference_300": true}, "criteria": {}}
+{"state": "I would like to activate my card to use now, can you help me?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2871, "jev_reference_300": false}, "criteria": {}}
+{"state": "I got my new card. How do I activate it?", "answers": {"intent": "activate_my_card"}, "meta": {"row": 2874, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why am I being charged when I withdraw cash?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2878, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why is there an extra charge for money that was withdrawn?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2884, "jev_reference_300": true}, "criteria": {}}
+{"state": "Why did I get a fee?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2886, "jev_reference_300": true}, "criteria": {}}
+{"state": "A fee was charged for my recent withdrawal.", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2890, "jev_reference_300": false}, "criteria": {}}
+{"state": "I've notice I was charged for withdrawing cash, can you explain why?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2895, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why was my account charged for using an ATM?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2896, "jev_reference_300": true}, "criteria": {}}
+{"state": "Was charged an ATM fee despite it being a small withdrawal on the 1st day of the month. I thought I was allowed 200 per month?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2911, "jev_reference_300": false}, "criteria": {}}
+{"state": "Why is there a fee for withdrawing?", "answers": {"intent": "cash_withdrawal_charge"}, "meta": {"row": 2915, "jev_reference_300": false}, "criteria": {}}
+{"state": "Am I able to order a new card and have it sent to me in China?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2916, "jev_reference_300": false}, "criteria": {}}
+{"state": "Will you be able to send the new card to China?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2917, "jev_reference_300": true}, "criteria": {}}
+{"state": "Once my card expires, what should I do?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2930, "jev_reference_300": true}, "criteria": {}}
+{"state": "I need a new card, my current card is nearly expired.", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2931, "jev_reference_300": true}, "criteria": {}}
+{"state": "My card is about to expire. How much does it cost to order a new one and how fast will I get it?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2933, "jev_reference_300": true}, "criteria": {}}
+{"state": "When my card expires, will I get a new one mailed to me?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2938, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I receive a new card while I am in China?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2944, "jev_reference_300": false}, "criteria": {}}
+{"state": "My card is expiring shortly.  How much will it cost for a replacement, and how soon can I get it?", "answers": {"intent": "card_about_to_expire"}, "meta": {"row": 2950, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I add money with Apple Pay?", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2959, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I use my Apple Watch to to top up?", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2960, "jev_reference_300": false}, "criteria": {}}
+{"state": "Top up on my Google Pay isn't working.", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2962, "jev_reference_300": true}, "criteria": {}}
+{"state": "how do i add money with my apple watch", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2971, "jev_reference_300": false}, "criteria": {}}
+{"state": "I got my American Express in Apple Pay, why is top up not working?", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2983, "jev_reference_300": true}, "criteria": {}}
+{"state": "How do I troubleshoot Google pay top up?", "answers": {"intent": "apple_pay_or_google_pay"}, "meta": {"row": 2991, "jev_reference_300": true}, "criteria": {}}
+{"state": "What is needed to prove my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3000, "jev_reference_300": false}, "criteria": {}}
+{"state": "What are the steps I need to take to verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3006, "jev_reference_300": true}, "criteria": {}}
+{"state": "How does my identity get verified?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3016, "jev_reference_300": false}, "criteria": {}}
+{"state": "What things do I need to verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3017, "jev_reference_300": true}, "criteria": {}}
+{"state": "What steps do I take to verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3018, "jev_reference_300": true}, "criteria": {}}
+{"state": "do the details of my profile have to match my documents", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3020, "jev_reference_300": true}, "criteria": {}}
+{"state": "What do you need so I can verify my identity?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3027, "jev_reference_300": false}, "criteria": {}}
+{"state": "What will I need for identity verification?", "answers": {"intent": "verify_my_identity"}, "meta": {"row": 3030, "jev_reference_300": false}, "criteria": {}}
+{"state": "Can I use your app if I am from the EU?", "answers": {"intent": "country_support"}, "meta": {"row": 3038, "jev_reference_300": true}, "criteria": {}}
+{"state": "Can I get a card outside the UK?", "answers": {"intent": "country_support"}, "meta": {"row": 3041, "jev_reference_300": true}, "criteria": {}}
+{"state": "I'm not in the UK, is it possible for me to still get a card?", "answers": {"intent": "country_support"}, "meta": {"row": 3043, "jev_reference_300": false}, "criteria": {}}
+{"state": "What countries do you support?", "answers": {"intent": "country_support"}, "meta": {"row": 3058, "jev_reference_300": false}, "criteria": {}}
+{"state": "What locations are you in?", "answers": {"intent": "country_support"}, "meta": {"row": 3060, "jev_reference_300": false}, "criteria": {}}
+{"state": "I'm not in the UK, can I get a card?", "answers": {"intent": "country_support"}, "meta": {"row": 3070, "jev_reference_300": true}, "criteria": {}}
+{"state": "If i'm not in the UK, can I still get a card?", "answers": {"intent": "country_support"}, "meta": {"row": 3071, "jev_reference_300": true}, "criteria": {}}
+{"state": "How many countries do you support?", "answers": {"intent": "country_support"}, "meta": {"row": 3072, "jev_reference_300": false}, "criteria": {}}
