@@ -200,6 +200,39 @@ better than the decision at a 0.5 threshold and the threshold is worth tuning.
 Intervals, majority-class baselines and the contamination manifest are in the
 [technical report](report/main.pdf).
 
+### Jev is ahead here, and what we think that means
+
+We measured Jev on all seven of these tasks, not just Banking77. It wins five
+and ties two, 38.3x chance against our 29.6x. The per-item predictions are in
+[`baselines/`](baselines/) so you can check it without an API key.
+
+We do not think that means the recipe is wrong, and here is the evidence
+either way.
+
+**Every time we added data, generalization went up, and it never stopped
+going up.** The first mixture of 61 tasks transferred nothing at all, 0.9x
+chance, which is to say a coin flip with extra steps. Padding training menus
+with distractor labels took Banking77 from a literal 0.000 to 0.205. Scaling
+and auditing to 279 tasks and 323,466 rows reached the numbers above. Three
+interventions, three improvements, no plateau in sight. That is the shape of a
+curve you have not finished climbing, not one that has flattened.
+
+**We stopped because of what we had, not because of what we learned.** One
+person, one GPU, 323,466 rows curated from public datasets. Flan-scale
+instruction mixtures are one to two orders of magnitude larger. We did not
+run out of ideas, we ran out of budget.
+
+**And we cannot see what Jev was trained on.** It is a closed API. Its
+architecture, its training corpus and its scale are all unobservable to us.
+So we cannot prove the remaining gap is a data-scale gap rather than
+something they know that we do not. What we can say is that our own scaling
+curve points at data, and that nothing we measured suggests the method itself
+is the limit.
+
+So treat the zero-shot number as a statement about our budget, and treat the
+next section as the load-bearing claim. **The part we can prove is that the
+recipe works when you point it at your own task.**
+
 ## What it does once fine-tuned on your task
 
 Paired exact McNemar against Jev on the same 450 healthcare router items,

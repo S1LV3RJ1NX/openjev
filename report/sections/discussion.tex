@@ -144,6 +144,47 @@ against 34 \noul{} and 11 \score{}, and the result pattern follows exactly:
 fastest route to a better general model is a more balanced typed-decision
 corpus, and assembling one is beyond what a single project can do.
 
+\subsection{What the zero-shot gap does and does not show}
+\label{sec:disc-gap}
+
+Jev wins five of the seven held-out tasks and ties two
+(Section~\ref{sec:res-jev-zeroshot}). It is worth being precise about what
+that licenses, because the obvious reading, that the recipe does not work,
+is not the reading the evidence supports.
+
+Every intervention that added data or data diversity improved
+generalization, and none of them plateaued. A 61-task mixture transferred
+nothing measurable, $0.9\times$ chance. Padding training menus with
+borrowed distractor labels moved a 77-way held-out menu from a literal
+$0.000$ to $0.205$. Scaling and auditing to 279 tasks and 323{,}466 rows
+produced the figures in Table~\ref{tab:heldout}. Three interventions,
+three improvements, no sign of diminishing returns at the point we
+stopped. The shape of that curve is the central piece of evidence for the
+method, and it is more informative than any single accuracy number in
+this paper.
+
+We stopped for reasons of budget rather than of evidence: one researcher,
+one GPU, and a corpus assembled from public datasets that is one to two
+orders of magnitude smaller than the instruction mixtures that motivated
+this design.
+
+The honest limit on the argument is that \textbf{Jev is a closed API and we
+cannot see what it was trained on}. Its architecture, corpus and scale are
+all unobservable. We therefore cannot demonstrate that the remaining gap is
+a data-scale gap rather than a method they have and we do not. Our own
+scaling curve points at data, and nothing we measured indicates the
+architecture is the binding constraint, but the reader should treat that as
+the most economical explanation of our results rather than as a
+demonstrated fact. Distinguishing the two would need either their training
+details or a run at a scale we could not afford.
+
+What the paper does demonstrate, without needing to resolve that question,
+is the conditional claim: given a few hundred labelled examples of a target
+task, the same recipe produces a model that beats the commercial system on
+that task, three wins and four ties against a system that is better than
+ours on every held-out benchmark. The recipe is sound; the general model is
+underfunded.
+
 \subsection{Limitations}
 
 \paragraph{The ordinal primitive is weak.} \texttt{helpsteer} beats chance
@@ -252,3 +293,13 @@ holds two deployment cases that the decoder does not, and three of the
 findings above exist only because we trained both and compared them. The
 version of this work with one backbone would have been shorter, cheaper,
 and considerably less informative.
+
+We did not match the commercial system zero-shot, and we report that on
+seven tasks rather than the one we could have chosen. We also did not
+find the ceiling of the approach: every time we added data the numbers
+improved, and they were still improving when the budget ran out. Whether
+the remaining gap is scale or something the vendor knows that we do not
+is a question a closed API does not let us answer. What this work does
+settle is narrower and, for most people with a classification problem,
+more useful: the recipe is public, it runs on one GPU, and given a few
+hundred labels of your own it beats the commercial system on your task.
