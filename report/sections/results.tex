@@ -162,6 +162,61 @@ tried.} The case for building one rests on the other half of the result:
 a few hundred labels of your own task reverse the ordering, which
 Section~\ref{sec:res-router} quantifies.
 
+\subsection{Against the closest open-source system}
+\label{sec:res-laya}
+
+Laya\footnote{\url{https://huggingface.co/convaiinnovations/laya}} is the
+nearest open-source system to what we built, exposing the same three
+primitives under a near-identical interface. We deliberately did not read
+its modelling code while designing ours, so that arriving at a similar
+design would be evidence of convergence rather than of copying. That
+justified excluding it from the design. It did not justify excluding it
+from the evaluation, which is an omission a reader pointed out and which
+Table~\ref{tab:laya} corrects.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+task & $K$ & Laya & ours (dec) & ours (enc) & Jev \\
+\midrule
+\texttt{clinc\_oos}      & 151 & 0.408 & \textbf{0.702} & 0.382 & 0.938 \\
+\texttt{massive\_intent} &  60 & 0.377 & \textbf{0.775} & 0.473 & 0.838 \\
+\texttt{banking77}       &  77 & 0.370 & \textbf{0.605} & 0.343 & 0.863 \\
+\texttt{sst5}            &   5 & 0.308 & \textbf{0.465} & 0.412 & 0.560 \\
+\texttt{ag\_news}        &   4 & \textbf{0.918} & 0.793 & 0.735 & 0.880 \\
+\texttt{civil\_comments} &   2 & 0.730 & 0.742 & 0.683 & 0.748 \\
+\texttt{helpsteer}       &   5 & 0.262 & 0.273 & 0.262 & 0.415 \\
+\midrule
+\multicolumn{2}{l}{mean multiple of chance} & 17.2 & \textbf{29.6} & 17.2 & 38.3 \\
+\bottomrule
+\end{tabular}
+\caption{Laya's published \texttt{typed-decisions} checkpoint through our
+harness, same 600 items per task. Our decoder wins four, ties two, loses
+one. Our encoder coincides with Laya at $17.2\times$.}
+\label{tab:laya}
+\end{table}
+
+\paragraph{Their single win is the number we trust least, and it favours
+them.} Laya scores $0.918$ on \texttt{ag\_news} while scoring $0.31$ to
+$0.41$ on four other tasks, and exceeds Jev there. One task far above a
+system's own average, and above a stronger system, is the signature of
+training contamination. We cannot test for it, because Laya's training
+mixture is not published.
+
+That uncertainty is symmetric and we state it in both directions. Our
+suite is held out from \emph{our} training, not from theirs, and several
+of its tasks are public. If Laya trained on any of them, every Laya
+figure above is flattered and our margin is conservative rather than
+generous. If it did not, the comparison is clean and they have an
+unusually strong \texttt{ag\_news}. We do not know which, and neither
+does the reader, so we decline to imply the first while reporting the
+second.
+
+We also compared against one published configuration rather than the best
+their method can achieve, which is the courtesy we would want extended to
+our own checkpoints.
+
 \subsection{The output format makes zero-shot scoring possible, not
 present}
 \label{sec:res-architecture}
